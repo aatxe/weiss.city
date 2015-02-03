@@ -16,7 +16,7 @@ body, html {
 }
 
 .links span {
-    margin: 0 0.2em;
+    margin: 0 0.3em;
 }
 
 .title a:hover {
@@ -85,10 +85,13 @@ body, html {
     font-size: 1.2em;
 }
 
-.fa {
+.glyphicon {
     font-size: 1.3em;
-    position: relative;
-    top: 1px;
+    top: 0;
+}
+
+.fa {
+    font-size: 1.6em;
 }
 
 p {
