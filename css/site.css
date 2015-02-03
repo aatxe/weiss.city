@@ -65,6 +65,10 @@ body, html {
     width: 100%;
 }
 
+.content hr {
+    border-color: #000;
+}
+
 .post {
     margin: 1.5em 0;
 }
@@ -76,3 +80,7 @@ body, html {
 .post-list {
     margin-top: 2em;
 }
+
+.post-info .post-title, .post-info .post-date {
+    font-size: 1.2em;
+}   
