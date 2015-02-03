@@ -15,7 +15,7 @@ primarily on making sure our clients' portals are both flexible and beautiful in
 
 In my spare time, I'll work on anything from websites to networking libraries to programming 
 languages to video game server emulators. You can check out my work on GitHub 
-[here](https://github.com/aatxe), or through the <span class="glyphicon glyphicon-tent"></span> in 
+[here](https://github.com/aatxe), or through the <span class="fa fa-github"></span> in 
 the top right. I also run my own IRC network in my free time called [PdgnCo](http://pdgn.co/). It's
  based on democratic and anarchistic ideals!
 
