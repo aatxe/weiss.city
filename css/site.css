@@ -90,3 +90,25 @@ body, html {
     position: relative;
     top: 1px;
 }
+
+p {
+    line-height: 1.4em;
+}
+
+@media (min-width: 400px) {
+    p {
+        line-height: 1.5em;
+    }
+}
+
+@media (min-width: 700px) {
+    p {
+        line-height: 1.6em;
+    }
+}
+
+@media (min-width: 900px) {
+    p {
+        line-height: 1.7em;
+    }
+}
