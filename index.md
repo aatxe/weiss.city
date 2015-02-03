@@ -17,7 +17,7 @@ In my spare time, I'll work on anything from websites to networking libraries to
 languages to video game server emulators. You can check out my work on GitHub 
 [here](https://github.com/aatxe). I also run my own IRC network in my free time called 
 [PdgnCo](http://pdgn.co/). It's founded on democratic and anarchistic principals, and I operate it
-accordingly.
+accordingly. I also spend some time [blogging](/archive.html).
 
 I'm a denizen of the web. If you're looking to contact me, you can find me all over the place. I'm
 on [Twitter](https://twitter.com/aatxe), [Facebook](https://facebook.com/aaronweiss74), 
