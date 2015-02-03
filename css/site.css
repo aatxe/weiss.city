@@ -48,6 +48,10 @@ body, html {
     color: #9b59b6;
 }
 
+.caption {
+    text-align: center;
+}
+
 .content {
     text-align: justify;
     margin-bottom: 1em;
@@ -55,6 +59,10 @@ body, html {
 
 .content p {
     margin: 1.25em 0;
+}
+
+.content img {
+    width: 100%;
 }
 
 .post {
