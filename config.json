@@ -381,10 +381,9 @@
     "code.less",
     "grid.less",
     "tables.less",
-    "forms.less",
     "responsive-utilities.less",
     "glyphicons.less"
   ],
   "js": [],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=b985fb65c1742fdad3cb"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=ecf0090d57184024f00d"
 }
