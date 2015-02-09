@@ -17,8 +17,8 @@ meant keeping things up to date, and given my post frequency, I wasn't very good
 Unable to have a separate server for my website, I was actually sharing it with the server I was 
 using for my IRC network. So, anything that impacted one was liable to impact the other. I wasn't 
 satisfied with this at all. The site is now completely static and generated with Hakyll, and the 
-only concern I have is writing rebuilding the site when I make changes. That's just a short
-`./site build` away.
+only concern I have is writing, and then rebuilding the site when I make changes. That's just a 
+short `./site build` away.
 
 I also had some long-standing design concerns. I liked my old design, but as it aged, a lot of the
 warts became more and more apparent. Despite my strive for minimalism, the focus was definitely 
