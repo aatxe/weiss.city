@@ -42,6 +42,7 @@
 <p>Next, I had to add a Procfile for Heroku. After all, it needs to know what exactly it has to run. This wasn’t a difficult process though. I simply put <code>web: node index.js --production</code> as this is a production site.</p>
 <p>Finally, I wanted to have the production assets generated with grunt during the deployment process. This meant a few things. I had to find a buildpack that would run a grunt task (which wasn’t hard) and then I had to add the grunt task to run. The buildpack is available on <a href="https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt">GitHub</a>. The task I created was just to perform <code>prod</code>. In order to get this to run properly however, I had to move several of the dependencies from <code>devDependencies</code> to <code>dependencies</code>. This included all of the grunt dependencies and <code>matchdep</code>. However, once this was done, everything worked smoothly.</p>
 <p>That being said, there’s one caveat with this whole process that tripped me up for a while. I was unable to get Heroku to properly use bower, and as such, I had to add all of the installed bower dependencies to the repository. I would like to remove this some day, and add <code>shell:bower</code> to the grunt task, but it’ll have to wait until I can get that to work. For now, including them in the repository will have to suffice.</p>
+<div class="center">Comments? Email me at <a href="mailto:awe@pdgn.co">awe@pdgn.co</a>.</div>
 
         </div>
       </div>
