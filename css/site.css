@@ -106,6 +106,10 @@ p {
     p {
         line-height: 1.5em;
     }
+
+    .content {
+        padding: 0 3em;
+    }
 }
 
 @media (min-width: 700px) {
