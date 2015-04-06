@@ -11,7 +11,6 @@ body, html {
 }
 
 .links {
-    padding-top: 0.40em;
     font-size: 1em;
 }
 
@@ -96,8 +95,6 @@ body, html {
 
 .icon-github-circled {
     font-size: 1.6em;
-    position: relative;
-    right: -0.4em;
 }
 
 p {
