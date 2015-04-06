@@ -94,8 +94,10 @@ body, html {
     top: 0;
 }
 
-.fa {
+.icon-github-circled {
     font-size: 1.6em;
+    position: relative;
+    right: -0.4em;
 }
 
 p {
