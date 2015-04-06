@@ -27,21 +27,22 @@ software projects if measured by total amount of happiness brought to users," an
 `jokebot`, a similar metric is brought up, "the most-forked of [his] projects". The thing that both
 these metrics have in common is that they're metrics of attention garnered.
 
-I'd argue then that the reason these works stood out wasn't because they were made quickly, or even
-that they were used while they were being made, but instead that they're simple and novel. There's
-little introduction necessary for a game based around combining things, or for a bot that tells
-jokes, or for a Scratch MIDI player. By contrast, his most engineered project is `nearley`, a
-parsing library in JavaScript. It's certainly a novel project, but why has it amounted to very
-little? I think it's all about the audience.
+While I believe that having software be used while it's made plays an important role in its
+development, I'd argue that even more central to the turnout of these projects is the ways in which
+they appeal to their audience. In this case, the audience is one that favors simplicity and 
+novelty. There's little introduction necessary for a game based around combining things, or for a 
+bot that tells jokes, or for a Scratch MIDI player. By contrast, his most engineered project is 
+`nearley`, a parsing library in JavaScript. It's certainly a novel project, but why has it amounted
+to very little? I think it's all about the audience.
 
 Hackathon culture (and its professional equivalent, start-up culture) is oriented around simple,
 quick, and novel (especially the latter two!). Python and JavaScript are at the center of these
-cultures, and the majority of the people hardmath123 interacts with are thoroughly immersed. So, my
-answer to the question of why these projects were so popular isn't because they were good or
+cultures, and the majority of those who would use hardmath123's software are thoroughly immersed. 
+So, my answer to the question of why these projects were so popular isn't because they were good or
 because there's something fundamentally effective about the strategy of hacking something up
-quickly. Instead, it's because those projects had a place in the culture he's participating in. By
-contrast, `nearley` is interesting, but can't find such a place. After all, parsing is an academic
-problem, and indeed, a project named for the parsing algorithm it uses (
+quickly. Instead, it's because those projects had a place in the culture they're participating in. 
+By contrast, `nearley` is interesting, but can't find such a place. After all, parsing is a
+predominantly academic problem, and indeed, a project named for the parsing algorithm it uses (
 [Earley parsing](https://en.wikipedia.org/wiki/Earley_parser)) is going to draw that sort of
 attention. It got attention in that respect, shown by its 108 stars and 4 contributors. However,
 nobody actually used it.
