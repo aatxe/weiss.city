@@ -88,13 +88,9 @@ body, html {
     font-size: 1.2em;
 }
 
-.glyphicon {
-    font-size: 1.3em;
-    top: 0;
-}
-
-.icon-github-circled {
-    font-size: 1.6em;
+.icon-comment {
+    position: relative;
+    top: -0.1em;
 }
 
 p {
