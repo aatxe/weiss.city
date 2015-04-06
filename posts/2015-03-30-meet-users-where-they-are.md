@@ -42,8 +42,8 @@ So, my answer to the question of why these projects were so popular isn't becaus
 because there's something fundamentally effective about the strategy of hacking something up
 quickly. Instead, it's because those projects had a place in the culture they're participating in. 
 By contrast, `nearley` is interesting, but can't find such a place. After all, parsing is a
-predominantly academic problem, and indeed, a project named for the parsing algorithm it uses (
-[Earley parsing](https://en.wikipedia.org/wiki/Earley_parser)) is going to draw that sort of
+predominantly academic problem, and indeed, a project named for the parsing algorithm it uses 
+([Earley parsing](https://en.wikipedia.org/wiki/Earley_parser)) is going to draw that sort of
 attention. It got attention in that respect, shown by its 108 stars and 4 contributors. However,
 nobody actually used it.
 
