@@ -8,10 +8,10 @@ about languages with strong type systems. I'm also an open source software devel
 eight years of experience. I prefer to program in Rust and Haskell, but I've got a lot of experience
 with Java and C# as well. I've also done quite a bit of work on the web.
 
-I work at a financial services startup called [ProtoIPO](http://protoipo.com/) designing user
-interfaces and experiences. We're building a platform to change the nature of capital investment.
-You can find out more about what we do on [our website](http://protoipo.com/). My work is focused 
-primarily on making sure our clients' portals are both flexible and beautiful in presentation.
+I'm a research assistant to Prof. [Arjun Guha](http://people.cs.umass.edu/~arjun/) in the 
+[PLASMA](http://plasma.cs.umass.edu/) research group. We're working on solving interesting problems
+with techniques from programming language theory. I used to work at a financial services startup
+called [ProtoIPO](http://protoipo.com/) designing user interfaces and experiences.
 
 In my spare time, I'll work on anything from websites to networking libraries to programming 
 languages to video game server emulators. You can check out my work on GitHub 
