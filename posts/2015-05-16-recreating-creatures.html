@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aaron Weiss / Recreating Creatures</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/fontello.min.css" rel="stylesheet">
+    <link href="../css/syntax.css" rel="stylesheet">
+    <link href="../css/site.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="header row">
+        <div class="col-sm-4">
+          <div class="title pull-left amethyst">
+            <a href="../"><span class="emerald">&lambda;.</span> Aaron Weiss</a>
+          </div>
+        </div>
+        <div class="col-sm-offset-4 col-sm-4">
+          <div class="links pull-right wet-asphalt">
+            <a href="https://github.com/aatxe" title="GitHub"><span class="icon-github-circled"></span></a>
+            <a href="../archive.html" title="Blog"><span class="icon-comment"></span></a>
+            <a href="https://keybase.io/awe" title="Keybase"><span class="icon-lock"></span></a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 content">
+          <div class="post-info">
+    <div class="post-title pull-left">Recreating Creatures</div>
+    <div class="post-date pull-right">May 16, 2015</div>
+    <div class="clearfix"></div>
+</div>
+<p>For years now, I’ve wanted to make my own artifical life game in the spirit of <a href="https://en.wikipedia.org/wiki/Creatures_(artificial_life_series)">Creatures</a>. I spent a lot of time imagining exactly what it’d be like, but when I was younger, I always imagined the creatures essentially behaving based on pseudorandom models. I hadn’t any exposure to more advanced artifical intelligence techniques, and so I didn’t even imagine that they’d be something more complex than that.</p>
+<p>I even made an attempt of sorts in 2013, entitled <a href="https://github.com/aatxe/critters">critters</a>. It didn’t go anywhere though. My goal from the get-go was to focus on extensibility. I wanted all of the aspects of the world around the creatures to be easily programmable in JavaScript. I had very little real experience with C++, but I was working with my friend <a href="https://github.com/retep998">Peter Atashian</a>. I got stuck trying to understand how to embed <a href="https://code.google.com/p/v8/">V8</a> and how to best apply it for the sort of extensibility I was imagining. Unfamiliar with the language and the tools, I gave up quickly.</p>
+<p>Fast forward to today, I’ve been programming in Rust for going on a year. I’m an active participant in academia now, and I’m getting some experience reading research papers. While my focus has been in programming languages, my friend <a href="http://www.jacobedelman.com">Jacob Edelman</a> has been working with neural networks for a while now. So, I’m trying again, but with a different approach this time. Rather than focus on getting all of the logistical engine-type stuff out of the way first, I’m focusing on the artificial life aspect. My plan is to build a backend first, and then create a small command-line interface using <a href="https://www.gnu.org/software/ncurses/ncurses.html">ncurses</a>. Once I’ve reached that point, I’ll work on developing it into a full 2D game. I’ll also be writing a series of blog posts about the process of working on this game. My hope in doing so is to document in detail the decisions made and difficulties encountered along the way. I’ll collect a full list of all the posts at the end of this post. You can find the project <a href="https://github.com/aatxe/life-sim/">on GitHub</a>.</p>
+<p>Posts in series: * <a href="http://aaronweiss.us/posts/2015-05-17-recreating-creatures-1.html">Recreating Creatures, Pt. 1</a></p>
+<div class="center">Comments? Email me at <a href="mailto:awe@pdgn.co">awe@pdgn.co</a>.</div>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

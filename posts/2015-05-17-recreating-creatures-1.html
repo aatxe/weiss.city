@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aaron Weiss / Recreating Creatures, Pt. 1</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/fontello.min.css" rel="stylesheet">
+    <link href="../css/syntax.css" rel="stylesheet">
+    <link href="../css/site.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="header row">
+        <div class="col-sm-4">
+          <div class="title pull-left amethyst">
+            <a href="../"><span class="emerald">&lambda;.</span> Aaron Weiss</a>
+          </div>
+        </div>
+        <div class="col-sm-offset-4 col-sm-4">
+          <div class="links pull-right wet-asphalt">
+            <a href="https://github.com/aatxe" title="GitHub"><span class="icon-github-circled"></span></a>
+            <a href="../archive.html" title="Blog"><span class="icon-comment"></span></a>
+            <a href="https://keybase.io/awe" title="Keybase"><span class="icon-lock"></span></a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-offset-3 col-sm-6 content">
+          <div class="post-info">
+    <div class="post-title pull-left">Recreating Creatures, Pt. 1</div>
+    <div class="post-date pull-right">May 17, 2015</div>
+    <div class="clearfix"></div>
+</div>
+<p>To begin, I’ve created a tag to mark the current state of the software when this post was written. You can find it <a href="https://github.com/aatxe/life-sim/tree/blog-post1">on GitHub</a>. With that out of the way, this first step in the game has been a confusing one. I found <a href="http://mrl.snu.ac.kr/courses/CourseSyntheticCharacter/grand96creatures.pdf">a paper by Steve Grand</a> detailing the design of Creatures. Unfortunately, the paper is sort of confusing, and doesn’t go into a great deal of detail. So, I struggled through designing a system of genetically-defined biochemistry with some basic primitives inspired by the paper. The definitions of these primitives was as follows:</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">struct</span> Chemical {
+    id: Id,
+    concentration: Concentration,
+}
+
+<span class="kw">pub</span> <span class="kw">struct</span> Emitter {
+    chemical: Id,
+    gain: Concentration,
+}
+
+<span class="kw">pub</span> <span class="kw">struct</span> Reaction {
+    kind: ReactionType,
+    rate: <span class="kw">u8</span>,
+    tick: Cell&lt;<span class="kw">u8</span>&gt;,
+}
+
+<span class="kw">pub</span> <span class="kw">struct</span> Receptor {
+    kind: ReceptorType,
+    chemical: Id,
+    gain: <span class="kw">f32</span>,
+    threshold: Concentration,
+}</code></pre>
+<p>The chemicals were defined essentially as they were in the paper (that is, they had no inherent properties). The emitters, reactions, and receptors tried to emulate the contents of the paper as I understood it, but ignoring the parts about locus sites. This was sufficient for me to build a small simulator:</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> simulate_genome(steps: <span class="kw">u32</span>, genome: Genome, map: &amp;<span class="kw">mut</span> ChemicalMap) {
+    <span class="kw">for</span> _ in <span class="dv">0.</span>.steps {
+        <span class="kw">let</span> <span class="kw">mut</span> deltas: DeltaMap = HashMap::new();
+        <span class="kw">for</span> gene in genome.iter() {
+            <span class="kw">match</span> *gene {
+                Gene::Emitter(<span class="kw">ref</span> e) =&gt; e.step(&amp;<span class="kw">mut</span> deltas),
+                Gene::Reaction(<span class="kw">ref</span> r) =&gt; r.step(map, &amp;<span class="kw">mut</span> deltas),
+                Gene::Receptor(<span class="kw">ref</span> r) =&gt; <span class="kw">if</span> <span class="kw">let</span> <span class="kw">Some</span>(val) = r.step(map, &amp;deltas) {
+                    <span class="ot">println!</span>(<span class="st">&quot;Receptor for {} triggered with output {}.&quot;</span>, r.id(), val);
+                },
+                _ =&gt; ()
+            }
+        }
+        map.apply(&amp;deltas);
+        map.values().map(|v|
+            <span class="ot">println!</span>(<span class="st">&quot;Chemical {} has concentration {}.&quot;</span>, v.id(), v.concnt())
+        ).count();
+    }
+}</code></pre>
+<p>It really doesn’t do much, but it does evaluate all of the reactions as they were defined. I had a lot of difficulty trying to decipher this system and infer how some of it behaved from its constituent parts, but there weren’t any big gotchas along the way. Of course, this is actually where the flaws came about (basically, emitters and receptors both function differently than how I interpreted the descriptions), but I’ll go more into depth on that later.</p>
+<p>The next thing I worked on was the brain, and to do it, I implemented a feedforward neural network. I’d never done this before, nor have I studied it in any deal of depth. So, this was a pain point. I managed to get by using <a href="http://www.ai-junkie.com/ann/evolved/nnt1.html">Neural Networks in Plain English</a>. The bulk of the work came in two parts. The first was the core interface to the neural net, and it came together nicely in functional style:</p>
+<pre class="sourceCode rust"><code class="sourceCode rust">    <span class="kw">pub</span> <span class="kw">fn</span> update(&amp;<span class="kw">self</span>, inputs: Vec&lt;<span class="kw">f32</span>&gt;) -&gt; <span class="kw">Option</span>&lt;Vec&lt;<span class="kw">f32</span>&gt;&gt; {
+        <span class="kw">if</span> inputs.len() != <span class="kw">self</span>.input_count { <span class="kw">return</span> <span class="kw">None</span> }
+        <span class="kw">Some</span>(<span class="kw">self</span>.layers.iter().fold(inputs, |acc, <span class="kw">ref</span> layer| {
+            layer.neurons.iter().map(|neuron| {
+                sigmoid(neuron.weights.iter()
+                              .zip(acc.iter().chain([-<span class="dv">1.0</span>].iter()))
+                              .map(|(w, v)| w * v)
+                              .fold(<span class="dv">0.0</span>, |acc, <span class="kw">ref</span> n| acc + n), <span class="dv">1.0</span>)
+            }).collect()
+        }))
+    }</code></pre>
+<p>The next part proved quite the struggle. I set out to make a function to create a neural network from a vector of all the weights. The challenging part was how exactly to slice up this vector such that the weights are properly assigned in the same pattern that they are read out by <code>get_weights(...)</code>. The final product was as follows:</p>
+<pre class="sourceCode rust"><code class="sourceCode rust">    <span class="kw">pub</span> <span class="kw">fn</span> with_weights(input_count: usize, output_count: usize, hidden_layer_count: usize,
+                        neurons_per_hidden_layer: usize, weights: &amp;[<span class="kw">f32</span>]) -&gt; <span class="kw">Option</span>&lt;NeuralNet&gt; {
+        <span class="kw">let</span> init = neurons_per_hidden_layer * (input_count + <span class="dv">1</span>); <span class="co">// neurons * weights</span>
+        <span class="kw">let</span> stride = neurons_per_hidden_layer * (neurons_per_hidden_layer + <span class="dv">1</span>); <span class="co">// neurons * weights</span>
+        <span class="kw">let</span> fin = output_count * (neurons_per_hidden_layer + <span class="dv">1</span>); <span class="co">// neurons * weights</span>
+        <span class="kw">if</span> weights.len() != init + stride * (hidden_layer_count - <span class="dv">1</span>) + fin { <span class="kw">return</span> <span class="kw">None</span> }
+        <span class="kw">Some</span>(NeuralNet {
+            input_count: input_count,
+            layers: {
+                <span class="kw">let</span> <span class="kw">mut</span> vec = Vec::with_capacity(hidden_layer_count + <span class="dv">1</span>);
+                <span class="kw">if</span> hidden_layer_count &gt; <span class="dv">0</span> {
+                    vec.push(NeuronLayer::with_weights(neurons_per_hidden_layer,
+                                                       &amp;weights[<span class="dv">0.</span>.init]));
+                    <span class="kw">for</span> c in <span class="dv">0</span> .. hidden_layer_count - <span class="dv">1</span> {
+                        vec.push(NeuronLayer::with_weights(neurons_per_hidden_layer,
+                            &amp;weights[init + stride * c .. init + stride * (c + <span class="dv">1</span>)]
+                        ));
+                    }
+                    vec.push(NeuronLayer::with_weights(output_count,
+                        &amp;weights[init + stride * (hidden_layer_count - <span class="dv">1</span>) ..]
+                    ));
+                } <span class="kw">else</span> {
+                    vec.push(NeuronLayer::with_weights(output_count, weights))
+                }
+                vec
+            }
+        })
+    }</code></pre>
+<p>I made the mistake initially of forgetting about the bias in each neuron, and as such, I spent quite a bit of time debugging what appeared to be some sort of off-by-one error. This is why the number of weights per neuron has to have a +1 tacked on. Finally, I built a full simulator combining the two systems:</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> simulate_genome(steps: <span class="kw">u32</span>, genome: Genome, map: &amp;<span class="kw">mut</span> ChemicalMap) {
+    <span class="kw">let</span> <span class="kw">mut</span> net = <span class="kw">None</span>;
+    <span class="kw">for</span> gene in genome.iter() {
+        <span class="kw">match</span> *gene {
+            Gene::Brain(h, npl, <span class="kw">ref</span> weights) =&gt; {
+                net = NeuralNet::with_weights(<span class="dv">256</span>, <span class="dv">4</span>, h, npl, &amp;weights);
+            },
+            _ =&gt; ()
+        }
+    }
+    <span class="kw">let</span> <span class="kw">mut</span> state = <span class="st">&quot;none&quot;</span>;
+    <span class="kw">for</span> s in <span class="dv">0.</span>.steps {
+        <span class="kw">let</span> <span class="kw">mut</span> inputs: Vec&lt;_&gt; = repeat(<span class="dv">0.0</span>).take(<span class="dv">256</span>).collect();
+        <span class="kw">let</span> <span class="kw">mut</span> deltas: DeltaMap = HashMap::new();
+        <span class="kw">for</span> gene in genome.iter() {
+            <span class="kw">match</span> *gene {
+                Gene::Emitter(<span class="kw">ref</span> e) =&gt; e.step(&amp;<span class="kw">mut</span> deltas),
+                Gene::Reaction(<span class="kw">ref</span> r) =&gt; r.step(map, &amp;<span class="kw">mut</span> deltas),
+                Gene::Receptor(<span class="kw">ref</span> r) =&gt; <span class="kw">if</span> <span class="kw">let</span> <span class="kw">Some</span>(val) = r.step(map, &amp;deltas) {
+                    inputs[r.id() <span class="kw">as</span> usize] += val;
+                },
+                _ =&gt; ()
+            }
+        }
+        map.apply(&amp;deltas);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="kw">Some</span>(<span class="kw">ref</span> net) = net {
+            <span class="kw">let</span> tmp = net.update(inputs).unwrap().value();
+            <span class="kw">if</span> tmp != state {
+                state = tmp;
+                <span class="ot">println!</span>(<span class="st">&quot;Creature is currently {} at time {}.&quot;</span>, state, s);
+            }
+        }
+    }
+}</code></pre>
+<p>Ultimately, this was a pretty trivial adaptation of the original chemical simulator I wrote. The biggest difference was going through and implementing <code>Rand</code> (or using a macro to do so) for a bunch of the biochemical types in order to allow me to generate large genomes. In running this simulation with everything randomized (including the neural nets), I found that it was nearly impossible for the maximum of the four outputs to change. Initially, I thought this meant that something was broken in my neural network implementation. So, I looked it over thoroughly. I’ve since come to the conclusion that I simply need to be far more intentional than randomly-generating everything. This is also the part where I found out that I had gotten the biochemistry system very wrong by excluding the locus sites. With the help of <a href="http://double.co.nz/creatures/genetics.htm">Chris Double’s Creatures genetics reference</a>, I learned that the locus sites are the way that the biochemistry is tied to physiology. Without this, the system is fundamentally useless.</p>
+<p>At the same time, my friend <a href="http://www.jacobedelman.com">Jacob</a> began insisting that physiology can instead be evolved in the neural network itself without any outside systems. So, I’m now at a point where I have to make a decision between these two options. I can either define physiology through biochemistry as in Creatures, or I can try to evolve physiology in the neural networks. I’m still not entirely sure which direction I’m going to take it (although I’m leaning toward the former). I’ll write more once I’ve gotten something together.</p>
+<div class="center">Comments? Email me at <a href="mailto:awe@pdgn.co">awe@pdgn.co</a>.</div>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
