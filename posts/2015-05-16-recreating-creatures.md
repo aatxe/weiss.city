@@ -32,4 +32,4 @@ posts at the end of this post. You can find the project
 [on GitHub](https://github.com/aatxe/life-sim/).
 
 Posts in series:
-None
+* [Recreating Creatures, Pt. 1](http://aaronweiss.us/posts/2015-05-17-recreating-creatures-1.html)
