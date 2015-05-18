@@ -64,6 +64,10 @@ body, html {
     margin: 1.25em 0;
 }
 
+.content ul {
+    margin-top: -1em;
+}
+
 .content img {
     width: 100%;
 }
