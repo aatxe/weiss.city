@@ -2,11 +2,11 @@
 title: Home 
 ---
 
-I'm Aaron Weiss! I'm a first-year student at the University of Massachusetts, Amherst, slated to
+I'm Aaron Weiss! I'm a second-year student at the University of Massachusetts, Amherst, slated to
 graduate in 2017. I'm interested in type and programming language theory, and I'm very passionate
 about languages with strong type systems. I'm also an open source software developer with roughly 
 eight years of experience. I prefer to program in Rust and Haskell, but I've got a lot of experience
-with Java and C# as well. I've also done quite a bit of work on the web.
+with Java, Scala, and C# as well. I've also done quite a bit of work on the web.
 
 I'm a research assistant to Prof. [Arjun Guha](http://people.cs.umass.edu/~arjun/) in the 
 [PLASMA](http://plasma.cs.umass.edu/) research group. We're working on solving interesting problems
