@@ -23,6 +23,7 @@ I'm a denizen of the web. If you're looking to contact me, you can find me all o
 on [Twitter](https://twitter.com/aatxe), [Facebook](https://facebook.com/aaronweiss74), 
 [Google+](https://plus.google.com/+AaronWeiss74), [Reddit](http://www.reddit.com/user/aaronweiss74), 
 and [Keybase](https://keybase.io/awe). You can also talk to me on 
-[FyreChat](irc://irc.fyrechat.net/vana) or [PdgnCo](ircs://irc.pdgn.co:6697/pdgn) as awe. You can 
-also email me at [awe@pdgn.co](mailto:awe@pdgn.co). You'll probably find me elsewhere, too. Older 
-accounts will be under the name aaronweiss74. More recent accounts will be under awe or aatxe. 
+[FyreChat](irc://irc.fyrechat.net/vana) or [PdgnCo](ircs://irc.pdgn.co:6697/pdgn) as awe, or on
+[freenode](irc://chat.freenode.net/) as aatxe. You can  also email me at
+[awe@pdgn.co](mailto:awe@pdgn.co). You'll probably find me elsewhere, too. Older accounts will be
+under the name aaronweiss74. More recent accounts will be under awe or aatxe. 
