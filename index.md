@@ -11,7 +11,8 @@ with Java, Scala, and C# as well. I've also done quite a bit of work on the web.
 I'm a research assistant to Prof. [Arjun Guha](http://people.cs.umass.edu/~arjun/) in the 
 [PLASMA](http://plasma.cs.umass.edu/) research group. We're working on solving interesting problems
 with techniques from programming language theory. I used to work at a financial services startup
-called [ProtoIPO](http://protoipo.com/) designing user interfaces and experiences.
+called [ProtoIPO](http://protoipo.com/) designing user interfaces and experiences. You can find
+more information on my [CV](/cv.pdf).
 
 In my spare time, I'll work on anything from websites to networking libraries to programming 
 languages to video game server emulators. You can check out my work on GitHub 
