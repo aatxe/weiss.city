@@ -3,8 +3,10 @@ body, html {
     font-size: 15px;
 }
 
-.header {
-    margin: 1em;
+@media (min-width: 768px) {
+    .header {
+        margin: 1em;
+    }
 }
 
 .title {
