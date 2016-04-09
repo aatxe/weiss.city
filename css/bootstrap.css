@@ -23,11 +23,6 @@ body {
     margin: 0
 }
 
-article, aside, details, figcaption, figure, footer, header, hgroup,
-main, menu, nav, section, summary {
-    display: block
-}
-
 a {
     background-color: transparent
 }
@@ -64,7 +59,7 @@ pre {
     overflow: auto
 }
 
-code, kbd, pre, samp {
+code, pre {
     font-family: monospace, monospace;
     font-size: 1em
 }
@@ -99,29 +94,9 @@ code, kbd, pre, samp {
         max-width: 100% !important
     }
 
-    p, h2, h3 {
+    p {
         orphans: 3;
         widows: 3
-    }
-
-    h2, h3 {
-        page-break-after: avoid
-    }
-
-    select {
-        background: #fff !important
-    }
-
-    .navbar {
-        display: none
-    }
-
-    .btn > .caret, .dropup > .btn > .caret {
-        border-top-color: #000 !important
-    }
-
-    .label {
-        border: 1px solid #000
     }
 }
 
@@ -177,55 +152,8 @@ hr {
   border-top: 1px solid #eeeeee;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: inherit;
-    font-weight: 500;
-    line-height: 1.1;
-    color: inherit
-}
-
-h1, .h1, h2, .h2, h3, .h3 {
-    margin-top: 20px;
-    margin-bottom: 10px
-}
-
-h4, .h4, h5, .h5, h6, .h6 {
-    margin-top: 10px;
-    margin-bottom: 10px
-}
-
-h1, .h1 {
-    font-size: 36px
-}
-
-h2, .h2 {
-    font-size: 30px
-}
-
-h3, .h3 {
-    font-size: 24px
-}
-
-h4, .h4 {
-    font-size: 18px
-}
-
-h5, .h5 {
-    font-size: 14px
-}
-
-h6, .h6 {
-    font-size: 12px
-}
-
 p {
     margin: 0 0 10px
-}
-
-.page-header {
-    padding-bottom: 9px;
-    margin: 40px 0 20px;
-    border-bottom: 1px solid #eee
 }
 
 ul, ol {
@@ -248,7 +176,7 @@ blockquote p:last-child, blockquote ul:last-child, blockquote ol:last-child {
     margin-bottom: 0
 }
 
-code, kbd, pre, samp {
+code, pre {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace
 }
 
@@ -433,13 +361,6 @@ pre code {
     .col-sm-offset-0 {
         margin-left: 0
     }
-}
-
-caption {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    color: #777;
-    text-align: left
 }
 
 .clearfix:before, .clearfix:after, .dl-horizontal dd:before, .dl-horizontal dd:after,
