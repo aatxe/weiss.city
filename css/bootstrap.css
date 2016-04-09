@@ -53,6 +53,13 @@ svg:not(:root) {
     overflow: hidden
 }
 
+hr {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  height: 0;
+}
+
 pre {
     overflow: auto
 }
@@ -161,6 +168,13 @@ a:focus {
 
 img {
     vertical-align: middle
+}
+
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid #eeeeee;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
