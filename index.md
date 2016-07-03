@@ -2,17 +2,18 @@
 title: Home 
 ---
 
-I'm Aaron Weiss! I'm a second-year student at the University of Massachusetts, Amherst, slated to
-graduate in 2017. I'm interested in type and programming language theory, and I'm very passionate
-about languages with strong type systems. I'm also an open source software developer with roughly 
-a decade of experience. I prefer to program in Rust and Haskell, but I've got a lot of experience
-with Java, Scala, and C# as well. I've also done quite a bit of work on the web.
+I'm Aaron Weiss! I'm a third-year student at the University of Massachusetts, Amherst, slated to
+graduate in the spring. I'm interested in type and programming language theory, and I'm very
+passionate about languages with strong type systems. I'm also an open source software developer
+with roughly  a decade of experience. I prefer to program in Rust and Haskell, but I've got a lot
+of experience with Java, Scala, and C# as well. I've also done quite a bit of work on the web.
 
 I'm a research assistant to Prof. [Arjun Guha](http://people.cs.umass.edu/~arjun/) in the 
 [PLASMA](http://plasma.cs.umass.edu/) research group. We're working on solving interesting problems
-with techniques from programming language theory. I used to work at a financial services startup
-called [ProtoIPO](http://protoipo.com/) designing user interfaces and experiences. You can find
-more information on my [CV](/cv.pdf).
+with techniques from programming language theory. My recent work has focused on static verification
+and synthesis of [Puppet](https://puppetlabs.com) manifests. I used to work at a financial services
+startup called [ProtoIPO](http://protoipo.com/) designing user interfaces and experiences. You can
+find more information on my [CV](/cv.pdf).
 
 In my spare time, I'll work on anything from websites to networking libraries to programming 
 languages to video game server emulators. You can check out my work on GitHub 
