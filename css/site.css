@@ -18,11 +18,6 @@ body, html {
     line-height: 1em;
 }
 
-.shield {
-    margin-top: -0.1em;
-    height: 1.3em;
-}
-
 .links {
     font-size: 1em;
 }
@@ -60,20 +55,8 @@ body, html {
     color: #9b59b6;
 }
 
-.umass-maroon, .umass-maroon a, .umass-maroon a:visited {
-    color: #881c1c;
-}
-
-.umass-maroon a:hover {
-    color: #A23636;
-}
-
 .caption, .center {
     text-align: center;
-}
-
-.body {
-    margin-top: -0.2em;
 }
 
 .content {
