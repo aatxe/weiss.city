@@ -43,6 +43,23 @@ body, html {
     color: #34495e;
 }
 
+.emerald, .emerald a, .emerald a:visited {
+    color: #27ae60;
+}
+
+.emerald a:hover, .amethyst a:hover .emerald {
+    
+    color: #2ecc71;
+}
+
+.amethyst, .amethyst a, .amethyst a:visited {
+    color: #8e44ad;
+}
+
+.amethyst a:hover {
+    color: #9b59b6;
+}
+
 .umass-maroon, .umass-maroon a, .umass-maroon a:visited {
     color: #881c1c;
 }
