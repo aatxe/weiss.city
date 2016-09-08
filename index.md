@@ -11,7 +11,7 @@ of experience with Java, Scala, and C# as well. I've also done quite a bit of wo
 I'm a research assistant to Prof. [Arjun Guha](http://people.cs.umass.edu/~arjun/) in the 
 [PLASMA](http://plasma.cs.umass.edu/) research group. We're working on solving interesting problems
 with techniques from programming language theory. My recent work has focused on static verification
-and synthesis of [Puppet](https://puppetlabs.com) manifests. I used to work at a financial services
+and synthesis of [Puppet](https://puppet.com/) manifests. I used to work at a financial services
 startup called [ProtoIPO](http://protoipo.com/) designing user interfaces and experiences. You can
 find more information on my [CV](/cv.pdf).
 
