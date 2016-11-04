@@ -115,13 +115,17 @@ p {
 
     .content {
         margin-top: 1em;
-        padding: 0 6em;
+        padding: 0 4em;
     }
 }
 
 @media (min-width: 700px) {
     p {
         line-height: 1.6em;
+    }
+
+    .content {
+        padding: 0 6em;
     }
 }
 
