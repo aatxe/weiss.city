@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:700');
+
 body, html {
     background: white;
     font-size: 16px;
@@ -5,6 +7,8 @@ body, html {
 
 .header {
     margin: 1em 0;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
 }
 
 @media (min-width: 768px) {
@@ -31,7 +35,7 @@ body, html {
 }
 
 .wet-asphalt, .wet-asphalt a, .wet-asphalt a:visited {
-    color: #2c3e50;
+    color: #2c3e50
 }
 
 .wet-asphalt a:hover {
@@ -59,12 +63,18 @@ body, html {
 }
 
 .content {
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
     text-align: justify;
     hyphens: auto;
     -ms-hyphens: auto;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     margin-bottom: 1em;
+}
+
+.content b {
+    font-weight: 700;
 }
 
 .content p {
