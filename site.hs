@@ -7,7 +7,7 @@ import           Hakyll
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
-    match ("cv.pdf" .||. "resume.pdf" .||. "images/*" .||. "fonts/*") $ do
+    match ("cv.pdf" .||. "resume.pdf" .||. "images/*") $ do
         route   idRoute
         compile copyFileCompiler
 
@@ -18,7 +18,7 @@ main = hakyll $ do
     match "index.md" $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
+            >>= loadAndApplyTemplate "templates/default.html" (constField "image" "true" `mappend` defaultContext)
             >>= relativizeUrls
 
     match "posts/*" $ do

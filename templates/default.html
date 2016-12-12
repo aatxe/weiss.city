@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Aaron Weiss / $title$</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/fontello.min.css" rel="stylesheet">
     <link href="/css/syntax.css" rel="stylesheet">
     <link href="/css/site.css" rel="stylesheet">
     <!--[if lt IE 9]>
@@ -16,24 +15,18 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div class="header row">
-        <div class="col-sm-4">
-          <div class="title pull-left amethyst">
-            <a href="/"><span class="emerald">&lambda;.</span> Aaron Weiss</a>
-          </div>
+      <div class="header">
+        <div class="title center amethyst">
+          <a href="/"><span class="emerald">&lambda;.</span> Aaron Weiss</a>
         </div>
-        <div class="col-sm-offset-4 col-sm-4">
-          <div class="links pull-right wet-asphalt">
-            <a href="https://github.com/aatxe" title="GitHub"><span class="icon-github-circled"></span></a>
-            <a href="/archive.html" title="Blog"><span class="icon-comment"></span></a>
-            <a href="https://keybase.io/awe" title="Keybase"><span class="icon-lock"></span></a>
-          </div>
+        <div class="me center">
+          $if(image)$
+            <img src="./images/aaron.jpg">
+          $endif$
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-offset-2 col-sm-8 content">
-          $body$
-        </div>
+      <div class="content">
+        $body$
       </div>
     </div>
   </body>
