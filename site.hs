@@ -17,8 +17,13 @@ main = hakyll $ do
 
     match "index.md" $ do
         route   $ setExtension "html"
+        let homeCtx =
+              constField "home" "true"  `mappend`
+              constField "image" "true" `mappend`
+              defaultContext
+
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" (constField "image" "true" `mappend` defaultContext)
+            >>= loadAndApplyTemplate "templates/default.html" homeCtx
             >>= relativizeUrls
 
     match "posts/*" $ do
@@ -35,6 +40,7 @@ main = hakyll $ do
             let archiveCtx =
                     listField "posts" postCtx (return posts) `mappend`
                     constField "title" "Archives"            `mappend`
+                    constField "home" "true"                 `mappend`
                     defaultContext
 
             makeItem ""
@@ -49,4 +55,5 @@ main = hakyll $ do
 postCtx :: Context String
 postCtx =
     dateField "date" "%B %e, %Y" `mappend`
+    constField "post" "true"     `mappend`
     defaultContext

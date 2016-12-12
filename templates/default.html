@@ -17,7 +17,14 @@
     <div class="container-fluid">
       <div class="header">
         <div class="title center amethyst">
-          <a href="/"><span class="emerald">&lambda;.</span> Aaron Weiss</a>
+         $if(home)$
+           <a href="/">
+         $endif$
+         $if(post)$
+           <a href="/archive.html">
+         $endif$
+            <span class="emerald">&lambda;.</span> Aaron Weiss
+          </a>
         </div>
         <div class="me center">
           $if(image)$
