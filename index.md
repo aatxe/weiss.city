@@ -16,8 +16,8 @@ startup called [ProtoIPO](http://protoipo.com/) designing user interfaces and ex
 find more information on my [CV](/cv.pdf).
 
 In my spare time, I'll work on anything from websites to networking libraries to programming 
-languages to video game server emulators. You can check out my work on GitHub 
-[here](https://github.com/aatxe). I also run my own IRC network in my free time called 
+languages to video game server emulators. You can check out my work on 
+[Github](https://github.com/aatxe). I also run my own IRC network in my free time called 
 [PdgnCo](http://pdgn.co/). It's founded on democratic and anarchistic principles, and I operate it
 accordingly. I also spend some time [blogging](/archive.html).
 
