@@ -3,10 +3,12 @@ title: Home
 ---
 
 I'm Aaron Weiss! I'm a third-year student at the University of Massachusetts, Amherst, slated to
-graduate in the spring. I'm interested in type and programming language theory, and I'm very
-passionate about languages with strong type systems. I'm also an open source software developer
-with roughly  a decade of experience. I prefer to program in Rust and Haskell, but I've got a lot
-of experience with Java, Scala, and C# as well. I've also done quite a bit of work on the web.
+graduate in the spring. I'm interested in using type systems and formal methods to build better
+tools and languages for software engineers. I'm also an open source software developer with
+roughly a decade of experience. My favorite languages are [Scala](http://www.scala-lang.org),
+[Rust](http://www.rust-lang.org/), and [Haskell](https://www.haskell.org), but I've also got
+a lot of experience with [Java](https://www.java.com/), [JavaScript](https://www.javascript.com),
+[C](https://en.wikipedia.org/wiki/C_(programming_language)), and [OCaml](http://ocaml.org).
 
 I'm a research assistant to Prof. [Arjun Guha](http://people.cs.umass.edu/~arjun/) in the 
 [PLASMA](http://plasma.cs.umass.edu/) research group. We're working on solving interesting problems
