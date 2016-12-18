@@ -1,8 +1,106 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:700');
 
-body, html {
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body {
     background: white;
     font-size: 16px;
+    margin: 0;
+    line-height: 1.4em;
+}
+
+hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none
+}
+
+a:hover, a:focus {
+    color: #23527c;
+    text-decoration: underline
+}
+
+a:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px
+}
+
+blockquote {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 17.5px;
+    border-left: 5px solid #eee
+}
+
+blockquote p:last-child, blockquote ul:last-child, blockquote ol:last-child {
+    margin-bottom: 0
+}
+
+code, pre {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace
+}
+
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px
+}
+
+pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px
+}
+
+pre code {
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+    white-space: pre-wrap;
+    background-color: transparent;
+    border-radius: 0
+}
+
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table
+}
+
+.clearfix {
+    clear: both;
+}
+
+.pull-right {
+    float: right !important
+}
+
+.pull-left {
+    float: left !important
+}
+
+@-ms-viewport {
+    width: device-width
 }
 
 .header {
@@ -25,13 +123,6 @@ body, html {
 .container:before, .container:after {
     content: " ";
     display: table
-}
-
-
-@media (min-width: 768px) {
-    .header {
-        margin: 2.5em;
-    }
 }
 
 .title {
@@ -81,6 +172,7 @@ body, html {
 
 .me img {
     margin-top: 1em;
+    margin-bottom: -0.33em;
     width: 128px;
     border-radius: 100%;
 }
