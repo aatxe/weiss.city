@@ -11,6 +11,23 @@ body, html {
     font-weight: 700;
 }
 
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px
+}
+
+.container:after {
+    clear: both
+}
+
+.container:before, .container:after {
+    content: " ";
+    display: table
+}
+
+
 @media (min-width: 768px) {
     .header {
         margin: 2.5em;
