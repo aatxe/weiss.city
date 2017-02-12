@@ -155,7 +155,8 @@ html, body, .container-left, .container-content {
 }
 
 .title {
-    font-size: 1.6em;
+    margin-top: 1em;
+    font-size: 2em;
     line-height: 1em;
 }
 
