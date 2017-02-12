@@ -23,7 +23,7 @@ main = hakyll $ do
               defaultContext
 
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" homeCtx
+            >>= loadAndApplyTemplate "templates/home.html" homeCtx
             >>= relativizeUrls
 
     match "posts/*" $ do
