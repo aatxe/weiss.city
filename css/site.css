@@ -274,6 +274,11 @@ html, body, .container-left, .container-content {
     top: -0.1em;
 }
 
+.pub {
+    text-align: left;
+    word-spacing: 0.12em;
+}
+
 p {
     line-height: 1.4em;
     letter-spacing: 0.01em;
