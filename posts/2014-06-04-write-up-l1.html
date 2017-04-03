@@ -24,9 +24,6 @@
             <span class="emerald">&lambda;.</span> Aaron Weiss
           </a>
         </div>
-        <div class="me center">
-          
-        </div>
       </div>
       <div class="content">
         <div class="post-info">
@@ -54,14 +51,14 @@
 <p>As it turns out, the first string in <code>.rodata</code> is a suspicious looking string and everything that follows it is denoted as being part of the base Haskell package. From this, we can infer that Haskell includes constants from the actual software as the first entry and then follows it with other strings from within <code>Prelude</code>. So, now, we need to figure out what to do with this string we found. Here it is: <code>Â°Â¥Â±Â¦Â¨Â¥Â·ÃƒÂ¥Â¶Â©ÃƒÂ¯Â­Â²Â«</code>.</p>
 <p>Judging from some of the previous problems in HSCTF and the fact that the majority of the string consists of accented capital A characters, my first guess would be that it’s a Caesar cipher. After all, this suggests that there’s a pretty tight grouping in values. So, we’re going to have to build some sort of Caesar cipher solver to attempt this approach.</p>
 <p>Here’s our Python script:</p>
-<pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> shifter(s):
-  <span class="kw">for</span> i in <span class="dt">range</span>(-<span class="dv">129</span>,<span class="dv">128</span>):
-    <span class="kw">try</span>:
-      <span class="dt">print</span>(i)
-      <span class="dt">print</span>(<span class="kw">lambda</span> z,y: <span class="st">&quot;&quot;</span>.join(<span class="dt">map</span>(<span class="kw">lambda</span> x:<span class="dt">chr</span>((<span class="dt">ord</span>(x)+y)%<span class="dv">256</span>),z)))(s,i)
-    <span class="kw">except</span>:
-      <span class="kw">pass</span>
-shifter(<span class="st">&quot;</span><span class="ch">\xb0\xa5\xb1\xa6\xa8\xa5\xb7\xc3\xa5\xb6\xa9\xc3\xaf\xad\xb2\xab</span><span class="st">&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> shifter(s):
+  <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">129</span>,<span class="dv">128</span>):
+    <span class="cf">try</span>:
+      <span class="bu">print</span>(i)
+      <span class="bu">print</span>(<span class="kw">lambda</span> z,y: <span class="st">&quot;&quot;</span>.join(<span class="bu">map</span>(<span class="kw">lambda</span> x:<span class="bu">chr</span>((<span class="bu">ord</span>(x)<span class="op">+</span>y)<span class="op">%</span><span class="dv">256</span>),z)))(s,i)
+    <span class="cf">except</span>:
+      <span class="cf">pass</span>
+shifter(<span class="st">&quot;</span><span class="ch">\xb0\xa5\xb1\xa6\xa8\xa5\xb7\xc3\xa5\xb6\xa9\xc3\xaf\xad\xb2\xab</span><span class="st">&quot;</span>)</code></pre></div>
 <p>The script works by going over all possible shifts within a byte and outputting our input string shifted by each amount. For the actual input, you’ll see that we had to use an ASCII table to convert the string into a format that Python could handle. This step may be optional depending on the language used for this part of the problem. Once this is done, let’s explore the output.</p>
 <div class="figure">
 <img src="https://dl.dropboxusercontent.com/u/8097711/L1-Screen4.png" alt="Output from shifter." />
