@@ -253,6 +253,11 @@ html, body, .container-left, .container-content {
     border-color: #000;
 }
 
+.content h1 {
+    font-size: 1.1em;
+    font-weight: normal;
+}
+
 .post {
     margin: 1.5em 0;
 }
