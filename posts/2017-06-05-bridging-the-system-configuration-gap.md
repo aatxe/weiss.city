@@ -11,7 +11,7 @@ In the past, system administrators relied largely on the shell to configure syst
 
 With the scale of modern computer systems, system configuration has become a pressing technical challenge. Large companies like [Red Hat](http://redhat.com), [Oracle](https://www.oracle.com/), and [Google](https://www.google.com/intl/en/about/) are pouring money into configuration management tools to deal with these complexities. These tools provide powerful, high-level abstractions to make system administration easier, and they're widely used for this purpose. For example, [Puppet](https://puppet.com) boasts that it's used by over 33,000 organizations, including 75 of the Fortune 100. 
 
-Still, scripts written in these configuration languages frequently contain bugs, and the shell remains the simplest way to diagnose them. However, after diagnosis, system administrators cannot **fix** the bugs from the shell as doing so would cause the state of the system to *drift* from the state specified by the configuration. Thus, in spite of their advantages, configuration management tools force system administrators to give up the simplicity and familiarity of the shell. But is there some way that we can fix this?
+Still, scripts written in these configuration languages frequently contain bugs, and the shell remains the simplest way to diagnose them. However, after diagnosis, system administrators cannot **fix** the bugs from the shell as doing so would cause the state of the system to drift from the state specified by the configuration. Thus, in spite of their advantages, configuration management tools force system administrators to give up the simplicity and familiarity of the shell. But is there some way that we can fix this?
 
 # Bridging the Gap
 
@@ -48,13 +48,13 @@ website {"piperchat.com": root => "piperchat" }
 
 In this example, we install and start the Apache service. We also create two simple Apache configurations that set up two websites, PiedPiper.com and PiperChat.com. This uses a type of Puppet abstraction known as a *define type*, but you can think of this as a simple function. 
 
-On its face, this Puppet configuration (or *manifest*) looks to be correct. However, when we deploy the configuration to a machine and try to visit either website, we get an Error 403: Forbidden. In order to debug this issue, we can then head to the shell. Looking at the log files (`tail /var/log/apache2/error.log`), we can see a line stating `permission denied`. We haven't set up anything about user access, and so the problem should be one of filesystem permissions. When we run `stat /var/sites/piedpiper`, we get back that the owner is `root` and the permissions are `-rwx------` (or `0700` for short). From this, we can recognize the issue: our `www` user cannot access the files apache is trying to serve! 
+On its face, this Puppet configuration (or *manifest*) looks to be correct. However, when we deploy the configuration to a machine and try to visit either website, we get an Error 403: Forbidden. In order to debug this issue, we can then head to the shell. Looking at the log files (`tail /var/log/apache2/error.log`), we can see a line stating `permission denied`. We haven't set up anything about user access, and so the problem should be one of filesystem permissions. When we run `stat /var/sites/piedpiper`, we get back that the owner is `root` and the permissions are `-rwx------` (or `0700` for short). From this, we can recognize the issue: our `www` user cannot access the files Apache is trying to serve! 
 
 Now that we've identified the issue, we can try to fix it. One possible fix is to run `chmod 755 /var/sites/piedpiper`. We can run this in the shell, and then run the special command `synth` to start the process of imperative configuration repair. This will automatically propagate the changes back to the manifest, resulting in the mode line changing to `mode => 0755`.
 
 # Multiple Repairs
 
-To get a sense of how multiple repairs are handled with imperative configuration repair, we can look at a simple, but slighlty contrived example with a single instantiation of a single abstraction.
+To get a sense of how multiple repairs are handled with imperative configuration repair, we can look at a simple, but slightly contrived example with a single instantiation of a single abstraction.
 
 ```puppet
 define dir($path) {
@@ -66,13 +66,13 @@ define dir($path) {
 dir { path => "/foo" }
 ```
 
-In this example, we have a `dir` abstraction that creates a directory at the specified path, and a single instantiation for the path `"/foo"`. If we then use the command `mv /foo /bar`, there are actually two possible repairs that make this change. The obvious one changes the constant `"/foo"` to `"/bar"`, but the other one changes the use of `$path` to `"/bar"` meaning the abstraction ignores its parameter.
+In this example, we have a `dir` abstraction that creates a directory at the specified path, and a single instantiation for the path `"/foo"`. If we then use the command `mv /foo /bar`, there are actually two possible repairs that make this change. The obvious one changes the constant `"/foo"` to `"/bar"`, but the other one changes the use of `$path` on the second line to `"/bar"` meaning the abstraction ignores its parameter.
 
 Both repairs are correct in that they preserve the changes made via the shell, but a user is likely to prefer the one that changes the parameters to the abstraction. We capture this intuition in a ranking algorithm. We calculate a cost for each repair that corresponds to the sum of the number of updates and the number of updates within an abstraction. This means that smaller updates and updates that make changes outside abstractions are preferred.
 
 # Bringing the Shell to Puppet 
 
-We implemented a prototype of imperative configuration repair for Puppet which we called [Tortoise](https://github.com/plasma-umass/Tortoise). Our prototype is written in [Scala](http://scala-lang.org), and consists of around 3,300 lines of code. It's built using [strace](https://linux.die.net/man/1/strace) and [z3](http://rise4fun.com/z3). It has its limitations, but works on a set of real Puppet benchmarks from [GitHub](https://github.com). To get a better sense of how it works, let's step through the whole toolchain at a high level.
+We implemented a prototype of imperative configuration repair for Puppet which we called [Tortoise](https://github.com/plasma-umass/Tortoise). Our prototype is written in [Scala](http://scala-lang.org), and consists of around 3,300 lines of code. It's built using [strace](https://linux.die.net/man/1/strace) and [z3](http://rise4fun.com/z3). It has its limitations, but works on a set of thirteen real Puppet benchmarks from [GitHub](https://github.com) used in prior work. To get a better sense of how it works, let's step through the whole toolchain at a high level.
 
 The user starts a Tortoise monitor on a shell using its pid: `tortoise watch -i manifest.pp -p pid`. The user must specify which manifest is deployed on the system and should be updated according to the edits made. They then enter a number of commands on the shell which produce file system effects via system calls. Tortoise records these effectful system calls and the paths that they've affected. When the user has fixed the bug, they run the command `synth` to signal to Tortoise to generate the repair.[^1] After receiving the `synth` command, the process of imperative configuration repair begins.
 
@@ -88,7 +88,7 @@ We evaluated our prototype on a suite of thirteen real world Puppet benchmarks t
 
 ![Varying manifest size with a constant-sized update.](/images/size-scaling.png)
 
-We also looked at evaluating the scalability of Tortoise on artificial benchmarks. In each case, we ran 100 trials at each size and recorded the  In one case, we looked at varying the size of the manifest while leaving the update size constant. This result is presented above. In practice, most manifests do not seem to grow beyond this size and the performance is well under a second. So, this performance seems reasonable.
+We also looked at evaluating the scalability of Tortoise on artificial benchmarks. In each case, we ran 100 trials at each size, recorded the runtime, and computed the average and confidence interval across all trials. In one case, we looked at varying the size of the manifest while leaving the update size constant. This result is presented above. In practice, most manifests do not seem to grow beyond this size and the performance is well under a second. So, this performance seems reasonable.
 
 In the other case, we looked at varying the size of the update. This result is presented below, and appears roughly exponential. This is expected because Tortoise relies on SMT solving to generate repairs. Fortunately, we can break up large repairs into a series of smaller intermediate pieces (that cover some part of the overall repair) and avoid the degenerate performance at large sizes. In general, we expect that users will likely perform distinct updates separately anyway.
 
@@ -96,4 +96,4 @@ In the other case, we looked at varying the size of the update. This result is p
 
 # Summary
 
-In conclusion, we presented imperative configuration repair and a prototype [Tortoise](https://github.com/plasma-umass/Tortoise) that bridge the gap between configuration management tools and the shell. Imperative configuration repair preserves all changes made from the shell, preserves the structure and abstractions of the original manifest, and uses instrumentation techniques to support all existing shells. Our prototype implementation is fast, and shows that our ranking algorithm appears reasonable. Overall, we have demonstrated that imperative configuration repair is a realistic technique for improving the process of configuration management.
+In conclusion, we presented imperative configuration repair and a prototype [Tortoise](https://github.com/plasma-umass/Tortoise) that together bridge the gap between configuration management tools and the shell. Imperative configuration repair preserves all changes made from the shell, preserves the structure and abstractions of the original manifest, and uses instrumentation techniques to support all existing shells. Our prototype implementation is fast, and shows that our ranking algorithm appears reasonable. Overall, we have demonstrated that imperative configuration repair is a realistic technique for improving the process of configuration management.
