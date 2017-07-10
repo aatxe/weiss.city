@@ -2,7 +2,7 @@
 title: Home 
 ---
 
-I'm Aaron Weiss, a first-year PhD and [NSF Fellow](https://nsfgrfp.org) at
+I'm Aaron Weiss, a first-year PhD student and [NSF Fellow](https://nsfgrfp.org) at
 [Northeastern](https://www.ccs.neu.edu) verifying compilers with
 [Amal Ahmed](http://www.ccs.neu.edu/home/amal/).
 
