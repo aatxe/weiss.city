@@ -121,7 +121,7 @@ pre code {
     display: table;
     padding: 0 2em;
     width: 100%;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 1.6;
     word-spacing: 0.08em;
     font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -315,6 +315,10 @@ p {
         width: 85%;
     }
 
+    .container-left {
+        font-size: 18px;
+    }
+
     .container-right {
         position: inherit;
     }
@@ -331,6 +335,7 @@ p {
 
     .container-left {
         width: 58%;
+        font-size: 20px;
     }
 
     .container-right {
@@ -343,5 +348,17 @@ p {
         width: 384px;
         margin-top: -192px;
         margin-right: -192px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .container-left {
+        font-size: 22px;
+    }
+}
+
+@media (min-width: 1300px) {
+    .container-left {
+        font-size: 24px;
     }
 }
