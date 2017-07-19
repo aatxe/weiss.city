@@ -11,9 +11,13 @@ main = hakyll $ do
     route idRoute
     compile copyFileCompiler
 
-  match "css/*" $ do
+  match "css/*" $ compile getResourceBody
+
+  create ["master.css"] $ do
     route idRoute
-    compile compressCssCompiler
+    compile $ do
+      css <- loadAll "css/*"
+      makeItem $ concatMap (compressCss . itemBody) (css :: [Item String])
 
   match "index.md" $ do
     route $ setExtension "html"
