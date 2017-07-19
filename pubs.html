@@ -9,9 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="128x128" href="./favicon-128x128.png">
-    <link href="./css/normalize.css" rel="stylesheet">
-    <link href="./css/syntax.css" rel="stylesheet">
-    <link href="./css/site.css" rel="stylesheet">
+    <link href="master.css" rel="stylesheet">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -30,7 +28,7 @@
         </div>
       </div>
       <div class="content">
-        <p>I believe all scientific research should be open and accessible to all, and as a researcher, I do
+          <p>I believe all scientific research should be open and accessible to all, and as a researcher, I do
 my part by listing my publications below, free of charge and in reverse chronological order.
 <div class="pub-list">
     
@@ -50,5 +48,21 @@ my part by listing my publications below, free of charge and in reverse chronolo
 
       </div>
     </div>
+    <noscript id="deferred-styles">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:700" rel="stylesheet" />
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                webkitRequestAnimationFrame || msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
   </body>
 </html>
