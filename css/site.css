@@ -280,6 +280,7 @@ html, body, .container-left, .container-content {
 .pub {
     text-align: left;
     word-spacing: 0.12em;
+    margin-bottom: 1.5em;
 }
 
 p {
