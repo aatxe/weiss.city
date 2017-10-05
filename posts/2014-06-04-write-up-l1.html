@@ -37,17 +37,13 @@
 <p>Ultimately, the goal of this problem was to retrieve the flag from one of the given executables. As a result, there’s a wide assortment of approaches to this problem. I’m not going to go over all of them here because I certainly don’t think I could produce all of them. Instead, I’m going to go over the approach that I anticipated as the most common solution to the problem. In fact, it’s possible that this wasn’t even the most common solution. Regardless, we’ll carry forward.</p>
 <p>Recognizing that the problem is one of reverse engineering, my first reaction is to immediately fire up <a href="https://www.hex-rays.com/products/ida/index.shtml">IDA</a>. Upon attempting to open the executable, IDA fails to do so because of the lambda in the file name. So, I rename it to <code>llama.exe</code> and try again to open it. This time, it works out. Next, I will attempt to run the program.</p>
 <div class="figure">
-<img src="https://dl.dropboxusercontent.com/u/8097711/L1-Screen1.png" alt="Running llama." />
+<img src="../images/L1-Screen1.png" alt="Running llama." />
 <p class="caption">Running llama.</p>
 </div>
-<p>Upon entering input, I notice that the program quickly ends, but I can catch that the output of the program depends on the value I input. I also notice that when I enter non-numbers, the program outputs a parsing error before exiting. Therefore, I can assume that the input needs to be a number. Since the output changes based on the input and there’s no additional files included with these programs, I can assume that the information I’m looking for has to be stored in the executable in some form. So, let’s look at the string table.</p>
-<div class="figure">
-<img src="https://dl.dropboxusercontent.com/u/8097711/L1-Screen2.png" alt="Looking at the string table." />
-<p class="caption">Looking at the string table.</p>
-</div>
+<p>Upon entering input, I notice that the program quickly ends, but I can catch that the output of the program depends on the value I input. I also notice that when I enter non-numbers, the program outputs a parsing error before exiting. Therefore, I can assume that the input needs to be a number. Since the output changes based on the input and there’s no additional files included with these programs, I can assume that the information I’m looking for has to be stored in the executable in some form. So, let’s look at the string table. e <img src="../images/L1-Screen2.png" alt="Looking at the string table." /></p>
 <p>Well, what’s this? It mentions GHC and RTS. If you didn’t know what these things were, a quick search on <a href="https://duckduckgo.com/?q=GHCRTS">DuckDuckGo</a> will reveal that GHC is the primary Haskell compiler and that the RTS is the Haskell runtime. Therefore, we now know that this is a Haskell executable made with GHC. As a result, we also know that the <code>.data</code> section is entirely runtime related data and that <code>.rodata</code> is going to hold actual variables from our program. After all, Haskell is an immutable language and as a result, data is read-only. So, let’s pull that up.</p>
 <div class="figure">
-<img src="https://dl.dropboxusercontent.com/u/8097711/L1-Screen3.png" alt="Looking at .rodata." />
+<img src="../images/L1-Screen3.png" alt="Looking at .rodata." />
 <p class="caption">Looking at .rodata.</p>
 </div>
 <p>As it turns out, the first string in <code>.rodata</code> is a suspicious looking string and everything that follows it is denoted as being part of the base Haskell package. From this, we can infer that Haskell includes constants from the actual software as the first entry and then follows it with other strings from within <code>Prelude</code>. So, now, we need to figure out what to do with this string we found. Here it is: <code>Â°Â¥Â±Â¦Â¨Â¥Â·ÃƒÂ¥Â¶Â©ÃƒÂ¯Â­Â²Â«</code>.</p>
@@ -63,7 +59,7 @@
 shifter(<span class="st">&quot;</span><span class="ch">\xb0\xa5\xb1\xa6\xa8\xa5\xb7\xc3\xa5\xb6\xa9\xc3\xaf\xad\xb2\xab</span><span class="st">&quot;</span>)</code></pre></div>
 <p>The script works by going over all possible shifts within a byte and outputting our input string shifted by each amount. For the actual input, you’ll see that we had to use an ASCII table to convert the string into a format that Python could handle. This step may be optional depending on the language used for this part of the problem. Once this is done, let’s explore the output.</p>
 <div class="figure">
-<img src="https://dl.dropboxusercontent.com/u/8097711/L1-Screen4.png" alt="Output from shifter." />
+<img src="../images/L1-Screen4.png" alt="Output from shifter." />
 <p class="caption">Output from shifter.</p>
 </div>
 <p>Well, look at that. We searched through the input a little and we found something very, very suspicious. This string, <code>LAMBDAS_ARE_KING</code>, looks like it could be the key. In fact, it is indeed the key. We did it!</p>
