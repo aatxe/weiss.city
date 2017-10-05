@@ -5,7 +5,7 @@ description: I lament my lack of open source development over the summer, and di
 
 It's the end of August now, and I'm leaving for school tomorrow. A twenty-two hour drive from southwest Florida to Amherst, MA awaits me. If you were to judge this summer based on my GitHub contributions, it'd appear to be one in which I very nearly disappeared entirely. However, ultimately, it was a very different summer than those in the past.
 
-![GitHub Contributions for 2014](https://dl.dropboxusercontent.com/u/8097711/Summer-2014-GitHub-Contributions.png)
+![GitHub Contributions for 2014](/images/Summer-2014-GitHub-Contributions.png)
 
 You'll see that there were almost no contributions during the entire course of the summer. This differs greatly from past summers where I demonstrated far more productivity than throughout the school year. This change is the result of two major changes in the past year.
 
