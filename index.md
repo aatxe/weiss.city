@@ -10,5 +10,4 @@ As an undergraduate, I worked with [Arjun Guha](http://people.cs.umass.edu/~arju
 verification and update synthesis for [Puppet](https://puppet.com/) manifests.
 
 I'm an open source software developer with about a decade of experience. My favorite languages are
-[Scala](http://www.scala-lang.org), [Rust](http://www.rust-lang.org/), and
-[Haskell](https://www.haskell.org).
+[Rust](http://www.rust-lang.org/) and [Scala](http://www.scala-lang.org).
