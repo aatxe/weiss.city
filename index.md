@@ -3,7 +3,7 @@ title: Home
 ---
 
 I'm Aaron Weiss, a first-year PhD student and [NSF Fellow](https://nsfgrfp.org) at
-[Northeastern](https://www.ccs.neu.edu) verifying compilers with
+[Northeastern](https://www.ccs.neu.edu) designing languages with
 [Amal Ahmed](http://www.ccs.neu.edu/home/amal/).
 
 As an undergraduate, I worked with [Arjun Guha](http://people.cs.umass.edu/~arjun/) on static
