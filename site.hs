@@ -30,6 +30,12 @@ main = hakyll $ do
       >>= loadAndApplyTemplate "templates/home.html" homeCtx
       >>= relativizeUrls
 
+  match "oneoffs/*" $ do
+    route $ setExtension "html"
+    compile $ pandocCompiler
+      >>= loadAndApplyTemplate "templates/oneoff.html" defaultContext
+      >>= relativizeUrls
+
   match "posts/*" $ do
     route $ setExtension "html"
     compile $ pandocCompiler
