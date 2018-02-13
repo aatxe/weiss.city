@@ -4,6 +4,12 @@ body {
     font-size: 1.3em;
 }
 
+.topbar {
+    height: 0.5em;
+    background: #cc2a06;
+    grid-column: span 12;
+}
+
 header, nav, .section-head {
     font-family: Montserrat,helvetica neue,Helvetica,Arial,sans-serif;
     font-weight: 600;
@@ -17,7 +23,6 @@ header, nav {
 }
 
 header {
-    margin-top: 1em;
     padding: 0.5em 0;
     text-align: center;
 }
@@ -32,6 +37,7 @@ nav {
     display: grid;
     grid-gap: 0.5em;
     padding-bottom: 0.5em;
+    box-shadow: 0 1px 1px #aaa;
 }
 
 header a, header a:visited, nav a, nav a:visited {
