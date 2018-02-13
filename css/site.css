@@ -78,7 +78,7 @@ section {
 
 .content {
     grid-column: col-start 2 / span 10;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
 }
 
 .home-head {
