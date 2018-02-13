@@ -107,7 +107,7 @@ section {
 
 .pubs, .posts {
     list-style: none;
-    padding: 0 3em;
+    padding: 0 0;
 }
 
 .pub {
@@ -141,6 +141,10 @@ section {
 
     .home-head .me img {
         width: 100%;
+    }
+
+    .pubs, .posts {
+        padding: 0 3em;
     }
 }
 
