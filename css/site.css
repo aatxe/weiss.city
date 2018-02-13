@@ -110,6 +110,9 @@ section {
     font-size: 1.3em;
     color: #eb2f06;
     border-bottom: 2px solid #eb2f06;
+    display: grid;
+    grid-gap: 0.3em;
+    grid-template: "date" "title";
 }
 
 .section-body {
@@ -120,7 +123,7 @@ section {
 
 .pubs, .posts {
     list-style: none;
-    padding: 0 0;
+    padding: 0;
 }
 
 .pub {
@@ -138,39 +141,10 @@ section {
     text-decoration: underline;
 }
 
-@media (min-width: 400px) {
-    nav .navlinks {
-        grid-column: col-start 2 / span 10;
-    }
-}
-
-@media (min-width: 700px) {
-    nav {
-        padding: 1.2em;
-    }
-
-    .content, nav .navlinks {
-        grid-column: col-start 3 / span 8;
-    }
-
-    .home-head {
-        grid-template-columns: 5fr 2fr;
-        grid-template-areas: "blurb image";
-    }
-
-    .home-head .me img {
-        width: 100%;
-    }
-}
-
-@media (min-width: 890px) {
-    nav .navlinks {
-        grid-template-columns: repeat(6, 1fr);
-    }
-}
-
 .post {
     margin: 1.5em 0;
+    display: grid;
+    grid-template: "title" "date";
 }
 
 .post:first-child {
@@ -181,29 +155,14 @@ section {
     margin-top: .25em;
 }
 
-.post-list {
-    margin-top: 2em;
+.post-title {
+    grid-area: title;
+    justify-self: left;
 }
 
-.post-info .post-title,.post-info .post-date {
-    font-size: 1.2em;
-}
-
-.clearfix:before, .clearfix:after {
-    content: " ";
-    display: table;
-}
-
-.clearfix {
-    clear: both;
-}
-
-.pull-right {
-    float: right !important;
-}
-
-.pull-left {
-    float: left !important;
+.post-date {
+    grid-area: date;
+    color: #eb2f06;
 }
 
 .content .figure, .content .center {
@@ -251,4 +210,54 @@ hr {
     -ms-hyphens: auto;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
+}
+
+@media (min-width: 400px) {
+    nav .navlinks {
+        grid-column: col-start 2 / span 10;
+    }
+}
+
+@media (min-width: 700px) {
+    nav {
+        padding: 1.2em;
+    }
+
+    .content, nav .navlinks {
+        grid-column: col-start 3 / span 8;
+    }
+
+    .home-head {
+        grid-template-columns: 5fr 2fr;
+        grid-template-areas: "blurb image";
+    }
+
+    .home-head .me img {
+        width: 100%;
+    }
+
+    .post {
+        grid-template-columns: 1fr 1fr;
+        grid-template: "title date";
+    }
+
+    .post-date {
+        justify-self: right;
+    }
+
+    .post-desc {
+        grid-column: span 2;
+    }
+
+    .section-head {
+        grid-gap: 1em;
+        grid-template-columns: 1fr 1fr;
+        grid-template: "title date";
+    }
+}
+
+@media (min-width: 890px) {
+    nav .navlinks {
+        grid-template-columns: repeat(6, 1fr);
+    }
 }
