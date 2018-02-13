@@ -18,12 +18,12 @@ header, nav, .section-head {
 header, nav {
     background: #eb2f06;
     color: white;
-    grid-column: span 12;
     padding: 0 0.2em;
 }
 
 header {
-    padding: 0.5em 0;
+    grid-column: span 12;
+    padding: 0.8em 0 0 0;
     text-align: center;
 }
 
@@ -34,10 +34,18 @@ header .title {
 }
 
 nav {
+    grid-column: span 12;
     display: grid;
-    grid-gap: 0.5em;
-    padding-bottom: 0.5em;
+    grid-template-columns: repeat(12, [col-start] 1fr);
+    padding: 1.2em 0.2em;
     box-shadow: 0 1px 1px #aaa;
+}
+
+nav .navlinks {
+    grid-column: span 12;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 0.5em;
 }
 
 header a, header a:visited, nav a, nav a:visited {
@@ -57,7 +65,6 @@ header a:hover, nav a:hover {
 }
 
 nav {
-    grid-template-columns: repeat(3, 1fr);
 }
 
 .content {
@@ -131,12 +138,18 @@ section {
     text-decoration: underline;
 }
 
+@media (min-width: 400px) {
+    nav .navlinks {
+        grid-column: col-start 2 / span 10;
+    }
+}
+
 @media (min-width: 700px) {
     nav {
-        grid-template-columns: repeat(6, 1fr);
+        padding: 1.2em;
     }
 
-    .content {
+    .content, nav .navlinks {
         grid-column: col-start 3 / span 8;
     }
 
@@ -148,14 +161,20 @@ section {
     .home-head .me img {
         width: 100%;
     }
+}
 
-    .pubs, .posts {
-        padding: 0 3em;
+@media (min-width: 890px) {
+    nav .navlinks {
+        grid-template-columns: repeat(6, 1fr);
     }
 }
 
 .post {
     margin: 1.5em 0;
+}
+
+.post:first-child {
+    margin-top: 0;
 }
 
 .post-desc {
