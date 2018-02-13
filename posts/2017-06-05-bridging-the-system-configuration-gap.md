@@ -1,6 +1,6 @@
 ---
 title: Bridging the System Configuration Gap
-description: I recently gave a talk at <a href="http://www.nepls.org">NEPLS</a> on research that enables sysadmins to update high-level system configurations from the shell.
+description: In this post, I walk through a talk I gave at <a href="http://www.nepls.org">NEPLS</a> on my research enabling system administrators to update high-level, declarative system configurations through the ordinary use of a shell.
 ---
 
 Last Friday, I gave a talk at [NEPLS](http://www.nepls.org) on work I did while I was at UMass with [Arjun Guha](https://people.cs.umass.edu/~arjun/home/). You can find the slide deck for the talk [here](/pubs/nepls17.pdf), but the rest of this post will be a presentation of the same general material.

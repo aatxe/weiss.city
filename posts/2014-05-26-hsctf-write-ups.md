@@ -1,6 +1,6 @@
 ---
 title: HSCTF Write-Ups
-description: I ran an algorithms and computer security competition called HSCTF. Here's how it went.
+description: After the successful completion of the first ever <a href="https://hsctf.com/">HSCTF</a>, a high school computer security competition, I give a quick overview of the competition and announce the winners.
 ---
 
 As an organizer of the recent High School CTF competition, [HSCTF](http://hsctf.com/), I designed a series of problems for competitors to take part in. My primary focus in problem design for the competition was in reverse engineering, but I also created one of the most challenging reconnaissance problem we offered in the competition. Since the competition is now complete, I'll be posting a series of write-ups on the problems I designed. In each write-up, I'll discuss the problem, the ideas that went into the design, the solution, pitfalls that users fell into, and any other interesting information about the problem.

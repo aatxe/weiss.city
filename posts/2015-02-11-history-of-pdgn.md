@@ -1,6 +1,6 @@
 ---
 title: A Brief History of Pdgn
-description: I detail the whole history of the Pdgn IRC network as it is now.
+description: As its founder, I detail the history of the PdgnCo IRC network, a self-proclaimed bastion of democratic autonomism on the web.
 ---
 
 This is a cross-post from the [PdgnCo Community Blog](http://blog.pdgn.co). It was published on

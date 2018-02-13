@@ -1,6 +1,6 @@
 ---
 title: Worker Appreciation Day
-description: I wrote an opinion editorial for The Daily Collegian about UMass dining workers.
+description: In this op-ed for the Daily Collegian, I extol the hard work of dining workers and encourage students to support them in their endeavors to achieve economic justice.
 ---
 
 As a member of the Student Labor Action Project, I wrote an opinion-editorial for UMass' Daily Collegian. It was published October 30th, and is available online [here](http://dailycollegian.com/2014/10/30/appreciating-campus-workers/). Additionally, it is reproduced exactly as I wrote it below.
