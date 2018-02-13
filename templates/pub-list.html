@@ -1,12 +1,14 @@
-$for(pubs)$
-  <div class="pub">
-    <div class="pub-title"><a href="./pubs/$file$.pdf">$title$</a></div>
-    <div class="pub-authors">$authors$.</div>
-    <div class="pub-info">
-        In <em>$venue$</em>, $location$, $date$.
-        $if(award)$
-        <b>$award$.</b>
-        $endif$
-    </div>
-  </div>
-$endfor$
+<ul class="pubs">
+  $for(pubs)$
+    <li class="pub">
+      <div class="pub-title"><a href="./pubs/$file$.pdf">$title$</a></div>
+      <div class="pub-authors">$authors$.</div>
+      <div class="pub-info">
+          In <em>$venue$</em>, $location$, $date$.
+          $if(award)$
+          <b>$award$.</b>
+          $endif$
+      </div>
+    </li>
+  $endfor$
+</ul>

@@ -1,10 +1,7 @@
---------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid (mappend)
 import           Hakyll
 
-
---------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
   match ("cv.pdf" .||. "images/*" .||. "pubs/*.pdf" .||. "*.png" .||. "*.ico") $ do
@@ -21,14 +18,15 @@ main = hakyll $ do
 
   match "index.md" $ do
     route $ setExtension "html"
-    let homeCtx =
-          constField "home" "true"  `mappend`
-          constField "image" "true" `mappend`
-          defaultContext
+    compile $ do
+      pubs <- recentFirst =<< loadAll "pubs/*.md"
+      let pubsCtx =
+            listField "pubs" pubCtx (return pubs) `mappend`
+            defaultContext
 
-    compile $ pandocCompiler
-      >>= loadAndApplyTemplate "templates/home.html" homeCtx
-      >>= relativizeUrls
+      pandocCompiler
+        >>= loadAndApplyTemplate "templates/default.html" pubsCtx
+        >>= relativizeUrls
 
   match "oneoffs/*" $ do
     route $ setExtension "html"
@@ -43,7 +41,7 @@ main = hakyll $ do
       >>= loadAndApplyTemplate "templates/default.html" postCtx
       >>= relativizeUrls
 
-  -- This no route is needed to build pubs.
+  -- This route is needed to build pubs.
   match "pubs/*.md" $ compile pandocCompiler
 
   create ["archive.html"] $ do
@@ -53,27 +51,11 @@ main = hakyll $ do
       let archiveCtx =
             listField "posts" postCtx (return posts) `mappend`
             constField "title" "Archives"            `mappend`
-            constField "home" "true"                 `mappend`
             defaultContext
 
       makeItem ""
         >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
         >>= loadAndApplyTemplate "templates/default.html" archiveCtx
-        >>= relativizeUrls
-
-  create ["pubs.html"] $ do
-    route idRoute
-    compile $ do
-      pubs <- recentFirst =<< loadAll "pubs/*.md"
-      let pubsCtx =
-            listField "pubs" pubCtx (return pubs) `mappend`
-            constField "title" "Publications"     `mappend`
-            constField "home" "true"              `mappend`
-            defaultContext
-
-      makeItem ""
-        >>= loadAndApplyTemplate "templates/pubs.html" pubsCtx
-        >>= loadAndApplyTemplate "templates/default.html" pubsCtx
         >>= relativizeUrls
 
   match "templates/*" $ compile templateCompiler
