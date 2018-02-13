@@ -106,13 +106,17 @@ section {
     border-radius: 100%;
 }
 
-.section-head {
-    font-size: 1.3em;
+.section-head, .copy h1 {
+    font-size: 1.1em;
     color: #eb2f06;
     border-bottom: 2px solid #eb2f06;
     display: grid;
     grid-gap: 0.3em;
     grid-template: "date" "title";
+}
+
+.copy h1 {
+    margin-bottom: 0;
 }
 
 .section-body {
@@ -210,6 +214,9 @@ hr {
     -ms-hyphens: auto;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
+    max-width: 720px;
+    margin: auto;
+    margin-top: 1em;
 }
 
 @media (min-width: 400px) {
