@@ -148,7 +148,7 @@ section {
 .post {
     margin: 1.5em 0;
     display: grid;
-    grid-template: "title" "date";
+    grid-template: "date" "title";
 }
 
 .post:first-child {
