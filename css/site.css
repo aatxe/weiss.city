@@ -245,6 +245,10 @@ hr {
     font-style: normal;
 }
 
+.copy blockquote ol:not(:first-child), .copy blockquote ul:not(:first-child) {
+    margin-top: -0.5em;
+}
+
 .copy .footnote-back {
     padding-left: 0.3em;
 }
