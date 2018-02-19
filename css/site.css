@@ -177,6 +177,10 @@ section {
     justify-self: center;
 }
 
+.content .sourceCode a:hover.sourceLine {
+    text-decoration: none;
+}
+
 pre code {
     padding: 0;
     font-size: inherit;
