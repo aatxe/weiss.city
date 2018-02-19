@@ -177,6 +177,10 @@ section {
     justify-self: center;
 }
 
+.content .sourceCode a.sourceLine, .content .sourceCode a:visited.sourceLine {
+    color: black;
+}
+
 .content .sourceCode a:hover.sourceLine {
     text-decoration: none;
 }
