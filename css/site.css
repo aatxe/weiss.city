@@ -226,6 +226,21 @@ hr {
     font-style: italic;
 }
 
+.copy blockquote cite::before {
+    content: '\2014 ';
+}
+
+.copy blockquote cite {
+    display: block;
+    margin-top: -0.5em;
+    text-align: right;
+    font-style: normal;
+}
+
+.copy .footnote-back {
+    padding-left: 0.3em;
+}
+
 @media (min-width: 400px) {
     nav .navlinks {
         grid-column: col-start 2 / span 10;
