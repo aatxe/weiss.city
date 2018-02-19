@@ -1,5 +1,5 @@
 ---
-title: Write-Up: awe
+title: 'Write-Up: awe'
 description: In this writeup from the first HSCTF, I walk through the solution to my unsolved reconnaissance problem entitled 'awe'.
 ---
 
