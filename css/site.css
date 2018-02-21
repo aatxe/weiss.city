@@ -78,7 +78,7 @@ section {
 
 .content {
     grid-column: col-start 2 / span 10;
-    margin-bottom: 1em;
+    margin: 1.5em auto;
 }
 
 .home-head {
@@ -169,7 +169,7 @@ section {
     color: #eb2f06;
 }
 
-.content .figure, .content .center {
+.content figure, .content .center {
     text-align: center;
 }
 
@@ -185,7 +185,7 @@ section {
     text-decoration: none;
 }
 
-pre code {
+pre code.sourceCode {
     padding: 0;
     font-size: inherit;
     color: inherit;
@@ -200,6 +200,11 @@ code {
     color: #eb2f06;
     background-color: #ffebe7;
     border-radius: 4px;
+}
+
+code.sourceCode {
+    color: black;
+    background: transparent;
 }
 
 .content p {
