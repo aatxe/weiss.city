@@ -80,31 +80,32 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
 <p>Both repairs are correct in that they preserve the changes made via the shell, but a user is likely to prefer the one that changes the parameters to the abstraction. We capture this intuition in a ranking algorithm. We calculate a cost for each repair that corresponds to the sum of the number of updates and the number of updates within an abstraction. This means that smaller updates and updates that make changes outside abstractions are preferred.</p>
 <h1 id="bringing-the-shell-to-puppet">Bringing the Shell to Puppet</h1>
 <p>We implemented a prototype of imperative configuration repair for Puppet which we called <a href="https://github.com/plasma-umass/Tortoise">Tortoise</a>. Our prototype is written in <a href="http://scala-lang.org">Scala</a>, and consists of around 3,300 lines of code. It’s built using <a href="https://linux.die.net/man/1/strace">strace</a> and <a href="http://rise4fun.com/z3">z3</a>. It has its limitations, but works on a set of thirteen real Puppet benchmarks from <a href="https://github.com">GitHub</a> used in prior work. To get a better sense of how it works, let’s step through the whole toolchain at a high level.</p>
-<p>The user starts a Tortoise monitor on a shell using its pid: <code>tortoise watch -i manifest.pp -p pid</code>. The user must specify which manifest is deployed on the system and should be updated according to the edits made. They then enter a number of commands on the shell which produce file system effects via system calls. Tortoise records these effectful system calls and the paths that they’ve affected. When the user has fixed the bug, they run the command <code>synth</code> to signal to Tortoise to generate the repair.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> After receiving the <code>synth</code> command, the process of imperative configuration repair begins.</p>
+<p>The user starts a Tortoise monitor on a shell using its pid: <code>tortoise watch -i manifest.pp -p pid</code>. The user must specify which manifest is deployed on the system and should be updated according to the edits made. They then enter a number of commands on the shell which produce file system effects via system calls. Tortoise records these effectful system calls and the paths that they’ve affected. When the user has fixed the bug, they run the command <code>synth</code> to signal to Tortoise to generate the repair.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> After receiving the <code>synth</code> command, the process of imperative configuration repair begins.</p>
 <p>Once initiated, Tortoise starts by parsing the manifest identified by the <code>-i</code> flag into a Puppet abstract syntax tree (AST). Then, it performs a labeling operation on the AST that assigns a unique label to each variable binding (including in abstractions). These labels are used to associate repairs with their corresponding bindings. We then compile the Puppet manifest into an imperative specification language called ΔP. This ΔP specification captures a series of file system operations and is used to generate a corresponding abstract file system on which the changes recorded by strace can be replayed. After replaying these changes, we can then use the abstract file system to produce ΔP constraints that will be used next in the synthesis procedure.</p>
 <p>The synthesis procedure starts by compiling the ΔP specification into logical formulas describing the step-by-step operation of the manifest over a symbolic file system. It then converts the ΔP constraints into logical assertions about the final state of the program over the symbolic file system. Because these changes were made via the shell after running the program, they may currently be false. Next, <a href="http://rise4fun.com/z3">z3</a> is asked to repeatedly find new models for the repair by replacing values present in the original program. Each of these models are recorded, and parsed into repair substitutions. These repairs are then ranked by the previously described ranking algorithm, and presented to the user. The user then selects their preferred repair, and the system automatically applies it to the manifest on disk.</p>
 <h1 id="evaluating-tortoise">Evaluating Tortoise</h1>
 <p>We evaluated our prototype on a suite of thirteen real world Puppet benchmarks that were gathered from GitHub. These benchmarks consist of instantiations of open source Puppet modules. For each benchmark, we identified a number of possible repairs to make via the shell. We ran Tortoise with each benchmark and each shell repair, and produced a list of repairs. To understand the effectiveness of the ranking procedure, we presented this list in a randomized fashion and asked the user to select their preferred repair. We recorded the Tortoise-assigned rank of this repair for each instance. We then averaged them and found that the average repair rank was 1.31 indicating that Tortoise typically ranks the preferred repair as the first option (this exact case occurred 75% of the time).</p>
-<div class="figure">
-<img src="../images/size-scaling.png" alt="Varying manifest size with a constant-sized update." />
-<p class="caption">Varying manifest size with a constant-sized update.</p>
-</div>
+<figure>
+<img src="../images/size-scaling.png" alt="Varying manifest size with a constant-sized update." /><figcaption>Varying manifest size with a constant-sized update.</figcaption>
+</figure>
 <p>We also looked at evaluating the scalability of Tortoise on artificial benchmarks. In each case, we ran 100 trials at each size, recorded the runtime, and computed the average and confidence interval across all trials. In one case, we looked at varying the size of the manifest while leaving the update size constant. This result is presented above. In practice, most manifests do not seem to grow beyond this size and the performance is well under a second. So, this performance seems reasonable.</p>
 <p>In the other case, we looked at varying the size of the update. This result is presented below, and appears roughly exponential. This is expected because Tortoise relies on SMT solving to generate repairs. Fortunately, we can break up large repairs into a series of smaller intermediate pieces (that cover some part of the overall repair) and avoid the degenerate performance at large sizes. In general, we expect that users will likely perform distinct updates separately anyway.</p>
-<div class="figure">
-<img src="../images/update-scaling.png" alt="Varying update size for a manifest." />
-<p class="caption">Varying update size for a manifest.</p>
-</div>
+<figure>
+<img src="../images/update-scaling.png" alt="Varying update size for a manifest." /><figcaption>Varying update size for a manifest.</figcaption>
+</figure>
 <h1 id="summary">Summary</h1>
 <p>In conclusion, we presented imperative configuration repair and a prototype <a href="https://github.com/plasma-umass/Tortoise">Tortoise</a> that together bridge the gap between configuration management tools and the shell. Imperative configuration repair preserves all changes made from the shell, preserves the structure and abstractions of the original manifest, and uses instrumentation techniques to support all existing shells. Our prototype implementation is fast, and shows that our ranking algorithm appears reasonable. Overall, we have demonstrated that imperative configuration repair is a realistic technique for improving the process of configuration management.</p>
-<div class="footnotes">
+<section class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Currently, <code>synth</code> is just an alias of the Unix <code>true</code>. A future version of Tortoise will instead have a dedicated <code>synth</code> program that communicates with the Tortoise monitor and presents the choice of repairs in this shell, rather than the monitoring one.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>Currently, <code>synth</code> is just an alias of the Unix <code>true</code>. A future version of Tortoise will instead have a dedicated <code>synth</code> program that communicates with the Tortoise monitor and presents the choice of repairs in this shell, rather than the monitoring one.<a href="#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
+</section>
 </div>
+<div class="center">
+  Comments? Questions? <a href="mailto:awe@pdgn.co">Email</a> or
+  <a href="https://twitter.com/aatxe">tweet</a> at me.
 </div>
-<div class="center">Comments? Email me at <a href="mailto:awe@pdgn.co">awe@pdgn.co</a>.</div>
 
         </section>
       

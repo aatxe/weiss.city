@@ -37,39 +37,38 @@
   <p>As part of HSCTF, there was a reverse engineering problem entitled “λ1”. The problem text was short and to the point “Here’s the lock. Find the key.” The first phrase <a href="http://compete.hsctf.com/ciJsbu4VFk/%CE%BB1.zip">“Here’s the lock.”</a> linked to an archive containing three executables, one for each of the major operating systems. All three executables were 64-bit. This problem is the first of a series of reversing problems.</p>
 <p>Ultimately, the goal of this problem was to retrieve the flag from one of the given executables. As a result, there’s a wide assortment of approaches to this problem. I’m not going to go over all of them here because I certainly don’t think I could produce all of them. Instead, I’m going to go over the approach that I anticipated as the most common solution to the problem. In fact, it’s possible that this wasn’t even the most common solution. Regardless, we’ll carry forward.</p>
 <p>Recognizing that the problem is one of reverse engineering, my first reaction is to immediately fire up <a href="https://www.hex-rays.com/products/ida/index.shtml">IDA</a>. Upon attempting to open the executable, IDA fails to do so because of the lambda in the file name. So, I rename it to <code>llama.exe</code> and try again to open it. This time, it works out. Next, I will attempt to run the program.</p>
-<div class="figure">
-<img src="../images/L1-Screen1.png" alt="Running llama." />
-<p class="caption">Running llama.</p>
-</div>
+<figure>
+<img src="../images/L1-Screen1.png" alt="Running llama." /><figcaption>Running llama.</figcaption>
+</figure>
 <p>Upon entering input, I notice that the program quickly ends, but I can catch that the output of the program depends on the value I input. I also notice that when I enter non-numbers, the program outputs a parsing error before exiting. Therefore, I can assume that the input needs to be a number. Since the output changes based on the input and there’s no additional files included with these programs, I can assume that the information I’m looking for has to be stored in the executable in some form. So, let’s look at the string table.</p>
-<div class="figure">
-<img src="../images/L1-Screen2.png" alt="Looking at the string table." />
-<p class="caption">Looking at the string table.</p>
-</div>
+<figure>
+<img src="../images/L1-Screen2.png" alt="Looking at the string table." /><figcaption>Looking at the string table.</figcaption>
+</figure>
 <p>Well, what’s this? It mentions GHC and RTS. If you didn’t know what these things were, a quick search on <a href="https://duckduckgo.com/?q=GHCRTS">DuckDuckGo</a> will reveal that GHC is the primary Haskell compiler and that the RTS is the Haskell runtime. Therefore, we now know that this is a Haskell executable made with GHC. As a result, we also know that the <code>.data</code> section is entirely runtime related data and that <code>.rodata</code> is going to hold actual variables from our program. After all, Haskell is an immutable language and as a result, data is read-only. So, let’s pull that up.</p>
-<div class="figure">
-<img src="../images/L1-Screen3.png" alt="Looking at .rodata." />
-<p class="caption">Looking at .rodata.</p>
-</div>
+<figure>
+<img src="../images/L1-Screen3.png" alt="Looking at .rodata." /><figcaption>Looking at .rodata.</figcaption>
+</figure>
 <p>As it turns out, the first string in <code>.rodata</code> is a suspicious looking string and everything that follows it is denoted as being part of the base Haskell package. From this, we can infer that Haskell includes constants from the actual software as the first entry and then follows it with other strings from within <code>Prelude</code>. So, now, we need to figure out what to do with this string we found. Here it is: <code>Â°Â¥Â±Â¦Â¨Â¥Â·ÃƒÂ¥Â¶Â©ÃƒÂ¯Â­Â²Â«</code>.</p>
 <p>Judging from some of the previous problems in HSCTF and the fact that the majority of the string consists of accented capital A characters, my first guess would be that it’s a Caesar cipher. After all, this suggests that there’s a pretty tight grouping in values. So, we’re going to have to build some sort of Caesar cipher solver to attempt this approach.</p>
 <p>Here’s our Python script:</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> shifter(s):
-  <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">129</span>,<span class="dv">128</span>):
-    <span class="cf">try</span>:
-      <span class="bu">print</span>(i)
-      <span class="bu">print</span>(<span class="kw">lambda</span> z,y: <span class="st">&quot;&quot;</span>.join(<span class="bu">map</span>(<span class="kw">lambda</span> x:<span class="bu">chr</span>((<span class="bu">ord</span>(x)<span class="op">+</span>y)<span class="op">%</span><span class="dv">256</span>),z)))(s,i)
-    <span class="cf">except</span>:
-      <span class="cf">pass</span>
-shifter(<span class="st">&quot;</span><span class="ch">\xb0\xa5\xb1\xa6\xa8\xa5\xb7\xc3\xa5\xb6\xa9\xc3\xaf\xad\xb2\xab</span><span class="st">&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">def</span> shifter(s):</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">129</span>,<span class="dv">128</span>):</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">    <span class="cf">try</span>:</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">      <span class="bu">print</span>(i)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">      <span class="bu">print</span>(<span class="kw">lambda</span> z,y: <span class="st">&quot;&quot;</span>.join(<span class="bu">map</span>(<span class="kw">lambda</span> x:<span class="bu">chr</span>((<span class="bu">ord</span>(x)<span class="op">+</span>y)<span class="op">%</span><span class="dv">256</span>),z)))(s,i)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="cf">except</span>:</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">      <span class="cf">pass</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">shifter(<span class="st">&quot;</span><span class="ch">\xb0\xa5\xb1\xa6\xa8\xa5\xb7\xc3\xa5\xb6\xa9\xc3\xaf\xad\xb2\xab</span><span class="st">&quot;</span>)</a></code></pre></div>
 <p>The script works by going over all possible shifts within a byte and outputting our input string shifted by each amount. For the actual input, you’ll see that we had to use an ASCII table to convert the string into a format that Python could handle. This step may be optional depending on the language used for this part of the problem. Once this is done, let’s explore the output.</p>
-<div class="figure">
-<img src="../images/L1-Screen4.png" alt="Output from shifter." />
-<p class="caption">Output from shifter.</p>
-</div>
+<figure>
+<img src="../images/L1-Screen4.png" alt="Output from shifter." /><figcaption>Output from shifter.</figcaption>
+</figure>
 <p>Well, look at that. We searched through the input a little and we found something very, very suspicious. This string, <code>LAMBDAS_ARE_KING</code>, looks like it could be the key. In fact, it is indeed the key. We did it!</p>
 </div>
-<div class="center">Comments? Email me at <a href="mailto:awe@pdgn.co">awe@pdgn.co</a>.</div>
+<div class="center">
+  Comments? Questions? <a href="mailto:awe@pdgn.co">Email</a> or
+  <a href="https://twitter.com/aatxe">tweet</a> at me.
+</div>
 
         </section>
       
