@@ -202,7 +202,7 @@ code {
     border-radius: 4px;
 }
 
-code.sourceCode {
+pre code, code.sourceCode {
     color: black;
     background: transparent;
 }
