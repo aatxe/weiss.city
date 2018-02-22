@@ -78,7 +78,7 @@ section {
 
 .content {
     grid-column: col-start 2 / span 10;
-    margin: 1.5em auto;
+    margin-bottom: 1.5em;
 }
 
 .home-head {
@@ -229,7 +229,7 @@ hr {
     -webkit-hyphens: auto;
     max-width: 720px;
     margin: auto;
-    margin-top: 1em;
+    margin-top: 2.5em;
 }
 
 .copy blockquote {
