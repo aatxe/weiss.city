@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aaron Weiss / Reasoning with Types in Rust</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="./favicon-128x128.png">
+    <link href="../master.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="topbar"></div>
+    <header>
+      <a href="../"><span class="title">&lambda;. Aaron Weiss</span></a>
+    </header>
+    <nav>
+      <div class="navlinks">
+        <a href="../archive.html">[Blog]</a>
+        <a href="../cv.pdf">[CV]</a>
+        <a href="mailto:awe@pdgn.co">[Email]</a>
+        <a href="https://github.com/aatxe">[GitHub]</a>
+        <a href="https://twitter.com/aatxe">[Twitter]</a>
+        <a href="https://keybase.io/awe">[Keybase]</a>
+      </div>
+    </nav>
+    <article class="content">
+      
+        <section class="copy">
+          <div class="section-head">
+    <div class="post-title">Reasoning with Types in Rust</div>
+    <div class="post-date">February 26, 2018</div>
+</div>
+<div class="section-body">
+  <p><a href="https://www.rust-lang.org/">Rust</a> is a modern programming language which is marketed primarily on the basis of its very nice type system, and I’d like to tell you about how you can use this type system to reason about your programs in interesting ways. Most of the time when its type system is discussed, the focus is on its guarantee of data race freedom and ability to enable so-called <a href="https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html"><em>fearless concurrency</em></a> (and rightfully so—this is a place where Rust truly shines!). Today, I have a different focus in mind, characterized perhaps most succinctly as follows:</p>
+<blockquote>
+<p>From the type of a polymorphic function we can derive a theorem that it satisfies. Every function of the same type satisfies the same theorem. This provides a free source of useful theorems.</p>
+<p><cite>Philip Wadler, <a href="http://ecee.colorado.edu/ecen5533/fall11/reading/free.pdf"><em>Theorems for Free!</em></a></cite></p>
+</blockquote>
+<p>If you’re not the most mathematically inclined, don’t be scared off by the word theorem! The quote is telling us that—with the right property of our type system—we can learn useful properties about generic (i.e. polymorphic) functions solely by inspecting their types. In the rest of this post, we’ll cover this type system property, and a number of example properties we can derive from types as as result.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> Much of what’s covered can be generalized to languages aside from Rust, but (most) examples will be in Rust with Rust-specific aspects highlighted.</p>
+<h1 id="a-principal-property-for-reasoning">A Principal Property for Reasoning</h1>
+<p>The property at the heart of this style of type-based reasoning with generics is known as <em>parametricity</em>. Parametricity can be formulated as a mathematical theorem,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> but it’s best thought of intuitively as the notion that all instances of a polymorphic function act the same way. With this intuition in mind, you can imagine determining whether or not a particular function is parametric. For example, we can determine that the following <a href="https://www.java.com/">Java</a> function is parametric:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">public</span> <span class="dt">static</span> &lt;T&gt; T <span class="fu">identity</span>(T x) {</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="kw">return</span> x;</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">}</a></code></pre></div>
+<p>And that the following almost-Java function is not:<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">public</span> <span class="dt">static</span> &lt;T&gt; T <span class="fu">notIdentity</span>(T x) {</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">if</span> (x <span class="kw">instanceof</span> <span class="bu">Integer</span>) {</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="kw">return</span> (T) <span class="dv">42</span>;</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  } <span class="kw">else</span> {</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">    <span class="kw">return</span> x;</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  }</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">}</a></code></pre></div>
+<p>The reason for this is that the latter function has chosen to specialize its behavior based on the type of its parameter, rather than acting the same on all types. This cuts to the essence of parametricity: to write parametric functions, we must treat parametric types opaquely! While Java does not enforce parametricity (and in fact often encourages otherwise), other type systems like that of <a href="https://www.haskell.org/">Haskell</a> and Rust require all functions to be parametric.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> When all polymorphic functions are parametric, the type system is said to be <em>parametrically polymorphic</em>—though in practice, many parametrically polymorphic type systems support some degree of ad hoc (that is, type-dependent polymorphism). In this case, we know that all polymorphic functions are parametric and we’re able to learn some of their properties solely from their type. So, let’s look at some examples in Rust.</p>
+<h1 id="who-am-i-or-reasoning-about-identity">Who am I? or: Reasoning about Identity</h1>
+<p>Consider the following function type, and try to imagine as many implementations as possible:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">fn</span>&lt;T&gt;(T) -&gt; T</a></code></pre></div>
+<p>This type describes a function that for any type <code class="sourceCode rust">T</code>, takes an argument of type <code class="sourceCode rust">T</code> and returns a result of type <code class="sourceCode rust">T</code>. If you’re already familiar with Rust, I’m sure it wouldn’t take long to come up with the following implementation, the identity function:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> id&lt;T&gt;(x: T) -&gt; T <span class="op">{</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">    x</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="op">}</span></a></code></pre></div>
+<p>In fact, since there are no operations we can actually perform on <code class="sourceCode rust">x</code>, it’s the only possible return value for this function. Of course, since Rust is effectful, we could print something before we return like so:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> effectful_id&lt;T&gt;(x: T) -&gt; T <span class="op">{</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">    <span class="pp">println!</span>(<span class="st">&quot;oh no&quot;</span>);</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">    x</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="op">}</span></a></code></pre></div>
+<p>And Rust is also impure, meaning we could error (called <em>panicking</em> in Rust) or otherwise diverge:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> panicking_id&lt;T&gt;(_: T) -&gt; T <span class="op">{</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">    <span class="pp">panic!</span>(<span class="st">&quot;at the disco&quot;</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="op">}</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">pub</span> <span class="kw">fn</span> diverging_id&lt;T&gt;(_: T) -&gt; T <span class="op">{</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">    <span class="kw">loop</span> <span class="op">{}</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="op">}</span></a></code></pre></div>
+<p>These various implementations all tell us something about what the type means, which we can phrase like so:</p>
+<blockquote>
+<p>A function of type <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(T) -&gt; T</code> must:</p>
+<ul>
+<li>return its argument <strong>or</strong></li>
+<li>panic or abort <strong>or</strong></li>
+<li>never return</li>
+</ul>
+</blockquote>
+<p>Additionally, since we still know nothing about the type <code class="sourceCode rust">T</code>, we can conclude that any effects that occur during the function are <em>not</em> dependent on the argument. With these two properties, we can then conclude the more general properties that functions of the type <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(T) -&gt; T</code> behave “like an identity function”:</p>
+<blockquote>
+<p>Given a function <code class="sourceCode rust">id</code> of type <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(T) -&gt; T</code>, a total function <code class="sourceCode rust">f</code> of the form <code class="sourceCode rust"><span class="kw">fn</span>(A) -&gt; B</code> where <code class="sourceCode rust">A</code> and <code class="sourceCode rust">B</code> are both concrete types, and a value <code class="sourceCode rust">a</code> of type <code class="sourceCode rust">A</code>, then either:</p>
+<ul>
+<li><code class="sourceCode rust">id</code> can be composed arbitrarily (e.g. <code class="sourceCode rust">id(f(a)) = f(id(a))</code>) <strong>or</strong></li>
+<li><code class="sourceCode rust">id(f(a))</code> and <code class="sourceCode rust">f(id(a))</code> both panic or diverge.</li>
+</ul>
+</blockquote>
+<p>In order to conclude this, we can consider each of the cases we previously described. If the function returns its argument, then we know both that <code class="sourceCode rust">id(a) = a</code> and <code class="sourceCode rust">id(f(a)) = f(a)</code> and we can combine these two equalities to conclude the first result. If the function does not return its arguments, we know it either panics or never returns but we also know that this cannot be dependent on the argument in any way. Thus if <code class="sourceCode rust">id(f(a))</code> panics, then <code class="sourceCode rust">f(id(a))</code> <strong>must</strong> panic as well.</p>
+<p>With that, we’ve intuited (but have not formally proven)<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> our first “useful theorem” about a family of functions based solely on their type. While it’s nice to know that identity-looking functions behave like an identity function, there’s certainly nothing earth-shattering about the result. But the fact that we can apply this style of reasoning to <em>every</em> type ought to be compelling.</p>
+<h1 id="vectors-abound">Vectors Abound</h1>
+<p>Let’s look at a slightly more complicated type now, involving Rust’s <code class="sourceCode rust"><span class="dt">Vec</span>&lt;T&gt;</code> type for dynamically-sized buffers. We’ll again follow the same formula of enumerating some possible implementations before trying to conclude a general property. Given the type:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">fn</span>&lt;T&gt;(<span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt;</a></code></pre></div>
+<p>We can come up with implementations such as:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> tail&lt;T&gt;(vec: <span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">    vec.into_iter().skip(<span class="dv">1</span>).collect()</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="op">}</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="kw">pub</span> <span class="kw">fn</span> reverse&lt;T&gt;(vec: <span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">    <span class="kw">let</span> init = <span class="dt">Vec</span>::with_capacity(vec.capacity());</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">    vec.into_iter().fold(init, |<span class="kw">mut</span> acc, elem| <span class="op">{</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">        acc.insert(<span class="dv">0</span>, elem);</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">        acc</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">    <span class="op">}</span>)</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="op">}</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="kw">pub</span> <span class="kw">fn</span> swap_first_two&lt;T&gt;(<span class="kw">mut</span> vec: <span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">    <span class="kw">if</span> vec.len() &lt; <span class="dv">2</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15">        <span class="kw">return</span> vec;</a>
+<a class="sourceLine" id="cb8-16" data-line-number="16">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17">    <span class="kw">let</span> elem = vec.remove(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb8-18" data-line-number="18">    vec.insert(<span class="dv">0</span>, elem);</a>
+<a class="sourceLine" id="cb8-19" data-line-number="19">    vec</a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="op">}</span></a></code></pre></div>
+<p>We can then try to capture a sense of what this type means as we did before:</p>
+<blockquote>
+<p>A function <code class="sourceCode rust">m</code> (for mystery) of type <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(<span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt;</code> must:</p>
+<ul>
+<li>return a <code class="sourceCode rust"><span class="dt">Vec</span>&lt;T&gt;</code> that contains a subset of the contents of its argument <code class="sourceCode rust"><span class="dt">Vec</span>&lt;T&gt;</code> in any order. (i.e. <code class="sourceCode agda">∀v<span class="ot">.</span> <span class="ot">{</span>e <span class="ot">|</span> e ∈ m<span class="ot">(</span>v<span class="ot">)}</span> ⊆ <span class="ot">{</span>e <span class="ot">|</span> e ∈ v<span class="ot">}</span></code>) <strong>or</strong></li>
+<li>panic or abort <strong>or</strong></li>
+<li>never return</li>
+</ul>
+</blockquote>
+<p>The process of concluding this is more complicated, but the general gist is that such a function can only perform the operations defined on <code class="sourceCode rust"><span class="dt">Vec</span>&lt;T&gt;</code> and as usual cannot inspect the types of its elements. From there, we know that we cannot create new values of type <code>T</code> or perform any operations dependent on values within the vector. This also leverages the Rust-specific fact that values cannot be copied without knowing that they implement <code>Clone</code> and/or <code>Copy</code> (whereas in other languages with parametricity, this typically is not the case). We can then conclude that all functions at this type must yield a permutation (or possibly a subset of a permutation) of the input vector. Of course, the same exceptions about panics and divergence apply. Interestingly, we can reach a similar general conclusion to the one we reached for <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(T) -&gt; T</code>:</p>
+<blockquote>
+<p>Given a function <code class="sourceCode rust">m</code> of type <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(<span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt;</code>, a total function <code class="sourceCode rust">f</code> of the form <code class="sourceCode rust"><span class="kw">fn</span>(<span class="dt">Vec</span>&lt;A&gt;) -&gt; <span class="dt">Vec</span>&lt;B&gt;</code> where <code class="sourceCode rust">A</code> and <code class="sourceCode rust">B</code> are both concrete types, and <code class="sourceCode rust">a</code> is a value of type <code class="sourceCode rust"><span class="dt">Vec</span>&lt;A&gt;</code>, then either:</p>
+<ul>
+<li><code class="sourceCode rust">mystery(f(a)) = f(mystery(a))</code> <strong>or</strong></li>
+<li><code class="sourceCode rust">mystery(f(a))</code> and <code class="sourceCode rust">f(mystery(a))</code> both panic or diverge.</li>
+</ul>
+</blockquote>
+<h1 id="noninterference-for-free">Noninterference for Free</h1>
+<p>Thus far, we’ve looked at rather simple properties of programs because it is easier to imagine the proof in your head. But now, let’s take the opportunity to explore a security property called <em>noninterference</em> for which a number of tailored type systems have been built. The idea behind these type systems is typically that you annotate types and values in your program with labels indicating whether a value should be public or secret (some systems expand this with further labels, but just the two are enough for the basics). Noninterference then says that functions with public output cannot depend on private inputs. Fortunately, using parametricity, we can have this property for free in Rust!<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p>To do so, first, we have to define a notion of secret (we’ll treat all unannotated types as public, though we could choose to introduce a public type as well for symmetry):</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a></code></pre></div>
+<p>Strictly speaking, we’ve now achieved noninterference! That was probably easier than you expected, but the intuition should be clear: since we can perform no operations whatsoever on values of the type <code class="sourceCode rust">Secret&lt;T&gt;</code>, it is impossible for public outputs to depend on secret data! However, there is a caveat: because of how access modifiers work in Rust, code in the same module can violate noninterference like so:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb10-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw">pub</span> <span class="kw">fn</span> unwrap_secret&lt;T&gt;(secret: Secret&lt;T&gt;) -&gt; T <span class="op">{</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">    secret.<span class="dv">0</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="op">}</span></a></code></pre></div>
+<p>To avoid this, we can place our implementation of secret types inside of its own module with no additional code:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">mod</span> secret <span class="op">{</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">    <span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="op">}</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw">use</span> <span class="kw">self</span>::secret::Secret;</a></code></pre></div>
+<p>Now, we have noninterference enforced in any downstream code, but in real security type systems, you can still use secret values to compute other secret values. To do this, we can use Rust’s trait system to add common functionality. We can use this to define a lot of operations, but some of the operator-overloading traits (<code class="sourceCode rust">std::ops</code>) are not currently general enough making some code less pleasant.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> Here is our example with some ability to use secret values to compute other secret values:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">mod</span> secret <span class="op">{</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">    <span class="at">#[</span>derive<span class="at">(</span><span class="bu">Copy</span><span class="at">,</span> <span class="bu">Clone</span><span class="at">,</span> <span class="bu">Default</span><span class="at">)]</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">    <span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="kw">use</span> std::ops::<span class="op">{</span>Add, Sub<span class="op">}</span>;</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="kw">impl</span>&lt;T&gt; Add <span class="kw">for</span> Secret&lt;T&gt; <span class="kw">where</span> T: Add <span class="op">{</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">        <span class="kw">type</span> Output = Secret&lt;&lt;T <span class="kw">as</span> Add&gt;::Output&gt;;</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">        <span class="kw">fn</span> add(<span class="kw">self</span>, other: Secret&lt;T&gt;) -&gt; <span class="kw">Self</span>::Output <span class="op">{</span></a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">            Secret(<span class="kw">self</span>.<span class="dv">0</span> + other.<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">        <span class="op">}</span></a>
+<a class="sourceLine" id="cb12-13" data-line-number="13">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb12-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">    <span class="kw">impl</span>&lt;T&gt; Sub <span class="kw">for</span> Secret&lt;T&gt; <span class="kw">where</span> T: Sub <span class="op">{</span></a>
+<a class="sourceLine" id="cb12-16" data-line-number="16">        <span class="kw">type</span> Output = Secret&lt;&lt;T <span class="kw">as</span> Sub&gt;::Output&gt;;</a>
+<a class="sourceLine" id="cb12-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb12-18" data-line-number="18">        <span class="kw">fn</span> sub(<span class="kw">self</span>, other: Secret&lt;T&gt;) -&gt; <span class="kw">Self</span>::Output <span class="op">{</span></a>
+<a class="sourceLine" id="cb12-19" data-line-number="19">            Secret(<span class="kw">self</span>.<span class="dv">0</span> - other.<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb12-20" data-line-number="20">        <span class="op">}</span></a>
+<a class="sourceLine" id="cb12-21" data-line-number="21">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb12-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb12-23" data-line-number="23">    <span class="co">// ...</span></a>
+<a class="sourceLine" id="cb12-24" data-line-number="24"><span class="op">}</span></a>
+<a class="sourceLine" id="cb12-25" data-line-number="25"><span class="kw">use</span> <span class="kw">self</span>::secret::Secret;</a></code></pre></div>
+<p>Now, we have some ways of using our secret data to construct other secret data. It’s limited, but many other extensions should follow similar patterns and we could also add other operations implemented directly on <code class="sourceCode rust">Secret&lt;T&gt;</code> types that compose secret values without going through a trait like so:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">impl</span> Secret&lt;<span class="dt">bool</span>&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">    <span class="kw">pub</span> <span class="kw">fn</span> branch&lt;F, T&gt;(&amp;<span class="kw">self</span>, cons: F, alt: F) -&gt; Secret&lt;T&gt;</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">    <span class="kw">where</span> F: <span class="bu">Fn</span>() -&gt; Secret&lt;T&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">        <span class="kw">if</span> <span class="kw">self</span>.<span class="dv">0</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">            cons()</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">            alt()</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">        <span class="op">}</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="op">}</span></a></code></pre></div>
+<p>With all these extensions, the argument that parametricity is still enforcing noninterference is now dependent on the exact set of operations that have been implemented for <code class="sourceCode rust">Secret&lt;T&gt;</code>, but as long as they <em>always</em> return an argument of the form <code class="sourceCode rust">Secret&lt;T&gt;</code>, Rust will enforce noninterference. We can even include operations that combine <code class="sourceCode rust">Secret&lt;T&gt;</code> and <code class="sourceCode rust">T</code> as long as their results are themselves secret. We could even imagine building a simple static analysis tool that runs atop Rust to audit a crate providing such a secret type to ensure that every function it implements returns a secret marked type.</p>
+<h1 id="bountiful-properties-with-bounded-parametricity">Bountiful Properties with Bounded Parametricity</h1>
+<p>Though we used traits to extend the functionality of our <code class="sourceCode rust">Secret&lt;T&gt;</code> type, they played a somewhat limited role in our argument for noninterference via parametricity, but we can do more. Fundamentally, traits allow us to bound type parameters with a specific interface that can be used within functions. This allow us to weaken our notion of parametricity from type parameters and values at those types being completely opaque to values at those types being usable in a controlled fashion. Correspondingly, we can derive even more interesting properties from the types. For a simple example, consider this extended version of our original identity example:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">fn</span>&lt;T&gt;(T) -&gt; T <span class="kw">where</span> T: <span class="bu">Display</span></a></code></pre></div>
+<p>Previously, we said that any side-effects of this function could not depend on the argument. By adding the <code class="sourceCode rust"><span class="bu">Display</span></code> bound on <code class="sourceCode rust">T</code>, we’ve allowed the argument to be displayed in output effects like <code class="sourceCode rust"><span class="pp">println!</span></code>. In a sense, this new ability to display the argument is expanding the allowed set of side-effects. This expansion is most evident from the fact that all of our old implementations are still legal at this bounded type, but new implementations are also legal. For example:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> trace&lt;T&gt;(x: T) -&gt; T <span class="kw">where</span> T: <span class="bu">Display</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">    <span class="pp">println!</span>(<span class="st">&quot;{}&quot;</span>, x);</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">    x</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="op">}</span></a></code></pre></div>
+<p>You may have noticed as we went through our earlier noninterference example that this property seems almost useless by virtue of being overly strict. In particular, since public outputs cannot depend on secret values in any way, there’s really no reason to use secret values at all. In practice, security type systems offer escape hatches (much like Rust’s <code class="sourceCode rust"><span class="kw">unsafe</span></code>) to selectively reveal secret information in a way that is readily auditable. With traits, we can build a principled escape hatch giving us a weakened property known as <em>relaxed noninterference</em>.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> Relaxed noninterference can be understood intuitively as the property that public outputs can only depend on secret values according to predetermined rules known as <em>declassification policies</em>.</p>
+<p>In our formulation in Rust, we will record these policies as traits and use trait bounds to decide what policies are available within a function. Consequently, the type signatures of our functions will necessarily have to tell us how they plan on using the secret data we give them giving us strong, local reasoning principles for security. At the heart of this approach is our previous definition of <code class="sourceCode rust">Secret&lt;T&gt;</code> with a trait representing the empty declassification policy:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="kw">pub</span> <span class="kw">trait</span> Sec&lt;T&gt;: private::Sealed <span class="op">{}</span></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="kw">impl</span>&lt;T&gt; Sec&lt;T&gt; <span class="kw">for</span> Secret&lt;T&gt; <span class="op">{}</span></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb16-6" data-line-number="6"><span class="kw">mod</span> private <span class="op">{</span></a>
+<a class="sourceLine" id="cb16-7" data-line-number="7">    <span class="kw">use</span> <span class="kw">super</span>::Secret;</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">    <span class="kw">pub</span> <span class="kw">trait</span> Sealed <span class="op">{}</span></a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">    <span class="kw">impl</span>&lt;T&gt; Sealed <span class="kw">for</span> Secret&lt;T&gt; <span class="op">{}</span></a>
+<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="op">}</span></a></code></pre></div>
+<p>Our private module here is used to seal the <code class="sourceCode rust">Sec&lt;T&gt;</code> trait preventing it from being implemented on any additional types beyond <code class="sourceCode rust">Secret&lt;T&gt;</code>. With just this, we can now specify functions like before that have noninterference:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> f&lt;S, T&gt;(x: <span class="dt">u32</span>, y: S) -&gt; <span class="dt">u32</span> <span class="kw">where</span> S: Sec&lt;<span class="dt">u32</span>&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">    <span class="co">// the following line is not legal...</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">    <span class="co">// return y.0;</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">    x</a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="op">}</span></a></code></pre></div>
+<p>We can then specify a number of declassification policies that enable us to make selective use of our secret values:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co">// Debug declassification policy: can format the value for debugging purposes</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw">impl</span>&lt;T&gt; <span class="bu">Debug</span> <span class="kw">for</span> Secret&lt;T&gt; <span class="kw">where</span> T: <span class="bu">Debug</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">    <span class="kw">fn</span> fmt(&amp;<span class="kw">self</span>, f: &amp;<span class="kw">mut</span> Formatter) -&gt; <span class="dt">Result</span>&lt;(), Error&gt; <span class="op">{</span></a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">        <span class="kw">self</span>.<span class="dv">0.f</span>mt(f)</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="op">}</span></a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="co">// Zeroable declassification policy: can determine whether or not this is zero</span></a>
+<a class="sourceLine" id="cb18-9" data-line-number="9"><span class="kw">impl</span>&lt;T&gt; Zeroable <span class="kw">for</span> Secret&lt;T&gt; <span class="kw">where</span> T: Zeroable <span class="op">{</span></a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">    <span class="kw">fn</span> is_zero(&amp;<span class="kw">self</span>) -&gt; <span class="dt">bool</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">        <span class="kw">self</span>.<span class="dv">0.</span>is_zero()</a>
+<a class="sourceLine" id="cb18-12" data-line-number="12">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb18-13" data-line-number="13"><span class="op">}</span></a>
+<a class="sourceLine" id="cb18-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb18-15" data-line-number="15"><span class="co">// Hash declassification policy: can compute a hash of the value</span></a>
+<a class="sourceLine" id="cb18-16" data-line-number="16"><span class="kw">impl</span>&lt;T&gt; <span class="bu">Hash</span> <span class="kw">for</span> Secret&lt;T&gt; <span class="kw">where</span> T: <span class="bu">Hash</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb18-17" data-line-number="17">    <span class="kw">fn</span> hash&lt;H&gt;(&amp;<span class="kw">self</span>, state: &amp;<span class="kw">mut</span> H) <span class="kw">where</span> H: Hasher <span class="op">{</span></a>
+<a class="sourceLine" id="cb18-18" data-line-number="18">        <span class="kw">self</span>.<span class="dv">0.</span>hash(state);</a>
+<a class="sourceLine" id="cb18-19" data-line-number="19">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb18-20" data-line-number="20"><span class="op">}</span></a></code></pre></div>
+<p>And then we can use these declassification policies to discern legal implementations of specific types as we’ve done before. Consider the type:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">fn</span>&lt;<span class="ot">'a</span>, S&gt;(S, <span class="dt">u64</span>) -&gt; <span class="dt">bool</span> <span class="kw">where</span> S: Sec&lt;&amp;<span class="ot">'a</span> <span class="dt">str</span>&gt; + <span class="bu">Hash</span></a></code></pre></div>
+<p>We know that there are some trivial implementations (e.g. comparing the <code class="sourceCode rust"><span class="dt">u64</span></code> against <code class="sourceCode rust"><span class="dv">0</span></code>) that don’t make use of the secret value, but what about implementations that do? We can come up with something like:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> check&lt;<span class="ot">'a</span>, S&gt;(password: S, db_hash: <span class="dt">u64</span>) -&gt; <span class="dt">bool</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw">where</span> S: Sec&lt;&amp;<span class="ot">'a</span> <span class="dt">str</span>&gt; + <span class="bu">Hash</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">    <span class="co">// please don't actually do this, use SHA256 instead.</span></a>
+<a class="sourceLine" id="cb20-4" data-line-number="4">    <span class="kw">use</span> std::collections::hash_map::DefaultHasher;</a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">    <span class="kw">let</span> <span class="kw">mut</span> hasher = DefaultHasher::new();</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6">    password.hash(&amp;<span class="kw">mut</span> hasher);</a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">    hasher.finish() == db_hash</a>
+<a class="sourceLine" id="cb20-8" data-line-number="8"><span class="op">}</span></a></code></pre></div>
+<p>Now, if we connected this to a web framework (like the amazing <a href="https://rocket.rs/">Rocket</a>), we could imagine having our forms always providing passwords as secret values. Then, by using traits as declassification policies, we can use the type system to ensure that we never accidentally misuse the password. However, we should be wary: we used <code class="sourceCode rust"><span class="bu">Hash</span></code> in this example because it’s provided by <code class="sourceCode rust">std</code> and includes already-implemented hash algorithms, but it’s actually overly-permissive for this purpose. We could write a custom hasher that would allow us to leak information or even completely reveal the value. For a real implementation, we would instead provide a more constrained trait that allows you to compute a specific cryptographic hash such as SHA256 or SHA512.</p>
+<h1 id="some-final-words">Some Final Words</h1>
+<p>If you’ve made it this far, you’ve seen a bunch of “crazy academic concepts” like parametricity, free theorems, and noninterference. You’ve also seen how traits can be used to relax parametricity and give us even more useful free theorems. Hopefully, this endeavor has convinced you of the strength of type-based reasoning in Rust. The <a href="https://github.com/aatxe/reasoning-with-types">small examples</a> that you’ve seen throughout the post are really just scratching the surface of this kind of reasoning: we can go further by using the added constraints from the ownership system to produce even more interesting theorems (such as that a <a href="https://en.wikipedia.org/wiki/Cryptographic_nonce">cryptographic nonce</a> is only used once). The extent of these reasoning capabilities is one of my personal favorite features of strong type systems, and subsequently one of my favorite things about Rust. Maybe it’ll be one of yours now too!</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Owing to their presentation in the paper <a href="http://ecee.colorado.edu/ecen5533/fall11/reading/free.pdf"><em>Theorems for Free!</em></a>, these properties are known in the academic world as <em>free theorems</em>—though I suspect that some will be unhappy with my liberal application of this term to intuited properties.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>And indeed, it was originally presented as the <em>abstraction theorem</em> in John C. Reynolds’ <a href="http://www.cse.chalmers.se/edu/year/2010/course/DAT140_Types/Reynolds_typesabpara.pdf"><em>Types, abstraction, and parametric polymorphism</em></a>.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>Actual Java does not allow the cast from <code class="sourceCode java"><span class="bu">Integer</span></code> to <code class="sourceCode java">T</code> as such, but there are more complicated examples involving subtyping that can produce similar specialized-by-type behavior. This simpler example nevertheless captures the essence of non-parametric functions.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>Strictly speaking, <a href="https://cs.appstate.edu/~johannp/popl04.pdf">Haskell’s <code>seq</code> breaks general parametricity</a>, as do Rust’s various reflection capabilities (including <code>Sized</code>) and the upcoming <a href="https://github.com/rust-lang/rfcs/pull/1210">impl specialization</a> feature. Fortunately, like in the Haskell paper, we can always refine our notion of parametricity. Though this does have some consequences for precisely what properties you can glean from types.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>Though our argument is somewhat proofy, we would require a formal semantics for Rust. There exists one in the form of <a href="http://plv.mpi-sws.org/rustbelt/">RustBelt</a>, and as part of my research, I hope to produce an alternative formal backing for these free theorems in Rust, particularly the latter ones related to security.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>A connection between parametricity and noninterference was commonly held wisdom in the programming languages community, but was not proven until Bowman and Ahmed’s <a href="http://www.ccs.neu.edu/home/amal/papers/nifree.pdf"><em>Noninterference for Free</em></a>.<a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>The consequence of this is that we would need to define methods instead of operators which would make secret code look weirder and be less ergonomic, but is not a fundamental limitation to this approach. If the trait definitions were made more general, this would be a nonissue, and we could use macros instead to offer some improvements.<a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>In <a href="https://hal.archives-ouvertes.fr/hal-01637023/document"><em>Type Abstraction for Relaxed Noninterference</em></a>, we see a related presentation of relaxed noninterference as a consequence of object-oriented type abstraction capabilities. Since Rust uses parametric polymorphism with traits for type abstraction, we are developing an analogue here.<a href="#fnref8" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+</div>
+<div class="center">
+  Comments? Questions? <a href="mailto:awe@pdgn.co">Email</a> or
+  <a href="https://twitter.com/aatxe">tweet</a> at me.
+</div>
+
+        </section>
+      
+    </article>
+    <noscript id="deferred-styles">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:700" rel="stylesheet" />
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                webkitRequestAnimationFrame || msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
+  </body>
+</html>
