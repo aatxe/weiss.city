@@ -34,7 +34,7 @@
     <div class="post-date">February 26, 2018</div>
 </div>
 <div class="section-body">
-  <p><a href="https://www.rust-lang.org/">Rust</a> is a modern programming language which is marketed primarily on the basis of its very nice type system, and I’d like to tell you about how you can use this type system to reason about your programs in interesting ways. Most of the time when its type system is discussed, the focus is on its guarantee of data race freedom and ability to enable so-called <a href="https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html"><em>fearless concurrency</em></a> (and rightfully so—this is a place where Rust truly shines!). Today, I have a different focus in mind, characterized perhaps most succinctly as follows:</p>
+  <p>we offer assistance to any other copyright holder who wishes to do the same. <a href="https://www.rust-lang.org/">Rust</a> is a modern programming language which is marketed primarily on the basis of its very nice type system, and I’d like to tell you about how you can use this type system to reason about your programs in interesting ways. Most of the time when its type system is discussed, the focus is on its guarantee of data race freedom and ability to enable so-called <a href="https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html"><em>fearless concurrency</em></a> (and rightfully so—this is a place where Rust truly shines!). Today, I have a different focus in mind, characterized perhaps most succinctly as follows:</p>
 <blockquote>
 <p>From the type of a polymorphic function we can derive a theorem that it satisfies. Every function of the same type satisfies the same theorem. This provides a free source of useful theorems.</p>
 <p><cite>Philip Wadler, <a href="http://ecee.colorado.edu/ecen5533/fall11/reading/free.pdf"><em>Theorems for Free!</em></a></cite></p>
@@ -139,12 +139,11 @@
 <p>To do so, first, we have to define a notion of secret (we’ll treat all unannotated types as public, though we could choose to introduce a public type as well for symmetry):</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a></code></pre></div>
 <p>Strictly speaking, we’ve now achieved noninterference! That was probably easier than you expected, but the intuition should be clear: since we can perform no operations whatsoever on values of the type <code class="sourceCode rust">Secret&lt;T&gt;</code>, it is impossible for public outputs to depend on secret data! However, there is a caveat: because of how access modifiers work in Rust, code in the same module can violate noninterference like so:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb10-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw">pub</span> <span class="kw">fn</span> unwrap_secret&lt;T&gt;(secret: Secret&lt;T&gt;) -&gt; T <span class="op">{</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">    secret.<span class="dv">0</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="op">}</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">pub</span> <span class="kw">fn</span> unwrap_secret&lt;T&gt;(secret: Secret&lt;T&gt;) -&gt; T <span class="op">{</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    secret.<span class="dv">0</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="op">}</span></a></code></pre></div>
 <p>To avoid this, we can place our implementation of secret types inside of its own module with no additional code:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">mod</span> secret <span class="op">{</span></a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">    <span class="kw">pub</span> <span class="kw">struct</span> Secret&lt;T&gt;(T);</a>
