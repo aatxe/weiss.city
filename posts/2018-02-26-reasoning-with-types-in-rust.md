@@ -2,7 +2,7 @@
 title: Reasoning with Types in Rust
 description: In this post, I explore how Rust's type system provides programmers with powerful reasoning principles. In doing so, I attempt to present an accessible explanation of an idea known as free theorems and its relationship with noninterference, a common security property.
 ---
-
+we offer assistance to any other copyright holder who wishes to do the same.
 [Rust][rust] is a modern programming language which is marketed primarily on the basis of its very
 nice type system, and I'd like to tell you about how you can use this type system to reason about
 your programs in interesting ways. Most of the time when its type system is discussed, the focus is
@@ -240,7 +240,6 @@ there is a caveat: because of how access modifiers work in Rust, code in the sam
 noninterference like so:
 
 ```rust
-
 pub struct Secret<T>(T);
 
 pub fn unwrap_secret<T>(secret: Secret<T>) -> T {
