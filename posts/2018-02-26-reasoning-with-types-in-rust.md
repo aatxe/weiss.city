@@ -434,7 +434,7 @@ come up with something like:
 ```rust
 pub fn check<'a, S>(password: S, db_hash: u64) -> bool
 where S: Sec<&'a str> + Hash {
-    // please don't actually do this, use SHA256 instead.
+    // please don't actually do this, use bcrypt or scrypt instead.
     use std::collections::hash_map::DefaultHasher;
     let mut hasher = DefaultHasher::new();
     password.hash(&mut hasher);
@@ -449,8 +449,8 @@ the password. However, we should be wary: we used `Hash`{.rust} in this example 
 provided by `std`{.rust} and includes already-implemented hash algorithms, but it's actually
 overly-permissive for this purpose. We could write a custom hasher that would allow us to leak
 information or even completely reveal the value. For a real implementation, we would instead provide
-a more constrained trait that allows you to compute a specific cryptographic hash such as SHA256 or
-SHA512.
+a more constrained trait that allows you to compute a specific cryptographic hash such as bcrypt or
+scrypt.
 
 [^8]: In [_Type Abstraction for Relaxed Noninterference_][typeabsrni], we see a related presentation
 of relaxed noninterference as a consequence of object-oriented type abstraction capabilities. Since
