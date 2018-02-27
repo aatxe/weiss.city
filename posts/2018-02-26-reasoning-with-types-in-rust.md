@@ -213,7 +213,7 @@ Interestingly, we can reach a similar general conclusion to the one we reached f
 > of the form `fn(Vec<A>) -> Vec<B>`{.rust} where `A`{.rust} and `B`{.rust} are both concrete types,
 > and `a`{.rust} is a value of type `Vec<A>`{.rust}, then either:
 >
->    - `mystery(f(a)) = f(mystery(a))`{.rust} __or__
+>    - `mystery(f(a)) ⊆ a ∧ f(mystery(a)) ⊆ a`{.rust} __or__
 >    - `mystery(f(a))`{.rust} and `f(mystery(a))`{.rust} both panic or diverge.
 
 # Noninterference for Free
