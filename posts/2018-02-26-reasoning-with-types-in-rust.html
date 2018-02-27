@@ -130,7 +130,7 @@
 <blockquote>
 <p>Given a function <code class="sourceCode rust">m</code> of type <code class="sourceCode rust"><span class="kw">fn</span>&lt;T&gt;(<span class="dt">Vec</span>&lt;T&gt;) -&gt; <span class="dt">Vec</span>&lt;T&gt;</code>, a total function <code class="sourceCode rust">f</code> of the form <code class="sourceCode rust"><span class="kw">fn</span>(<span class="dt">Vec</span>&lt;A&gt;) -&gt; <span class="dt">Vec</span>&lt;B&gt;</code> where <code class="sourceCode rust">A</code> and <code class="sourceCode rust">B</code> are both concrete types, and <code class="sourceCode rust">a</code> is a value of type <code class="sourceCode rust"><span class="dt">Vec</span>&lt;A&gt;</code>, then either:</p>
 <ul>
-<li><code class="sourceCode rust">mystery(f(a)) = f(mystery(a))</code> <strong>or</strong></li>
+<li><code class="sourceCode rust">mystery(f(a)) ⊆ a ∧ f(mystery(a)) ⊆ a</code> <strong>or</strong></li>
 <li><code class="sourceCode rust">mystery(f(a))</code> and <code class="sourceCode rust">f(mystery(a))</code> both panic or diverge.</li>
 </ul>
 </blockquote>
