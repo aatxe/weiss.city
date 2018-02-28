@@ -64,9 +64,6 @@ header a:hover, nav a:hover {
     opacity: 0.85;
 }
 
-nav {
-}
-
 .content {
     font-family: Lato, helvetica neue, Helvetica, Arial, sans-serif;
     line-height: 1.6em;
@@ -115,6 +112,10 @@ section {
     grid-template: "date" "title";
 }
 
+.section-head.archive-head {
+    grid-template: "title rss";
+}
+
 .copy h1 {
     margin-bottom: 0;
 }
@@ -159,7 +160,7 @@ section {
     margin-top: .25em;
 }
 
-.post-title {
+.post-title, .archive-title {
     grid-area: title;
     justify-self: left;
 }
@@ -167,6 +168,15 @@ section {
 .post-date {
     grid-area: date;
     color: #eb2f06;
+}
+
+.archive-rss {
+    grid-area: rss;
+    justify-self: right;
+}
+
+.archive-rss img {
+    height: 1em;
 }
 
 .content figure, .content .center {
