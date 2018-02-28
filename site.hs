@@ -37,12 +37,20 @@ main = hakyll $ do
   match "posts/*" $ do
     route $ setExtension "html"
     compile $ pandocCompiler
+      >>= saveSnapshot "content"
       >>= loadAndApplyTemplate "templates/post.html"    postCtx
       >>= loadAndApplyTemplate "templates/default.html" postCtx
       >>= relativizeUrls
 
   -- This route is needed to build pubs.
   match "pubs/*.md" $ compile pandocCompiler
+
+  create ["rss.xml"] $ do
+    route idRoute
+    compile $ do
+      loadAllSnapshots "posts/*" "content"
+        >>= fmap (take 10) . recentFirst
+        >>= renderRss (feedConfiguration "Recent Posts") feedCtx
 
   create ["archive.html"] $ do
     route idRoute
@@ -71,3 +79,17 @@ pubCtx :: Context String
 pubCtx =
   dateField "date" "%B %Y" `mappend`
   defaultContext
+
+feedCtx :: Context String
+feedCtx =
+  bodyField "description" `mappend`
+  defaultContext
+
+feedConfiguration :: String -> FeedConfiguration
+feedConfiguration title = FeedConfiguration {
+      feedTitle       = "Aaron Weiss / " ++ title
+    , feedDescription = "Personal blog of Aaron Weiss"
+    , feedAuthorName  = "Aaron Weiss"
+    , feedAuthorEmail = "awe@pdgn.co"
+    , feedRoot        = "https://aaronweiss.us/"
+}
