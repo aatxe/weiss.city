@@ -132,7 +132,7 @@
 <ul>
 <li><del><code class="sourceCode rust">mystery(f(a)) = f(mystery(a))</code></del> <strong>or</strong></li>
 <li><code class="sourceCode rust">mystery(f(a))</code> and <code class="sourceCode rust">f(mystery(a))</code> both return “related” values <strong>or</strong></li>
-<li><code class="sourceCode rust">mystery(f(a))</code> and <code class="sourceCode rust">f(mystery(a))</code> both panic or diverge.</li>
+<li>at least one of <code class="sourceCode rust">mystery(f(a))</code> and <code class="sourceCode rust">f(mystery(a))</code> panic or diverge.</li>
 </ul>
 </blockquote>
 <h1 id="noninterference-for-free">Noninterference for Free</h1>
