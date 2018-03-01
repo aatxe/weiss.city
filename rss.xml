@@ -3,14 +3,14 @@
     xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <title>Aaron Weiss / Recent Posts</title>
-        <link>https://aaronweiss.us/</link>
+        <link>https://aaronweiss.us</link>
         <description><![CDATA[Personal blog of Aaron Weiss]]></description>
-        <atom:link href="https://aaronweiss.us//rss.xml" rel="self"
+        <atom:link href="https://aaronweiss.us/rss.xml" rel="self"
                    type="application/rss+xml" />
         <lastBuildDate>Mon, 26 Feb 2018 00:00:00 UT</lastBuildDate>
         <item>
     <title>Reasoning with Types in Rust</title>
-    <link>https://aaronweiss.us//posts/2018-02-26-reasoning-with-types-in-rust.html</link>
+    <link>https://aaronweiss.us/posts/2018-02-26-reasoning-with-types-in-rust.html</link>
     <description><![CDATA[<p><a href="https://www.rust-lang.org/">Rust</a> is a modern programming language which is marketed primarily on the basis of its very nice type system, and I’d like to tell you about how you can use this type system to reason about your programs in interesting ways. Most of the time when its type system is discussed, the focus is on its guarantee of data race freedom and ability to enable so-called <a href="https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html"><em>fearless concurrency</em></a> (and rightfully so—this is a place where Rust truly shines!). Today, I have a different focus in mind, characterized perhaps most succinctly as follows:</p>
 <blockquote>
 <p>From the type of a polymorphic function we can derive a theorem that it satisfies. Every function of the same type satisfies the same theorem. This provides a free source of useful theorems.</p>
@@ -240,12 +240,12 @@
 </ol>
 </section>]]></description>
     <pubDate>Mon, 26 Feb 2018 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2018-02-26-reasoning-with-types-in-rust.html</guid>
+    <guid>https://aaronweiss.us/posts/2018-02-26-reasoning-with-types-in-rust.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
     <title>Bridging the System Configuration Gap</title>
-    <link>https://aaronweiss.us//posts/2017-06-05-bridging-the-system-configuration-gap.html</link>
+    <link>https://aaronweiss.us/posts/2017-06-05-bridging-the-system-configuration-gap.html</link>
     <description><![CDATA[<p>Last Friday, I gave a talk at <a href="http://www.nepls.org">NEPLS</a> on work I did while I was at UMass with <a href="https://people.cs.umass.edu/~arjun/home/">Arjun Guha</a>. You can find the slide deck for the talk <a href="/pubs/nepls17.pdf">here</a>, but the rest of this post will be a presentation of the same general material.</p>
 <h1 id="the-state-of-system-configuration">The State of System Configuration</h1>
 <p>In the past, system administrators relied largely on the shell to configure systems within an organization. Systems would either be configured manually on an individual basis, or automatically by scripts written by more enterprising administrators. However, the increased need for computer systems has made this approach generally intractable.</p>
@@ -314,12 +314,12 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
 </ol>
 </section>]]></description>
     <pubDate>Mon, 05 Jun 2017 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2017-06-05-bridging-the-system-configuration-gap.html</guid>
+    <guid>https://aaronweiss.us/posts/2017-06-05-bridging-the-system-configuration-gap.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
     <title>A Brief History of Pdgn</title>
-    <link>https://aaronweiss.us//posts/2015-02-11-history-of-pdgn.html</link>
+    <link>https://aaronweiss.us/posts/2015-02-11-history-of-pdgn.html</link>
     <description><![CDATA[<p>This is a cross-post from the <a href="http://blog.pdgn.co">PdgnCo Community Blog</a>. It was published on February 11th, 2015, and can also be found <a href="http://blog.pdgn.co/general/2015/02/11/history-of-pdgn.html">here</a>.</p>
 <hr />
 <p>The idea for Pdgn first came in June of 2014. For reasons that I can’t recall, I was drawn to searching for a domain. I didn’t really have a purpose for it. I was just poking around to see if anything cool was available. I stumbled upon the domain <code>pdgn.co</code>, and I thought it was concise, oddly charming, and easily pronouncable (as the English word, pigeon). As I said, I didn’t have a purpose, and so, I didn’t purchase the domain. I did, however, keep it in my mind.</p>
@@ -335,12 +335,12 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
 <p>After a few months, it became more apparent that running an IRC network on a single server was less than desirable. I wasn’t able to do updates of any kind, and maintenance meant that everything was completely inaccessible. So, I set out to make Pdgn into an actual network instead. The first step was to <a href="http://aaronweiss.us/posts/2015-02-03-going-static.html">move my site off of Ghost</a>, which was being hosted on the same server as the IRC network. Once that was done, I got two new, smaller servers for the network. One in San Fransisco, and one in New York. I had to decide on names, and I wanted an overarching theme for them. So, I settled on <a href="http://dictionary.reference.com/browse/genus">genera</a> of pigeons as an appropriate name. The hub server in New York was named <a href="https://en.wikipedia.org/wiki/Columba_(genus)">Columba</a>, after the genus of typical Old World pigeons. The server in San Fransisco was named <a href="https://en.wikipedia.org/wiki/Dodo">Raphus</a>, after the genus of the dodo (which is, to some people’s suprise including my own, a type of pigeon!).</p>
 <p>On February 3rd, 2015, both of the new servers went live, and the original server that housed Pdgn was taken down. With this, the original services bot was also retired. <a href="https://github.com/Pdgn/site/tree/fa533c0f976470211ca41f689c45001dd270ee67">On February 9th</a>, I released an official <a href="http://pdgn.co">pdgn.co site</a>, and then <a href="https://github.com/Pdgn/blog/tree/919e50226dd6e68e69ef85dda4c6ce73e72a6075">on February 10th</a>, I released the official <a href="http://blog.pdgn.co">pdgn.co community blog</a>. This brings us to today, February 11th, where I have now, for the first time, documented the history of the network. It’s hard to say where the future will take us, but I hope to expand the network with more servers and more people. This is really only the beginning.</p>]]></description>
     <pubDate>Wed, 11 Feb 2015 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2015-02-11-history-of-pdgn.html</guid>
+    <guid>https://aaronweiss.us/posts/2015-02-11-history-of-pdgn.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
     <title>Worker Appreciation Day</title>
-    <link>https://aaronweiss.us//posts/2014-10-21-worker-appreciation-day.html</link>
+    <link>https://aaronweiss.us/posts/2014-10-21-worker-appreciation-day.html</link>
     <description><![CDATA[<p>As a member of the Student Labor Action Project, I wrote an opinion-editorial for UMass’ Daily Collegian. It was published October 30th, and is available online <a href="http://dailycollegian.com/2014/10/30/appreciating-campus-workers/">here</a>. Additionally, it is reproduced exactly as I wrote it below.</p>
 <hr />
 <p>Today is Worker Appreciation Day. The Student Labor Action Project (SLAP) is hosting a brunch to show gratitude to the many workers of UMass. We’d like to encourage other students to do their part in expressing their gratitude to those with whom they interact. Workers make UMass work. They clean our dishes, our floors, and our showers. They fix our heating, sell us books, and run the on-campus hotel. Perhaps most importantly, they make our food. Do we, as students, consider the significance that workers have in our everyday lives? Without UMass workers, we could not have the incredible experiences made available to us at this institution. So, what do they get in return?</p>
@@ -349,12 +349,12 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
 <p>The 03s fought back against this abuse in 2011 by unionizing. After three years of unionization, the 03s continue to work without contract as the university has kept them in a perpetual state of bargaining. As Ben Walton wrote earlier this year, continued bargaining has even been used by the administration to deny workers raises. Combined with inflation, the lives of essential workers are only getting harder, and they deserve better. As students of this institution, we pay a great deal of money and there’s no reason that those who feed us should not be able to feed themselves.</p>
 <p>SLAP urges students to do their part in demanding economic justice for all UMass workers because they fundamentally shape our experience here and deserve far, far better than they have now. We need to band together in support of our workers; doing otherwise supports the status quo. We need their support, and right now, they need ours.</p>]]></description>
     <pubDate>Tue, 21 Oct 2014 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2014-10-21-worker-appreciation-day.html</guid>
+    <guid>https://aaronweiss.us/posts/2014-10-21-worker-appreciation-day.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
     <title>Write-Up: λ1</title>
-    <link>https://aaronweiss.us//posts/2014-06-04-write-up-l1.html</link>
+    <link>https://aaronweiss.us/posts/2014-06-04-write-up-l1.html</link>
     <description><![CDATA[<p>As part of HSCTF, there was a reverse engineering problem entitled “λ1”. The problem text was short and to the point “Here’s the lock. Find the key.” The first phrase <a href="http://compete.hsctf.com/ciJsbu4VFk/%CE%BB1.zip">“Here’s the lock.”</a> linked to an archive containing three executables, one for each of the major operating systems. All three executables were 64-bit. This problem is the first of a series of reversing problems.</p>
 <p>Ultimately, the goal of this problem was to retrieve the flag from one of the given executables. As a result, there’s a wide assortment of approaches to this problem. I’m not going to go over all of them here because I certainly don’t think I could produce all of them. Instead, I’m going to go over the approach that I anticipated as the most common solution to the problem. In fact, it’s possible that this wasn’t even the most common solution. Regardless, we’ll carry forward.</p>
 <p>Recognizing that the problem is one of reverse engineering, my first reaction is to immediately fire up <a href="https://www.hex-rays.com/products/ida/index.shtml">IDA</a>. Upon attempting to open the executable, IDA fails to do so because of the lambda in the file name. So, I rename it to <code>llama.exe</code> and try again to open it. This time, it works out. Next, I will attempt to run the program.</p>
@@ -386,12 +386,12 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
 </figure>
 <p>Well, look at that. We searched through the input a little and we found something very, very suspicious. This string, <code>LAMBDAS_ARE_KING</code>, looks like it could be the key. In fact, it is indeed the key. We did it!</p>]]></description>
     <pubDate>Wed, 04 Jun 2014 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2014-06-04-write-up-l1.html</guid>
+    <guid>https://aaronweiss.us/posts/2014-06-04-write-up-l1.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
     <title>Write-Up: awe</title>
-    <link>https://aaronweiss.us//posts/2014-05-26-write-up-awe.html</link>
+    <link>https://aaronweiss.us/posts/2014-05-26-write-up-awe.html</link>
     <description><![CDATA[<p>As part of HSCTF, there was a reconnaissance problem entitled awe. The given text for the problem was simple, and generally unhelpful as it was part of a series on some of our organizers. The text read “My name is Aaron Weiss.” The problem was, as you could probably tell, about me.</p>
 <p>The task of finding the flag was broken up into two pairs of <code>#, word</code> in two different places on the web. The hope was that when all four parts (two pairs from two sources) were found, they could be assembled into the flag using the order from the numbers accompanying the words. The format was designed purposefully to look suspicious and to draw attention across the web. The problem never intended for people to just guess random pieces of information.</p>
 <p>The first pair was found in two GitHub repositories, <a href="https://github.com/aatxe/dc-anchor/commit/fdf059c097e1f2fbe5d988dd2fca74e1e984857b#L13">dc-anchor</a> and <a href="https://github.com/aatxe/juicebot/commit/31c8e338d1b939f79c413ded9bae31b0a8013e10#L2">juicebot</a>. As something of a gotcha, the first repository had another <a href="https://github.com/aatxe/dc-anchor/commit/6591b8d28ce6f6c3c626babdcf1c9b357182a317#L13">commit</a> wherein I had removed a flag from an old CTF we ran. Many teams got caught up thinking this was important, even despite the note I added saying it wasn’t. This probably helped to add to the confusion, as this old flag was found by a great many participants.</p>
@@ -400,17 +400,17 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
 <p>Many teams got caught up in searching for particular information about me and making guesses based on that information. This resulted in a variety of funny submissions that were all generally unrelated to me. Many of these submissions were related to an Iraq war veteran and a video wherein he challenged New York’s SAFE Act. Others were related to a seemingly insignificant secondary character in a book entitled the Trikon Deception. Here’s a sampling of some of the submissions: <code>2nd Amendment</code>, <code>awe is really cool</code>, <code>SAFE Act</code>, <code>My right is greater than your dead</code>, and <code>Gun Control</code>.</p>
 <p>Based on the history of the problem, it should be rather apparent that it was a lot harder than it originally seemed to me as the author. The problem was originally set to be a 300 point problem, but was raised to a 400 point problem prior to the competition. Half way through the competition, the problem remained unsolved and so it was raised to 500 points. Ultimately, the problem was not solved during the competition.</p>]]></description>
     <pubDate>Mon, 26 May 2014 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2014-05-26-write-up-awe.html</guid>
+    <guid>https://aaronweiss.us/posts/2014-05-26-write-up-awe.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
     <title>HSCTF Write-Ups</title>
-    <link>https://aaronweiss.us//posts/2014-05-26-hsctf-write-ups.html</link>
+    <link>https://aaronweiss.us/posts/2014-05-26-hsctf-write-ups.html</link>
     <description><![CDATA[<p>As an organizer of the recent High School CTF competition, <a href="http://hsctf.com/">HSCTF</a>, I designed a series of problems for competitors to take part in. My primary focus in problem design for the competition was in reverse engineering, but I also created one of the most challenging reconnaissance problem we offered in the competition. Since the competition is now complete, I’ll be posting a series of write-ups on the problems I designed. In each write-up, I’ll discuss the problem, the ideas that went into the design, the solution, pitfalls that users fell into, and any other interesting information about the problem.</p>
 <p>The competition itself was wildly successful with over 750 teams registered, and over 2,100 participants. We offered 45 problems (and a survey) coming to a total of 14,250 points (50 points for the survey). We had a highly competitive top fifty with many teams able to jump quickly in the ranks by solving one problem. It was a close competition for sure. In fact, Raelly didn’t jump into the first position until the closing hour or two of the competition.</p>
 <p>With that, I’d like to congratulate all of our participants in HSCTF. This was a wonderful competition and I’m deeply pleased with how well it went. Hard problems were solved. The competition was fierce. Everyone did a wonderful job. Specifically, I’d like to congratulate The Lumberjacks from Phillips Academy for placing third, 0x90.avi from Thomas Jefferson High School for placing second, and Raelly from Thomas Jefferson High School for Science and Technology for their last-minute steal of first place. This is especially impressive since they joined the competition rather late. Well played, everyone!</p>]]></description>
     <pubDate>Mon, 26 May 2014 00:00:00 UT</pubDate>
-    <guid>https://aaronweiss.us//posts/2014-05-26-hsctf-write-ups.html</guid>
+    <guid>https://aaronweiss.us/posts/2014-05-26-hsctf-write-ups.html</guid>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 
