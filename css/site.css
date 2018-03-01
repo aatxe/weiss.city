@@ -238,7 +238,7 @@ hr {
 }
 
 .content img {
-    width: 75%;
+    width: 100%;
 }
 
 .content .copy {
@@ -327,6 +327,10 @@ hr {
 
     .content div.sourceCode {
         font-size: 0.9em;
+    }
+
+    .content img {
+        width: 75%;
     }
 }
 
