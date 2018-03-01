@@ -215,7 +215,7 @@ Interestingly, we can reach a similar general conclusion to the one we reached f
 >
 >    - ~~`mystery(f(a)) = f(mystery(a))`{.rust}~~ __or__
 >    - `mystery(f(a))`{.rust} and `f(mystery(a))`{.rust} both return "related" values __or__
->    - `mystery(f(a))`{.rust} and `f(mystery(a))`{.rust} both panic or diverge.
+>    - at least one of `mystery(f(a))`{.rust} and `f(mystery(a))`{.rust} panic or diverge.
 
 # Noninterference for Free
 
