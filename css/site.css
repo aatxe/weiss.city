@@ -191,7 +191,7 @@ section {
     white-space: pre-wrap;
 }
 
-.content pre.sourceCode {
+.content pre {
     background: #f5f5f5;
     padding: 1em;
     border-radius: 0.2em;
@@ -326,7 +326,7 @@ hr {
     }
 
     .content pre, .content div.sourceCode {
-        font-size: 1.1em;
+        font-size: 1em;
     }
 
     .content img {
