@@ -81,7 +81,7 @@ section {
 .home-head {
     display: grid;
     grid-gap: 1em;
-    grid-template-column 1fr;
+    grid-template-column: 1fr;
     grid-template-areas: "image" "blurb";
 }
 
