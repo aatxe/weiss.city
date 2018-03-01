@@ -192,6 +192,10 @@ section {
 }
 
 .content pre {
+    hyphens: none;
+    -ms-hyphens: none;
+    -moz-hyphens: none;
+    -webkit-hyphens: none;
     background: #f5f5f5;
     padding: 1em;
     border-radius: 0.2em;
