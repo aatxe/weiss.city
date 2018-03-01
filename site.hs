@@ -91,5 +91,5 @@ feedConfiguration title = FeedConfiguration {
     , feedDescription = "Personal blog of Aaron Weiss"
     , feedAuthorName  = "Aaron Weiss"
     , feedAuthorEmail = "awe@pdgn.co"
-    , feedRoot        = "https://aaronweiss.us/"
+    , feedRoot        = "https://aaronweiss.us"
 }
