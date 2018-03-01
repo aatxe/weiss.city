@@ -188,6 +188,7 @@ section {
     justify-self: center;
     font-size: 0.8em;
     text-align: left;
+    white-space: pre-wrap;
 }
 
 .content pre.sourceCode {
