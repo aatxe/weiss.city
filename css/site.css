@@ -177,6 +177,7 @@ section {
 
 .archive-rss img {
     height: 1em;
+    width: 1em !important;
 }
 
 .content figure, .content .center {
