@@ -188,6 +188,11 @@ section {
     justify-self: center;
 }
 
+.content div.sourceCode {
+    font-size: 0.8em;
+    text-align: left;
+}
+
 .content pre.sourceCode {
     background: #f5f5f5;
     padding: 1em;
@@ -247,6 +252,10 @@ hr {
     max-width: 720px;
     margin: auto;
     margin-top: 2.5em;
+}
+
+.copy ol, .copy ul {
+    text-align: left;
 }
 
 .copy blockquote {
@@ -316,6 +325,10 @@ hr {
         grid-gap: 1em;
         grid-template-columns: 1fr 1fr;
         grid-template: "title date";
+    }
+
+    .content div.sourceCode {
+        font-size: 0.9em;
     }
 }
 
