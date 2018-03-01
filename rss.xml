@@ -353,7 +353,7 @@ dir { path =&gt; &quot;/foo&quot; }</code></pre>
     <dc:creator>Aaron Weiss</dc:creator>
 </item>
 <item>
-    <title>Write-Up: &lambda;1</title>
+    <title>Write-Up: λ1</title>
     <link>https://aaronweiss.us//posts/2014-06-04-write-up-l1.html</link>
     <description><![CDATA[<p>As part of HSCTF, there was a reverse engineering problem entitled “λ1”. The problem text was short and to the point “Here’s the lock. Find the key.” The first phrase <a href="http://compete.hsctf.com/ciJsbu4VFk/%CE%BB1.zip">“Here’s the lock.”</a> linked to an archive containing three executables, one for each of the major operating systems. All three executables were 64-bit. This problem is the first of a series of reversing problems.</p>
 <p>Ultimately, the goal of this problem was to retrieve the flag from one of the given executables. As a result, there’s a wide assortment of approaches to this problem. I’m not going to go over all of them here because I certainly don’t think I could produce all of them. Instead, I’m going to go over the approach that I anticipated as the most common solution to the problem. In fact, it’s possible that this wasn’t even the most common solution. Regardless, we’ll carry forward.</p>
