@@ -43,7 +43,7 @@
 <a class="sourceLine" id="cb5-2" data-line-number="2">    <span class="pp">println!</span>(<span class="st">&quot;oh no&quot;</span>);</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">    x</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="op">}</span></a></code></pre></div>
-<p>And Rust is also impure, meaning we could error (called <em>panicking</em> in Rust) or otherwise diverge:</p>
+<p>And Rust is also partial, meaning we could error (called <em>panicking</em> in Rust) or otherwise diverge:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">pub</span> <span class="kw">fn</span> panicking_id&lt;T&gt;(_: T) -&gt; T <span class="op">{</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">    <span class="pp">panic!</span>(<span class="st">&quot;at the disco&quot;</span>)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"><span class="op">}</span></a>
