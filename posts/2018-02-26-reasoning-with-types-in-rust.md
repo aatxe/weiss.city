@@ -103,7 +103,7 @@ pub fn effectful_id<T>(x: T) -> T {
 }
 ```
 
-And Rust is also impure, meaning we could error (called _panicking_ in Rust) or otherwise diverge:
+And Rust is also partial, meaning we could error (called _panicking_ in Rust) or otherwise diverge:
 
 ```rust
 pub fn panicking_id<T>(_: T) -> T {
