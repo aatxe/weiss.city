@@ -355,6 +355,7 @@ hr {
 
 @media (min-width: 1080px) {
     .content pre {
-        max-width: inherit;
+        max-width: 720px;
+        max-width: calc(720px - 2em);
     }
 }
