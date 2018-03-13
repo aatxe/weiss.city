@@ -200,14 +200,14 @@ We can then try to capture a sense of what this type means as we did before:
 
 The process of concluding this is more complicated, but the general gist is that such a function can
 only perform the operations defined on `Vec<T>`{.rust} and as usual cannot inspect the types of its
-elements. From there, we know that we cannot create new values of type `T` or perform any operations
-dependent on values within the vector. This also leverages the Rust-specific fact that values (in
-this case, of type `T`) cannot be copied without knowing that they implement `Clone` and/or `Copy`
-(whereas in other languages with parametricity, this typically is not the case). We can then
-conclude that all functions at this type must yield a permutation (or possibly a subset of a
-permutation) of the input vector. Of course, the same exceptions about panics and divergence apply.
-Interestingly, we can reach a similar general conclusion to the one we reached for
-`fn<T>(T) -> T`{.rust}:
+elements. From there, we know that we cannot create new values of type `T`{.rust} or perform any
+operations dependent on values within the vector. This also leverages the Rust-specific fact that
+values (in this case, of type `T`{.rust}) cannot be copied without knowing that they implement
+`Clone`{.rust} and/or `Copy`{.rust} (whereas in other languages with parametricity, this typically
+is not the case). We can then conclude that all functions at this type must yield a permutation (or
+possibly a subset of a permutation) of the input vector. Of course, the same exceptions about panics
+and divergence apply. Interestingly, we can reach a similar general conclusion to the one we reached
+for `fn<T>(T) -> T`{.rust}:
 
 > Given a function `m`{.rust} of type `fn<T>(Vec<T>) -> Vec<T>`{.rust}, a total function `f`{.rust}
 > of the form `fn(Vec<A>) -> Vec<B>`{.rust} where `A`{.rust} and `B`{.rust} are both concrete types,
