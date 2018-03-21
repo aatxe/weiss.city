@@ -11,7 +11,7 @@ body {
 }
 
 header, nav, .section-head {
-    font-family: Montserrat,helvetica neue,Helvetica,Arial,sans-serif;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
 }
 
@@ -65,7 +65,7 @@ header a:hover, nav a:hover {
 }
 
 .content {
-    font-family: Lato, helvetica neue, Helvetica, Arial, sans-serif;
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.6em;
     grid-column: col-start 2 / span 10;
     margin-bottom: 1.5em;
@@ -179,6 +179,10 @@ section {
 
 .content figure, .content .center {
     text-align: center;
+}
+
+.content pre, .content code {
+    font-family: "Source Code Pro", monospace;
 }
 
 .content pre, .content div.sourceCode {
