@@ -10,5 +10,5 @@ I'm Aaron Weiss, a first-year PhD student and [NSF Fellow](https://nsfgrfp.org) 
 As an undergraduate, I worked with [Arjun Guha](http://people.cs.umass.edu/~arjun/) on static
 verification and update synthesis for [Puppet](https://puppet.com/) manifests.
 
-I'm an open source software developer with about a decade of experience. My favorite languages are
+I'm an open source software developer with about a decade of experience, mostly in
 [Rust](http://www.rust-lang.org/) and [Scala](http://www.scala-lang.org).
