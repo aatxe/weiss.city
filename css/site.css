@@ -247,7 +247,6 @@ hr {
 }
 
 .content .copy {
-    text-align: justify;
     hyphens: auto;
     -ms-hyphens: auto;
     -moz-hyphens: auto;
@@ -257,8 +256,8 @@ hr {
     margin-top: 2.5em;
 }
 
-.copy ol, .copy ul {
-    text-align: left;
+.content .copy p {
+    text-align: justify;
 }
 
 .copy blockquote {
