@@ -183,7 +183,7 @@ section {
 }
 
 .content pre, .content code {
-    font-family: "Source Code Pro", monospace;
+    font-family: "Fira Code", "Source Code Pro", monospace;
 }
 
 .content pre, .content div.sourceCode {
