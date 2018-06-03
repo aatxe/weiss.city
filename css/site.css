@@ -260,6 +260,10 @@ hr {
     text-align: justify;
 }
 
+.content .copy .blog-blurb {
+    font-size: 0.9em;
+}
+
 .copy blockquote {
     border-left: 0.25em solid #eb2f06;
     margin: 0.5em 0 0.5em -0.25em;
