@@ -4,7 +4,11 @@
       <div class="pub-title"><a href="./pubs/$file$.pdf">$title$</a></div>
       <div class="pub-authors">$authors$.</div>
       <div class="pub-info">
-          In <em>$venue$</em>, $location$, $date$.
+        $if(submission)$
+        <em>In submission</em>, $date$.
+        $else$
+        In <em>$venue$</em>, $location$, $date$.
+        $endif$
           $if(award)$
           <b>$award$.</b>
           $endif$
