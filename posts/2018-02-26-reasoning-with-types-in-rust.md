@@ -475,7 +475,7 @@ subsequently one of my favorite things about Rust. Maybe it'll be one of yours n
 [haskell]: https://www.haskell.org/
 [fearless]: https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html
 [tff]: http://ecee.colorado.edu/ecen5533/fall11/reading/free.pdf
-[typeabs]: http://www.cse.chalmers.se/edu/year/2010/course/DAT140_Types/Reynolds_typesabpara.pdf
+[typeabs]: https://commie.club/papers/reynolds83:parametricity.pdf
 [freeseq]: https://cs.appstate.edu/~johannp/popl04.pdf
 [specialization]: https://github.com/rust-lang/rfcs/pull/1210
 [rustbelt]: http://plv.mpi-sws.org/rustbelt/
