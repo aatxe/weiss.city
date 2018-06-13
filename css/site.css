@@ -282,6 +282,30 @@ hr {
     font-style: normal;
 }
 
+.copy ul {
+    list-style: none;
+    padding-left: 2.2em;
+}
+
+.copy ul li::before {
+    font-family: Helvetica !important;
+    content: '\2605';
+    color: #eb2f06;
+    margin-left: -1.5em;
+    margin-right: 0.5em;
+    font-size: 0.8em;
+    font-style: normal;
+}
+
+.copy ul.posts {
+    list-style: unset;
+    padding-left: unset;
+}
+
+.copy ul li.post::before {
+    content: unset;
+}
+
 .copy blockquote ol:not(:first-child), .copy blockquote ul:not(:first-child) {
     margin-top: -0.5em;
 }
