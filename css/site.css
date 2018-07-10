@@ -11,7 +11,7 @@ body {
     grid-column: span 12;
 }
 
-header, nav, .section-head {
+header, nav, .section-head, .copy h1, .copy h2, .copy h3 {
     font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
 }
