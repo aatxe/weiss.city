@@ -210,12 +210,12 @@ and divergence apply. Interestingly, we can reach a similar general conclusion t
 for `fn<T>(T) -> T`{.rust}:
 
 > Given a function `m`{.rust} of type `fn<T>(Vec<T>) -> Vec<T>`{.rust}, a total function `f`{.rust}
-> of the form `fn(Vec<A>) -> Vec<B>`{.rust} where `A`{.rust} and `B`{.rust} are both concrete types,
-> and `a`{.rust} is a value of type `Vec<A>`{.rust}, then either:
+> of the form `fn(A) -> B`{.rust} where `A`{.rust} and `B`{.rust} are both concrete types, and
+> `a`{.rust} is a value of type `Vec<A>`{.rust}, then either:
 >
 >    - `mystery(map_f(a)) = map_f(mystery(a))`{.rust} where `map_f`{.rust} is defined as 
 >       `|x| { x.iter().map(f).collect() }`{.rust} __or__
->    - at least one of `mystery(f(a))`{.rust} and `f(mystery(a))`{.rust} panic or diverge.
+>    - at least one of `mystery(map_f(a))`{.rust} and `map_f(mystery(a))`{.rust} panic or diverge.
 
 # Noninterference for Free
 
