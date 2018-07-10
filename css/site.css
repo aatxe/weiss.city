@@ -11,7 +11,7 @@ body {
     grid-column: span 12;
 }
 
-header, nav, .section-head, .copy h1, .copy h2, .copy h3 {
+header, nav, .section-head {
     font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
 }
@@ -66,7 +66,7 @@ header a:hover, nav a:hover {
 }
 
 .content {
-    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 1.45;
     grid-column: col-start 2 / span 10;
     margin-bottom: 1.5em;
@@ -90,6 +90,7 @@ section {
 
 .home-head .blurb {
     grid-area: blurb;
+    font-size: 0.9em;
 }
 
 .home-head .me {
@@ -183,7 +184,7 @@ section {
 }
 
 .content pre, .content code {
-    font-family: "Fira Code", "Source Code Pro", monospace;
+    font-family: "Fira Code", "Fira Mono", monospace;
 }
 
 .content pre, .content div.sourceCode {
@@ -389,5 +390,17 @@ hr {
     .content pre {
         max-width: 720px;
         max-width: calc(720px - 2em);
+    }
+}
+
+@media (min-width: 1260px) {
+    .home-head .blurb {
+        font-size: 1em;
+    }
+}
+
+@media (min-width: 1440px) {
+    .home-head .blurb {
+        font-size: 1.1em;
     }
 }
