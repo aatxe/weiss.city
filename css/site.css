@@ -261,7 +261,7 @@ hr {
     text-align: justify;
 }
 
-.content .copy .blurb {
+.content .copy .blurb, .copy figcaption {
     font-size: 0.9em;
 }
 
