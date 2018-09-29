@@ -140,11 +140,11 @@ section {
     margin: 0;
 }
 
-.pub .pub-extras a:before {
+.navlinks a:before, .pub .pub-extras a:before {
     content: '[';
 }
 
-.pub .pub-extras a:after {
+.navlinks a:after, .pub .pub-extras a:after {
     content: ']';
 }
 
