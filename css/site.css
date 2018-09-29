@@ -136,6 +136,18 @@ section {
     margin-bottom: 1.5em;
 }
 
+.pub .pub-extras p {
+    margin: 0;
+}
+
+.pub .pub-extras a:before {
+    content: '[';
+}
+
+.pub .pub-extras a:after {
+    content: ']';
+}
+
 .content a, .content a:visited {
     color: #eb2f06;
     text-decoration: none;
