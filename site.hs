@@ -4,7 +4,7 @@ import           Hakyll
 
 main :: IO ()
 main = hakyll $ do
-  match ("cv.pdf" .||. "images/*" .||. "pubs/*.pdf" .||. "*.png" .||. "*.ico") $ do
+  match ("cv.pdf" .||. "images/*" .||. "pubs/*.pdf" .||. "gradapps/*.pdf" .||. "*.png" .||. "*.ico") $ do
     route idRoute
     compile copyFileCompiler
 
