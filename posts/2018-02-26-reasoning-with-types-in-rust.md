@@ -40,12 +40,12 @@ public static <T> T identity(T x) {
 }
 ```
 
-And that the following almost-Java function is not:[^3]
+And that the following Java function is not:
 
 ```java
 public static <T> T notIdentity(T x) {
   if (x instanceof Integer) {
-    return (T) 42;
+    return (T) (Integer) 42;
   } else {
     return x;
   }
@@ -65,9 +65,6 @@ examples in Rust.
 
 [^2]: And indeed, it was originally presented as the _abstraction theorem_ in John C. Reynolds'
 [_Types, abstraction, and parametric polymorphism_][typeabs].
-[^3]: Actual Java does not allow the cast from `Integer`{.java} to `T`{.java} as such, but there are
-more complicated examples involving subtyping that can produce similar specialized-by-type behavior.
-This simpler example nevertheless captures the essence of non-parametric functions.
 [^4]: Strictly speaking, [Haskell's `seq` breaks general parametricity][freeseq], as do Rust's
 various reflection capabilities (including `Sized`) and the upcoming
 [impl specialization][specialization] feature. Fortunately, like in the Haskell paper, we can always
