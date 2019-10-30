@@ -3,7 +3,7 @@ title: Home
 blurb: yes
 ---
 
-I'm Aaron Weiss, a second-year PhD student and [NSF Fellow](https://nsfgrfp.org) at
+I'm Aaron Weiss, a third-year PhD student and [NSF Fellow](https://nsfgrfp.org) at
 [Northeastern](https://www.ccs.neu.edu) designing type systems with
 [Amal Ahmed](http://www.ccs.neu.edu/home/amal/).
 
