@@ -4,7 +4,7 @@ blurb: yes
 ---
 
 I'm Aaron Weiss, a third-year PhD student and [NSF Fellow](https://nsfgrfp.org) at
-[Northeastern](https://www.ccs.neu.edu) designing type systems with
+[Northeastern](https://www.khoury.northeastern.edu/) designing type systems with
 [Amal Ahmed](http://www.ccs.neu.edu/home/amal/).
 
 As an undergraduate, I worked with [Arjun Guha](http://people.cs.umass.edu/~arjun/) on static
