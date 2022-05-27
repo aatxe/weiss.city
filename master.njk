@@ -1,0 +1,9 @@
+---
+permalink: master.css
+---
+{% set css %}
+  {% include "css/normalize.css" %}
+  {% include "css/site.css" %}
+  {% include "css/syntax.css" %}
+{% endset %}
+{{ css | cssmin | safe }}

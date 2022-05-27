@@ -1,0 +1,13 @@
+{%- for post in collections.posts | reverse -%}
+  {% if post.data.published %}
+  <li class="post">
+    <div class="post-title"><a href="{{ post.url }}">{{ post.data.title }}</a></div>
+    <div class="post-date">
+      {{ post.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) }}
+    </div>
+    {% if post.data.description %}
+        <div class="post-desc">{{ post.data.description | safe }}</div>
+    {% endif %}
+  </li>
+  {% endif %}
+{%- endfor -%}

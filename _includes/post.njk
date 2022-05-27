@@ -1,0 +1,17 @@
+{% extends 'article.njk' %}
+
+{% block article %}
+  <div class="section-head">
+    <div class="post-title">{{ title }}</div>
+    <div class="post-date">
+      {{ page.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) }}
+    </div>
+  </div>
+  <div class="section-body">
+    {{ content | safe }}
+  </div>
+  <div class="center">
+    Comments? Questions? <a href="mailto:aweiss@hey.com">Email</a> or
+    <a href="https://twitter.com/aatxe">tweet</a> at me.
+  </div>
+{% endblock %}

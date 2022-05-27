@@ -1,0 +1,18 @@
+{% extends 'base.njk' %}
+
+{% block main %}
+  <section class="home-head">
+    <div class="blurb">
+      {{ content | safe }}
+    </div>
+    <div class="me">
+      <img src="./images/aaron.jpg" alt="Headshot photograph of Aaron.">
+    </div>
+  </section>
+  <section class="publications">
+    <div class="section-head">Publications</div>
+    <div class="section-body">
+      {% include 'pub-list.njk' %}
+    </div>
+  </section>
+{% endblock %}

@@ -1,6 +1,7 @@
 ---
 title: Reasoning with Types in Rust
 description: In this post, I explore how Rust's type system provides programmers with powerful reasoning principles. In doing so, I attempt to present an accessible explanation of an idea known as free theorems and its relationship with noninterference, a common security property.
+published: true
 ---
 
 [Rust][rust] is a modern programming language which is marketed primarily on the basis of its very
@@ -79,8 +80,8 @@ Consider the following function type, and try to imagine as many implementations
 fn<T>(T) -> T
 ```
 
-This type describes a function that for any type `T`{.rust}, takes an argument of type `T`{.rust}
-and returns a result of type `T`{.rust}. If you're already familiar with Rust, I'm sure it wouldn't
+This type describes a function that for any type `T`, takes an argument of type `T`
+and returns a result of type `T`. If you're already familiar with Rust, I'm sure it wouldn't
 take long to come up with the following implementation, the identity function:
 
 ```rust
@@ -89,7 +90,7 @@ pub fn id<T>(x: T) -> T {
 }
 ```
 
-In fact, since there are no operations we can actually perform on `x`{.rust}, it's the only possible
+In fact, since there are no operations we can actually perform on `x`, it's the only possible
 return value for this function. Of course, since Rust is effectful, we could print something before
 we return like so:
 
@@ -115,30 +116,30 @@ pub fn diverging_id<T>(_: T) -> T {
 These various implementations all tell us something about what the type means, which we can phrase
 like so:
 
-> A function of type `fn<T>(T) -> T`{.rust} must:
+> A function of type `fn<T>(T) -> T` must:
 >
 >    - return its argument __or__
 >    - panic or abort __or__
 >    - never return
 
-Additionally, since we still know nothing about the type `T`{.rust}, we can conclude that any
+Additionally, since we still know nothing about the type `T`, we can conclude that any
 effects that occur during the function are _not_ dependent on the argument. With these two
 properties, we can then conclude the more general properties that functions of the type
-`fn<T>(T) -> T`{.rust} behave "like an identity function":
+`fn<T>(T) -> T` behave "like an identity function":
 
-> Given a function `id`{.rust} of type `fn<T>(T) -> T`{.rust}, a total function `f`{.rust} of the
-> form `fn(A) -> B`{.rust} where `A`{.rust} and `B`{.rust} are both concrete types, and a value 
-> `a`{.rust} of type `A`{.rust}, then either:
+> Given a function `id` of type `fn<T>(T) -> T`, a total function `f` of the
+> form `fn(A) -> B` where `A` and `B` are both concrete types, and a value 
+> `a` of type `A`, then either:
 >
->    - `id`{.rust} can be composed arbitrarily (e.g. `id(f(a)) = f(id(a))`{.rust}) __or__
->    - `id(f(a))`{.rust} and `f(id(a))`{.rust} both panic or diverge.
+>    - `id` can be composed arbitrarily (e.g. `id(f(a)) = f(id(a))`) __or__
+>    - `id(f(a))` and `f(id(a))` both panic or diverge.
 
 In order to conclude this, we can consider each of the cases we previously described. If the
-function returns its argument, then we know both that `id(a) = a`{.rust} and
-`id(f(a)) = f(a)`{.rust} and we can combine these two equalities to conclude the first result. If
+function returns its argument, then we know both that `id(a) = a` and
+`id(f(a)) = f(a)` and we can combine these two equalities to conclude the first result. If
 the function does not return its arguments, we know it either panics or never returns but we also
-know that this cannot be dependent on the argument in any way. Thus if `id(f(a))`{.rust} panics,
-then `f(id(a))`{.rust} __must__ panic as well.
+know that this cannot be dependent on the argument in any way. Thus if `id(f(a))` panics,
+then `f(id(a))` __must__ panic as well.
 
 With that, we've intuited (but have not formally proven)[^5] our first "useful theorem" about
 a family of functions based solely on their type. While it's nice to know that identity-looking
@@ -153,7 +154,7 @@ security.
 
 # Vectors Abound
 
-Let's look at a slightly more complicated type now, involving Rust's `Vec<T>`{.rust} type for
+Let's look at a slightly more complicated type now, involving Rust's `Vec<T>` type for
 dynamically-sized buffers. We'll again follow the same formula of enumerating some possible
 implementations before trying to conclude a general property. Given the type:
 
@@ -188,31 +189,31 @@ pub fn swap_first_two<T>(mut vec: Vec<T>) -> Vec<T> {
 
 We can then try to capture a sense of what this type means as we did before:
 
-> A function `m`{.rust} (for mystery) of type `fn<T>(Vec<T>) -> Vec<T>`{.rust} must:
+> A function `m` (for mystery) of type `fn<T>(Vec<T>) -> Vec<T>` must:
 >
->    - return a `Vec<T>`{.rust} that contains a subset of the contents of its argument
->      `Vec<T>`{.rust} in any order. (i.e. `∀v. {e | e ∈ m(v)} ⊆ {e | e ∈ v}`{.agda}) __or__
+>    - return a `Vec<T>` that contains a subset of the contents of its argument
+>      `Vec<T>` in any order. (i.e. `∀v. {e | e ∈ m(v)} ⊆ {e | e ∈ v}`) __or__
 >    - panic or abort __or__
 >    - never return
 
 The process of concluding this is more complicated, but the general gist is that such a function can
-only perform the operations defined on `Vec<T>`{.rust} and as usual cannot inspect the types of its
-elements. From there, we know that we cannot create new values of type `T`{.rust} or perform any
+only perform the operations defined on `Vec<T>` and as usual cannot inspect the types of its
+elements. From there, we know that we cannot create new values of type `T` or perform any
 operations dependent on values within the vector. This also leverages the Rust-specific fact that
-values (in this case, of type `T`{.rust}) cannot be copied without knowing that they implement
-`Clone`{.rust} and/or `Copy`{.rust} (whereas in other languages with parametricity, this typically
+values (in this case, of type `T`) cannot be copied without knowing that they implement
+`Clone` and/or `Copy` (whereas in other languages with parametricity, this typically
 is not the case). We can then conclude that all functions at this type must yield a permutation (or
 possibly a subset of a permutation) of the input vector. Of course, the same exceptions about panics
 and divergence apply. Interestingly, we can reach a similar general conclusion to the one we reached
-for `fn<T>(T) -> T`{.rust}:
+for `fn<T>(T) -> T`:
 
-> Given a function `m`{.rust} of type `fn<T>(Vec<T>) -> Vec<T>`{.rust}, a total function `f`{.rust}
-> of the form `fn(A) -> B`{.rust} where `A`{.rust} and `B`{.rust} are both concrete types, and
-> `a`{.rust} is a value of type `Vec<A>`{.rust}, then either:
+> Given a function `m` of type `fn<T>(Vec<T>) -> Vec<T>`, a total function `f`
+> of the form `fn(A) -> B` where `A` and `B` are both concrete types, and
+> `a` is a value of type `Vec<A>`, then either:
 >
->    - `mystery(map_f(a)) = map_f(mystery(a))`{.rust} where `map_f`{.rust} is defined as 
->       `|x| { x.iter().map(f).collect() }`{.rust} __or__
->    - at least one of `mystery(map_f(a))`{.rust} and `map_f(mystery(a))`{.rust} panic or diverge.
+>    - `mystery(map_f(a)) = map_f(mystery(a))` where `map_f` is defined as 
+>       `|x| { x.iter().map(f).collect() }` __or__
+>    - at least one of `mystery(map_f(a))` and `map_f(mystery(a))` panic or diverge.
 
 # Noninterference for Free
 
@@ -234,7 +235,7 @@ pub struct Secret<T>(T);
 
 Strictly speaking, we've now achieved noninterference! That was probably easier than you expected,
 but the intuition should be clear: since we can perform no operations whatsoever on values of the
-type `Secret<T>`{.rust}, it is impossible for public outputs to depend on secret data! However,
+type `Secret<T>`, it is impossible for public outputs to depend on secret data! However,
 there is a caveat: because of how access modifiers work in Rust, code in the same module can violate
 noninterference like so:
 
@@ -259,7 +260,7 @@ use self::secret::Secret;
 Now, we have noninterference enforced in any downstream code, but in real security type systems, you
 can still use secret values to compute other secret values. To do this, we can use Rust's trait
 system to add common functionality. We can use this to define a lot of operations, but some of the
-operator-overloading traits (`std::ops`{.rust}) are not currently general enough making some code
+operator-overloading traits (`std::ops`) are not currently general enough making some code
 less pleasant.[^7] Here is our example with some ability to use secret values to compute other
 secret values:
 
@@ -293,7 +294,7 @@ use self::secret::Secret;
 
 Now, we have some ways of using our secret data to construct other secret data. It's limited, but
 many other extensions should follow similar patterns and we could also add other operations
-implemented directly on `Secret<T>`{.rust} types that compose secret values without going through a
+implemented directly on `Secret<T>` types that compose secret values without going through a
 trait like so:
 
 ```rust
@@ -310,9 +311,9 @@ impl Secret<bool> {
 ```
 
 With all these extensions, the argument that parametricity is still enforcing noninterference is now
-dependent on the exact set of operations that have been implemented for `Secret<T>`{.rust}, but as
-long as they _always_ return an argument of the form `Secret<T>`{.rust}, Rust will enforce
-noninterference. We can even include operations that combine `Secret<T>`{.rust} and `T`{.rust} as
+dependent on the exact set of operations that have been implemented for `Secret<T>`, but as
+long as they _always_ return an argument of the form `Secret<T>`, Rust will enforce
+noninterference. We can even include operations that combine `Secret<T>` and `T` as
 long as their results are themselves secret. We could even imagine building a simple static analysis
 tool that runs atop Rust to audit a crate providing such a secret type to ensure that every function
 it implements returns a secret marked type.
@@ -327,7 +328,7 @@ could use macros instead to offer some improvements.
 
 # Bountiful Properties with Bounded Parametricity
 
-Though we used traits to extend the functionality of our `Secret<T>`{.rust} type, they played a
+Though we used traits to extend the functionality of our `Secret<T>` type, they played a
 somewhat limited role in our argument for noninterference via parametricity, but we can do more.
 Fundamentally, traits allow us to bound type parameters with a specific interface that can be used
 within functions. This allow us to weaken our notion of parametricity from type parameters and
@@ -340,8 +341,8 @@ fn<T>(T) -> T where T: Display
 ```
 
 Previously, we said that any side-effects of this function could not depend on the argument. By
-adding the `Display`{.rust} bound on `T`{.rust}, we've allowed the argument to be displayed in
-output effects like `println!`{.rust}. In a sense, this new ability to display the argument is
+adding the `Display` bound on `T`, we've allowed the argument to be displayed in
+output effects like `println!`. In a sense, this new ability to display the argument is
 expanding the allowed set of side-effects. This expansion is most evident from the fact that all of
 our old implementations are still legal at this bounded type, but new implementations are also
 legal. For example:
@@ -356,7 +357,7 @@ pub fn trace<T>(x: T) -> T where T: Display {
 You may have noticed as we went through our earlier noninterference example that this property seems
 almost useless by virtue of being overly strict. In particular, since public outputs cannot depend
 on secret values in any way, there's really no reason to use secret values at all. In practice,
-security type systems offer escape hatches (much like Rust's `unsafe`{.rust}) to selectively reveal
+security type systems offer escape hatches (much like Rust's `unsafe`) to selectively reveal
 secret information in a way that is readily auditable. With traits, we can build a principled escape
 hatch giving us a weakened property known as _relaxed noninterference_.[^8] Relaxed noninterference
 can be understood intuitively as the property that public outputs can only depend on secret values
@@ -366,7 +367,7 @@ In our formulation in Rust, we will record these policies as traits and use trai
 what policies are available within a function. Consequently, the type signatures of our functions
 will necessarily have to tell us how they plan on using the secret data we give them giving us
 strong, local reasoning principles for security. At the heart of this approach is our previous
-definition of `Secret<T>`{.rust} with a trait representing the empty declassification policy:
+definition of `Secret<T>` with a trait representing the empty declassification policy:
 
 ```rust
 pub struct Secret<T>(T);
@@ -381,8 +382,8 @@ mod private {
 }
 ```
 
-Our private module here is used to seal the `Sec<T>`{.rust} trait preventing it from being
-implemented on any additional types beyond `Secret<T>`{.rust}. With just this, we can now specify
+Our private module here is used to seal the `Sec<T>` trait preventing it from being
+implemented on any additional types beyond `Secret<T>`. With just this, we can now specify
 functions like before that have noninterference: 
 
 ```rust
@@ -425,8 +426,8 @@ types as we've done before. Consider the type:
 fn<'a, S>(S, u64) -> bool where S: Sec<&'a str> + Hash
 ```
 
-We know that there are some trivial implementations (e.g. comparing the `u64`{.rust} against
-`0`{.rust}) that don't make use of the secret value, but what about implementations that do? We can
+We know that there are some trivial implementations (e.g. comparing the `u64` against
+`0`) that don't make use of the secret value, but what about implementations that do? We can
 come up with something like:
 
 ```rust
@@ -443,8 +444,8 @@ where S: Sec<&'a str> + Hash {
 Now, if we connected this to a web framework (like the amazing [Rocket][rocket]), we could imagine
 having our forms always providing passwords as secret values. Then, by using traits as
 declassification policies, we can use the type system to ensure that we never accidentally misuse
-the password. However, we should be wary: we used `Hash`{.rust} in this example because it's
-provided by `std`{.rust} and includes already-implemented hash algorithms, but it's actually
+the password. However, we should be wary: we used `Hash` in this example because it's
+provided by `std` and includes already-implemented hash algorithms, but it's actually
 overly-permissive for this purpose. We could write a custom hasher that would allow us to leak
 information or even completely reveal the value. For a real implementation, we would instead provide
 a more constrained trait that allows you to compute a specific cryptographic hash such as bcrypt or

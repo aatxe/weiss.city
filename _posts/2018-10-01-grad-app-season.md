@@ -1,6 +1,7 @@
 ---
 title: "T'is the (Grad Apps) Season" 
 description: In this quick writeup, I write a bit about the graduate applications cycle and share my application materials from Fall 2016, including my <a href="https://nsfgrfp.org">NSF Fellowship</a> application.
+published: true
 ---
 
 Yesterday on Twitter, [Joomy Korkut][joomy] ([\@cattheory][joomy-tw]) posted about the graduate

@@ -4,14 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aaron Weiss / $title$</title>
+    <title>Aaron Weiss / {{ title }}</title>
     <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="128x128" href="./favicon-128x128.png">
     <link rel="me" href="https://github.com/aatxe">
     <link rel="me" href="https://twitter.com/aatxe">
-    <link rel="me" href="https://sunbeam.city/@awe">
     <link href="/master.css" rel="stylesheet">
   </head>
   <body>
@@ -21,8 +20,8 @@
     </header>
     <nav>
       <div class="navlinks">
-        <a href="/archive.html">Blog</a>
-        <a href="/cv.pdf">CV</a>
+        <a href="/archive/">Blog</a>
+        <a href="/aweiss-resume.pdf">CV</a>
         <a href="mailto:aweiss@hey.com">Email</a>
         <a href="https://github.com/aatxe">GitHub</a>
         <a href="https://twitter.com/aatxe">Twitter</a>
@@ -30,26 +29,7 @@
       </div>
     </nav>
     <article class="content">
-      $if(blurb)$
-        <section class="home-head">
-          <div class="blurb">
-            $body$
-          </div>
-          <div class="me">
-            <img src="./images/aaron.jpg" alt="Headshot photograph of Aaron.">
-          </div>
-        </section>
-        <section class="publications">
-          <div class="section-head">Publications</div>
-          <div class="section-body">
-            $partial("templates/pub-list.html")$
-          </div>
-        </section>
-      $else$
-        <section class="copy">
-          $body$
-        </section>
-      $endif$
+      {% block main %}{% endblock %}
     </article>
     <noscript id="deferred-styles">
       <link href="https://code.cdn.mozilla.net/fonts/fira.css" rel=" stylesheet" />

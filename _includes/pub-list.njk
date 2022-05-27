@@ -1,0 +1,27 @@
+<ul class="pubs">
+  {%- for pub in collections.pubs | reverse -%}
+    <li class="pub">
+      <div class="pub-title">
+        <a href="./pubs/{{ pub.data.file }}.pdf">{{ pub.data.title }}</a>
+      </div>
+      <div class="pub-authors">{{ pub.data.authors }}.</div>
+      <div class="pub-info">
+      {% if pub.data.submission %}
+        Submitted, {{ pub.data.pubdate }}.
+      {% elif pub.data.draft %}
+        On <em>{{ pub.data.venue }}</em>, {{ pub.data.pubdate }}.
+      {% else %}
+        In <em>{{ pub.data.venue }}</em>, {{ pub.data.location }}, {{ pub.data.pubdate }}.
+      {% endif %}
+      {% if pub.data.award %}
+        <b>{{ pub.data.award }}.</b>
+      {% endif %}
+      </div>
+    {% if pub.templateContent %}
+    <div class="pub-extras">
+      {{ pub.templateContent | safe }}
+    </div>
+    {% endif %}
+    </li>
+  {%- endfor -%}
+</ul>

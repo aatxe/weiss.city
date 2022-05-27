@@ -1,6 +1,7 @@
 ---
 title: 'Write-Up: awe'
 description: In this writeup from the first HSCTF, I walk through the solution to my unsolved reconnaissance problem entitled 'awe'.
+published: true
 ---
 
 As part of HSCTF, there was a reconnaissance problem entitled awe. The given text for the problem was simple, and generally unhelpful as it was part of a series on some of our organizers. The text read "My name is Aaron Weiss." The problem was, as you could probably tell, about me.
