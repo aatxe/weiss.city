@@ -1,16 +1,19 @@
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
+const pluginRss = require("@11ty/eleventy-plugin-rss");
 const CleanCSS = require("clean-css");
 
 module.exports = function(eleventyConfig) {
+  eleventyConfig.ignores.add("README.md");
+
   eleventyConfig.addPassthroughCopy("images");
   eleventyConfig.addPassthroughCopy("gradapps");
   eleventyConfig.addPassthroughCopy("pubs/*.pdf");
-  eleventyConfig.addPassthroughCopy("css/*.css");
   eleventyConfig.addPassthroughCopy("*.pdf");
   eleventyConfig.addPassthroughCopy("*.png");
   eleventyConfig.addPassthroughCopy("*.ico");
 
   eleventyConfig.addPlugin(syntaxHighlight);
+  eleventyConfig.addPlugin(pluginRss);
 
   let markdownIt = require("markdown-it");
   let markdownItFootnote = require("markdown-it-footnote");
