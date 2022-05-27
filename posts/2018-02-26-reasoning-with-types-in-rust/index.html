@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aaron Weiss / Reasoning with Types in Rust</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="./favicon-128x128.png">
+    <link rel="me" href="https://github.com/aatxe">
+    <link rel="me" href="https://twitter.com/aatxe">
+    <link href="/master.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="topbar"></div>
+    <header>
+      <a href="/"><span class="title">&lambda;. Aaron Weiss</span></a>
+    </header>
+    <nav>
+      <div class="navlinks">
+        <a href="/archive/">Blog</a>
+        <a href="/aweiss-resume.pdf">CV</a>
+        <a href="mailto:aweiss@hey.com">Email</a>
+        <a href="https://github.com/aatxe">GitHub</a>
+        <a href="https://twitter.com/aatxe">Twitter</a>
+        <a href="https://keybase.io/awe">Keybase</a>
+      </div>
+    </nav>
+    <article class="content">
+      
+  <section class="copy">
+    
+  <div class="section-head">
+    <div class="post-title">Reasoning with Types in Rust</div>
+    <div class="post-date">
+      February 25, 2018
+    </div>
+  </div>
+  <div class="section-body">
+    <p><a href="https://www.rust-lang.org/">Rust</a> is a modern programming language which is marketed primarily on the basis of its very
+nice type system, and I'd like to tell you about how you can use this type system to reason about
+your programs in interesting ways. Most of the time when its type system is discussed, the focus is
+on its guarantee of data race freedom and ability to enable so-called
+<a href="https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html"><em>fearless concurrency</em></a> (and rightfully so---this is a place where Rust truly shines!).
+Today, I have a different focus in mind, characterized perhaps most succinctly as follows:</p>
+<blockquote>
+<p>From the type of a polymorphic function we can derive a theorem that it satisfies. Every function
+of the same type satisfies the same theorem. This provides a free source of useful theorems.</p>
+<p><cite>Philip Wadler, <a href="http://ecee.colorado.edu/ecen5533/fall11/reading/free.pdf"><em>Theorems for Free!</em></a></cite></p>
+</blockquote>
+<p>If you're not the most mathematically inclined, don't be scared off by the word theorem! The quote
+is telling us that---with the right property of our type system---we can learn useful properties
+about generic (i.e. polymorphic) functions solely by inspecting their types. In the rest of this
+post, we'll cover this type system property, and a number of example properties we can derive from
+types as as result.<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> Much of what's covered can be generalized to languages aside from Rust,
+but (most) examples will be in Rust with Rust-specific aspects highlighted.</p>
+<h1>A Principal Property for Reasoning</h1>
+<p>The property at the heart of this style of type-based reasoning with generics is known as
+<em>parametricity</em>. Parametricity can be formulated as a mathematical theorem,<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup> but it's best
+thought of intuitively as the notion that all instances of a polymorphic function act the same way.
+With this intuition in mind, you can imagine determining whether or not a particular function is
+parametric. For example, we can determine that the following <a href="https://www.java.com/">Java</a> function is parametric:</p>
+<pre class="language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">identity</span><span class="token punctuation">(</span><span class="token class-name">T</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span><br>  <span class="token keyword">return</span> x<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p>And that the following Java function is not:</p>
+<pre class="language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> <span class="token class-name">T</span> <span class="token function">notIdentity</span><span class="token punctuation">(</span><span class="token class-name">T</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span><br>  <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token keyword">instanceof</span> <span class="token class-name">Integer</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token punctuation">)</span> <span class="token number">42</span><span class="token punctuation">;</span><br>  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span><br>    <span class="token keyword">return</span> x<span class="token punctuation">;</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<p>The reason for this is that the latter function has chosen to specialize its behavior based on the
+type of its parameter, rather than acting the same on all types. This cuts to the essence of
+parametricity: to write parametric functions, we must treat parametric types opaquely! While Java
+does not enforce parametricity (and in fact often encourages otherwise), other type systems like that
+of <a href="https://www.haskell.org/">Haskell</a> and Rust require all functions to be parametric.<sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup> When all polymorphic
+functions are parametric, the type system is said to be <em>parametrically polymorphic</em>---though in
+practice, many parametrically polymorphic type systems support some degree of ad hoc (that is,
+type-dependent polymorphism). In this case, we know that all polymorphic functions are parametric
+and we're able to learn some of their properties solely from their type. So, let's look at some
+examples in Rust.</p>
+<h1>Who am I? or: Reasoning about Identity</h1>
+<p>Consider the following function type, and try to imagine as many implementations as possible:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">fn</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span></code></pre>
+<p>This type describes a function that for any type <code>T</code>, takes an argument of type <code>T</code>
+and returns a result of type <code>T</code>. If you're already familiar with Rust, I'm sure it wouldn't
+take long to come up with the following implementation, the identity function:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">id</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> <span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token punctuation">{</span><br>    x<br><span class="token punctuation">}</span></code></pre>
+<p>In fact, since there are no operations we can actually perform on <code>x</code>, it's the only possible
+return value for this function. Of course, since Rust is effectful, we could print something before
+we return like so:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">effectful_id</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> <span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token punctuation">{</span><br>    <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"oh no"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    x<br><span class="token punctuation">}</span></code></pre>
+<p>And Rust is also partial, meaning we could error (called <em>panicking</em> in Rust) or otherwise diverge:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">panicking_id</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>_<span class="token punctuation">:</span> <span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token punctuation">{</span><br>    <span class="token macro property">panic!</span><span class="token punctuation">(</span><span class="token string">"at the disco"</span><span class="token punctuation">)</span><br><span class="token punctuation">}</span><br><br><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">diverging_id</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>_<span class="token punctuation">:</span> <span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token punctuation">{</span><br>    <span class="token keyword">loop</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<p>These various implementations all tell us something about what the type means, which we can phrase
+like so:</p>
+<blockquote>
+<p>A function of type <code>fn&lt;T&gt;(T) -&gt; T</code> must:</p>
+<ul>
+<li>return its argument <strong>or</strong></li>
+<li>panic or abort <strong>or</strong></li>
+<li>never return</li>
+</ul>
+</blockquote>
+<p>Additionally, since we still know nothing about the type <code>T</code>, we can conclude that any
+effects that occur during the function are <em>not</em> dependent on the argument. With these two
+properties, we can then conclude the more general properties that functions of the type
+<code>fn&lt;T&gt;(T) -&gt; T</code> behave &quot;like an identity function&quot;:</p>
+<blockquote>
+<p>Given a function <code>id</code> of type <code>fn&lt;T&gt;(T) -&gt; T</code>, a total function <code>f</code> of the
+form <code>fn(A) -&gt; B</code> where <code>A</code> and <code>B</code> are both concrete types, and a value
+<code>a</code> of type <code>A</code>, then either:</p>
+<ul>
+<li><code>id</code> can be composed arbitrarily (e.g. <code>id(f(a)) = f(id(a))</code>) <strong>or</strong></li>
+<li><code>id(f(a))</code> and <code>f(id(a))</code> both panic or diverge.</li>
+</ul>
+</blockquote>
+<p>In order to conclude this, we can consider each of the cases we previously described. If the
+function returns its argument, then we know both that <code>id(a) = a</code> and
+<code>id(f(a)) = f(a)</code> and we can combine these two equalities to conclude the first result. If
+the function does not return its arguments, we know it either panics or never returns but we also
+know that this cannot be dependent on the argument in any way. Thus if <code>id(f(a))</code> panics,
+then <code>f(id(a))</code> <strong>must</strong> panic as well.</p>
+<p>With that, we've intuited (but have not formally proven)<sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup> our first &quot;useful theorem&quot; about
+a family of functions based solely on their type. While it's nice to know that identity-looking
+functions behave like an identity function, there's certainly nothing earth-shattering about the
+result. But the fact that we can apply this style of reasoning to <em>every</em> type ought to be
+compelling.</p>
+<h1>Vectors Abound</h1>
+<p>Let's look at a slightly more complicated type now, involving Rust's <code>Vec&lt;T&gt;</code> type for
+dynamically-sized buffers. We'll again follow the same formula of enumerating some possible
+implementations before trying to conclude a general property. Given the type:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">fn</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span></code></pre>
+<p>We can come up with implementations such as:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">tail</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>vec<span class="token punctuation">:</span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token punctuation">{</span><br>    vec<span class="token punctuation">.</span><span class="token function">into_iter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">skip</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br><span class="token punctuation">}</span><br><br><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">reverse</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>vec<span class="token punctuation">:</span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token punctuation">{</span><br>    <span class="token keyword">let</span> init <span class="token operator">=</span> <span class="token class-name">Vec</span><span class="token punctuation">::</span><span class="token function">with_capacity</span><span class="token punctuation">(</span>vec<span class="token punctuation">.</span><span class="token function">capacity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    vec<span class="token punctuation">.</span><span class="token function">into_iter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">fold</span><span class="token punctuation">(</span>init<span class="token punctuation">,</span> <span class="token closure-params"><span class="token closure-punctuation punctuation">|</span><span class="token keyword">mut</span> acc<span class="token punctuation">,</span> elem<span class="token closure-punctuation punctuation">|</span></span> <span class="token punctuation">{</span><br>        acc<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> elem<span class="token punctuation">)</span><span class="token punctuation">;</span><br>        acc<br>    <span class="token punctuation">}</span><span class="token punctuation">)</span><br><span class="token punctuation">}</span><br><br><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">swap_first_two</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token keyword">mut</span> vec<span class="token punctuation">:</span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token punctuation">{</span><br>    <span class="token keyword">if</span> vec<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">2</span> <span class="token punctuation">{</span><br>        <span class="token keyword">return</span> vec<span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br>    <span class="token keyword">let</span> elem <span class="token operator">=</span> vec<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    vec<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> elem<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    vec<br><span class="token punctuation">}</span></code></pre>
+<p>We can then try to capture a sense of what this type means as we did before:</p>
+<blockquote>
+<p>A function <code>m</code> (for mystery) of type <code>fn&lt;T&gt;(Vec&lt;T&gt;) -&gt; Vec&lt;T&gt;</code> must:</p>
+<ul>
+<li>return a <code>Vec&lt;T&gt;</code> that contains a subset of the contents of its argument
+<code>Vec&lt;T&gt;</code> in any order. (i.e. <code>∀v. {e | e ∈ m(v)} ⊆ {e | e ∈ v}</code>) <strong>or</strong></li>
+<li>panic or abort <strong>or</strong></li>
+<li>never return</li>
+</ul>
+</blockquote>
+<p>The process of concluding this is more complicated, but the general gist is that such a function can
+only perform the operations defined on <code>Vec&lt;T&gt;</code> and as usual cannot inspect the types of its
+elements. From there, we know that we cannot create new values of type <code>T</code> or perform any
+operations dependent on values within the vector. This also leverages the Rust-specific fact that
+values (in this case, of type <code>T</code>) cannot be copied without knowing that they implement
+<code>Clone</code> and/or <code>Copy</code> (whereas in other languages with parametricity, this typically
+is not the case). We can then conclude that all functions at this type must yield a permutation (or
+possibly a subset of a permutation) of the input vector. Of course, the same exceptions about panics
+and divergence apply. Interestingly, we can reach a similar general conclusion to the one we reached
+for <code>fn&lt;T&gt;(T) -&gt; T</code>:</p>
+<blockquote>
+<p>Given a function <code>m</code> of type <code>fn&lt;T&gt;(Vec&lt;T&gt;) -&gt; Vec&lt;T&gt;</code>, a total function <code>f</code>
+of the form <code>fn(A) -&gt; B</code> where <code>A</code> and <code>B</code> are both concrete types, and
+<code>a</code> is a value of type <code>Vec&lt;A&gt;</code>, then either:</p>
+<ul>
+<li><code>mystery(map_f(a)) = map_f(mystery(a))</code> where <code>map_f</code> is defined as
+<code>|x| { x.iter().map(f).collect() }</code> <strong>or</strong></li>
+<li>at least one of <code>mystery(map_f(a))</code> and <code>map_f(mystery(a))</code> panic or diverge.</li>
+</ul>
+</blockquote>
+<h1>Noninterference for Free</h1>
+<p>Thus far, we've looked at rather simple properties of programs because it is easier to imagine the
+proof in your head. But now, let's take the opportunity to explore a security property called
+<em>noninterference</em> for which a number of tailored type systems have been built. The idea behind these
+type systems is typically that you annotate types and values in your program with labels indicating
+whether a value should be public or secret (some systems expand this with further labels, but just
+the two are enough for the basics). Noninterference then says that functions with public output
+cannot depend on private inputs. Fortunately, using parametricity, we can have this property for
+free in Rust!<sup class="footnote-ref"><a href="#fn5" id="fnref5">[5]</a></sup></p>
+<p>To do so, first, we have to define a notion of secret (we'll treat all unannotated types as
+public, though we could choose to introduce a public type as well for symmetry):</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Strictly speaking, we've now achieved noninterference! That was probably easier than you expected,
+but the intuition should be clear: since we can perform no operations whatsoever on values of the
+type <code>Secret&lt;T&gt;</code>, it is impossible for public outputs to depend on secret data! However,
+there is a caveat: because of how access modifiers work in Rust, code in the same module can violate
+noninterference like so:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">unwrap_secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>secret<span class="token punctuation">:</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token punctuation">{</span><br>    secret<span class="token number">.0</span><br><span class="token punctuation">}</span></code></pre>
+<p>To avoid this, we can place our implementation of secret types inside of its own module with no
+additional code:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">mod</span> <span class="token module-declaration namespace">secret</span> <span class="token punctuation">{</span><br>    <span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><br><span class="token keyword">use</span> <span class="token keyword">self</span><span class="token module-declaration namespace"><span class="token punctuation">::</span>secret<span class="token punctuation">::</span></span><span class="token class-name">Secret</span><span class="token punctuation">;</span></code></pre>
+<p>Now, we have noninterference enforced in any downstream code, but in real security type systems, you
+can still use secret values to compute other secret values. To do this, we can use Rust's trait
+system to add common functionality. We can use this to define a lot of operations, but some of the
+operator-overloading traits (<code>std::ops</code>) are not currently general enough making some code
+less pleasant.<sup class="footnote-ref"><a href="#fn6" id="fnref6">[6]</a></sup> Here is our example with some ability to use secret values to compute other
+secret values:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">mod</span> <span class="token module-declaration namespace">secret</span> <span class="token punctuation">{</span><br>    <span class="token attribute attr-name">#[derive(Copy, Clone, Default)]</span><br>    <span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>    <span class="token keyword">use</span> <span class="token namespace">std<span class="token punctuation">::</span>ops<span class="token punctuation">::</span></span><span class="token punctuation">{</span><span class="token class-name">Add</span><span class="token punctuation">,</span> <span class="token class-name">Sub</span><span class="token punctuation">}</span><span class="token punctuation">;</span><br><br>    <span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Add</span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Add</span> <span class="token punctuation">{</span><br>        <span class="token keyword">type</span> <span class="token type-definition class-name">Output</span> <span class="token operator">=</span> <span class="token class-name">Secret</span><span class="token operator">&lt;&lt;</span><span class="token class-name">T</span> <span class="token keyword">as</span> <span class="token class-name">Add</span><span class="token operator">></span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token operator">></span><span class="token punctuation">;</span><br><br>        <span class="token keyword">fn</span> <span class="token function-definition function">add</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">,</span> other<span class="token punctuation">:</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">Self</span><span class="token punctuation">::</span><span class="token class-name">Output</span> <span class="token punctuation">{</span><br>            <span class="token class-name">Secret</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span><span class="token number">0</span> <span class="token operator">+</span> other<span class="token number">.0</span><span class="token punctuation">)</span><br>        <span class="token punctuation">}</span><br>    <span class="token punctuation">}</span><br><br>    <span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Sub</span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Sub</span> <span class="token punctuation">{</span><br>        <span class="token keyword">type</span> <span class="token type-definition class-name">Output</span> <span class="token operator">=</span> <span class="token class-name">Secret</span><span class="token operator">&lt;&lt;</span><span class="token class-name">T</span> <span class="token keyword">as</span> <span class="token class-name">Sub</span><span class="token operator">></span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token operator">></span><span class="token punctuation">;</span><br><br>        <span class="token keyword">fn</span> <span class="token function-definition function">sub</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">,</span> other<span class="token punctuation">:</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">Self</span><span class="token punctuation">::</span><span class="token class-name">Output</span> <span class="token punctuation">{</span><br>            <span class="token class-name">Secret</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span><span class="token number">0</span> <span class="token operator">-</span> other<span class="token number">.0</span><span class="token punctuation">)</span><br>        <span class="token punctuation">}</span><br>    <span class="token punctuation">}</span><br><br>    <span class="token comment">// ...</span><br><span class="token punctuation">}</span><br><span class="token keyword">use</span> <span class="token keyword">self</span><span class="token module-declaration namespace"><span class="token punctuation">::</span>secret<span class="token punctuation">::</span></span><span class="token class-name">Secret</span><span class="token punctuation">;</span></code></pre>
+<p>Now, we have some ways of using our secret data to construct other secret data. It's limited, but
+many other extensions should follow similar patterns and we could also add other operations
+implemented directly on <code>Secret&lt;T&gt;</code> types that compose secret values without going through a
+trait like so:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">impl</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token keyword">bool</span><span class="token operator">></span> <span class="token punctuation">{</span><br>    <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">branch</span><span class="token operator">&lt;</span><span class="token class-name">F</span><span class="token punctuation">,</span> <span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">,</span> cons<span class="token punctuation">:</span> <span class="token class-name">F</span><span class="token punctuation">,</span> alt<span class="token punctuation">:</span> <span class="token class-name">F</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><br>    <span class="token keyword">where</span> <span class="token class-name">F</span><span class="token punctuation">:</span> <span class="token class-name">Fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token punctuation">{</span><br>        <span class="token keyword">if</span> <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token number">0</span> <span class="token punctuation">{</span><br>            <span class="token function">cons</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span><br>            <span class="token function">alt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>        <span class="token punctuation">}</span><br>    <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<p>With all these extensions, the argument that parametricity is still enforcing noninterference is now
+dependent on the exact set of operations that have been implemented for <code>Secret&lt;T&gt;</code>, but as
+long as they <em>always</em> return an argument of the form <code>Secret&lt;T&gt;</code>, Rust will enforce
+noninterference. We can even include operations that combine <code>Secret&lt;T&gt;</code> and <code>T</code> as
+long as their results are themselves secret. We could even imagine building a simple static analysis
+tool that runs atop Rust to audit a crate providing such a secret type to ensure that every function
+it implements returns a secret marked type.</p>
+<h1>Bountiful Properties with Bounded Parametricity</h1>
+<p>Though we used traits to extend the functionality of our <code>Secret&lt;T&gt;</code> type, they played a
+somewhat limited role in our argument for noninterference via parametricity, but we can do more.
+Fundamentally, traits allow us to bound type parameters with a specific interface that can be used
+within functions. This allow us to weaken our notion of parametricity from type parameters and
+values at those types being completely opaque to values at those types being usable in a controlled
+fashion. Correspondingly, we can derive even more interesting properties from the types. For a
+simple example, consider this extended version of our original identity example:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">fn</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Display</span></code></pre>
+<p>Previously, we said that any side-effects of this function could not depend on the argument. By
+adding the <code>Display</code> bound on <code>T</code>, we've allowed the argument to be displayed in
+output effects like <code>println!</code>. In a sense, this new ability to display the argument is
+expanding the allowed set of side-effects. This expansion is most evident from the fact that all of
+our old implementations are still legal at this bounded type, but new implementations are also
+legal. For example:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">trace</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> <span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">T</span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Display</span> <span class="token punctuation">{</span><br>    <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"{}"</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    x<br><span class="token punctuation">}</span></code></pre>
+<p>You may have noticed as we went through our earlier noninterference example that this property seems
+almost useless by virtue of being overly strict. In particular, since public outputs cannot depend
+on secret values in any way, there's really no reason to use secret values at all. In practice,
+security type systems offer escape hatches (much like Rust's <code>unsafe</code>) to selectively reveal
+secret information in a way that is readily auditable. With traits, we can build a principled escape
+hatch giving us a weakened property known as <em>relaxed noninterference</em>.<sup class="footnote-ref"><a href="#fn7" id="fnref7">[7]</a></sup> Relaxed noninterference
+can be understood intuitively as the property that public outputs can only depend on secret values
+according to predetermined rules known as <em>declassification policies</em>.</p>
+<p>In our formulation in Rust, we will record these policies as traits and use trait bounds to decide
+what policies are available within a function. Consequently, the type signatures of our functions
+will necessarily have to tell us how they plan on using the secret data we give them giving us
+strong, local reasoning principles for security. At the heart of this approach is our previous
+definition of <code>Secret&lt;T&gt;</code> with a trait representing the empty declassification policy:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br><span class="token keyword">pub</span> <span class="token keyword">trait</span> <span class="token type-definition class-name">Sec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">:</span> <span class="token namespace">private<span class="token punctuation">::</span></span><span class="token class-name">Sealed</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><br><span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Sec</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><br><br><span class="token keyword">mod</span> <span class="token module-declaration namespace">private</span> <span class="token punctuation">{</span><br>    <span class="token keyword">use</span> <span class="token keyword">super</span><span class="token punctuation">::</span><span class="token class-name">Secret</span><span class="token punctuation">;</span><br>    <span class="token keyword">pub</span> <span class="token keyword">trait</span> <span class="token type-definition class-name">Sealed</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><br>    <span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Sealed</span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<p>Our private module here is used to seal the <code>Sec&lt;T&gt;</code> trait preventing it from being
+implemented on any additional types beyond <code>Secret&lt;T&gt;</code>. With just this, we can now specify
+functions like before that have noninterference:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">f</span><span class="token operator">&lt;</span><span class="token class-name">S</span><span class="token punctuation">,</span> <span class="token class-name">T</span><span class="token operator">></span><span class="token punctuation">(</span>x<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token class-name">S</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u32</span> <span class="token keyword">where</span> <span class="token class-name">S</span><span class="token punctuation">:</span> <span class="token class-name">Sec</span><span class="token operator">&lt;</span><span class="token keyword">u32</span><span class="token operator">></span> <span class="token punctuation">{</span><br>    <span class="token comment">// the following line is not legal...</span><br>    <span class="token comment">// return y.0;</span><br>    x<br><span class="token punctuation">}</span></code></pre>
+<p>We can then specify a number of declassification policies that enable us to make selective use of
+our secret values:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token comment">// Debug declassification policy: can format the value for debugging purposes</span><br><span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Debug</span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Debug</span> <span class="token punctuation">{</span><br>    <span class="token keyword">fn</span> <span class="token function-definition function">fmt</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">,</span> f<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token class-name">Formatter</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Result</span><span class="token operator">&lt;</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">Error</span><span class="token operator">></span> <span class="token punctuation">{</span><br>        <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token number">0</span><span class="token punctuation">.</span><span class="token function">fmt</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><br>    <span class="token punctuation">}</span><br><span class="token punctuation">}</span><br><br><span class="token comment">// Zeroable declassification policy: can determine whether or not this is zero</span><br><span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Zeroable</span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Zeroable</span> <span class="token punctuation">{</span><br>    <span class="token keyword">fn</span> <span class="token function-definition function">is_zero</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">bool</span> <span class="token punctuation">{</span><br>        <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token number">0</span><span class="token punctuation">.</span><span class="token function">is_zero</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>    <span class="token punctuation">}</span><br><span class="token punctuation">}</span><br><br><span class="token comment">// Hash declassification policy: can compute a hash of the value</span><br><span class="token keyword">impl</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token class-name">Hash</span> <span class="token keyword">for</span> <span class="token class-name">Secret</span><span class="token operator">&lt;</span><span class="token class-name">T</span><span class="token operator">></span> <span class="token keyword">where</span> <span class="token class-name">T</span><span class="token punctuation">:</span> <span class="token class-name">Hash</span> <span class="token punctuation">{</span><br>    <span class="token keyword">fn</span> <span class="token function-definition function">hash</span><span class="token operator">&lt;</span><span class="token class-name">H</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">,</span> state<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token class-name">H</span><span class="token punctuation">)</span> <span class="token keyword">where</span> <span class="token class-name">H</span><span class="token punctuation">:</span> <span class="token class-name">Hasher</span> <span class="token punctuation">{</span><br>        <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token number">0</span><span class="token punctuation">.</span><span class="token function">hash</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<p>And then we can use these declassification policies to discern legal implementations of specific
+types as we've done before. Consider the type:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">fn</span><span class="token operator">&lt;</span><span class="token lifetime-annotation symbol">'a</span><span class="token punctuation">,</span> <span class="token class-name">S</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token class-name">S</span><span class="token punctuation">,</span> <span class="token keyword">u64</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">bool</span> <span class="token keyword">where</span> <span class="token class-name">S</span><span class="token punctuation">:</span> <span class="token class-name">Sec</span><span class="token operator">&lt;</span><span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'a</span> <span class="token keyword">str</span><span class="token operator">></span> <span class="token operator">+</span> <span class="token class-name">Hash</span></code></pre>
+<p>We know that there are some trivial implementations (e.g. comparing the <code>u64</code> against
+<code>0</code>) that don't make use of the secret value, but what about implementations that do? We can
+come up with something like:</p>
+<pre class="language-rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">check</span><span class="token operator">&lt;</span><span class="token lifetime-annotation symbol">'a</span><span class="token punctuation">,</span> <span class="token class-name">S</span><span class="token operator">></span><span class="token punctuation">(</span>password<span class="token punctuation">:</span> <span class="token class-name">S</span><span class="token punctuation">,</span> db_hash<span class="token punctuation">:</span> <span class="token keyword">u64</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">bool</span><br><span class="token keyword">where</span> <span class="token class-name">S</span><span class="token punctuation">:</span> <span class="token class-name">Sec</span><span class="token operator">&lt;</span><span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'a</span> <span class="token keyword">str</span><span class="token operator">></span> <span class="token operator">+</span> <span class="token class-name">Hash</span> <span class="token punctuation">{</span><br>    <span class="token comment">// please don't actually do this, use bcrypt or scrypt instead.</span><br>    <span class="token keyword">use</span> <span class="token namespace">std<span class="token punctuation">::</span>collections<span class="token punctuation">::</span>hash_map<span class="token punctuation">::</span></span><span class="token class-name">DefaultHasher</span><span class="token punctuation">;</span><br>    <span class="token keyword">let</span> <span class="token keyword">mut</span> hasher <span class="token operator">=</span> <span class="token class-name">DefaultHasher</span><span class="token punctuation">::</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    password<span class="token punctuation">.</span><span class="token function">hash</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> hasher<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    hasher<span class="token punctuation">.</span><span class="token function">finish</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> db_hash<br><span class="token punctuation">}</span></code></pre>
+<p>Now, if we connected this to a web framework (like the amazing <a href="https://rocket.rs/">Rocket</a>), we could imagine
+having our forms always providing passwords as secret values. Then, by using traits as
+declassification policies, we can use the type system to ensure that we never accidentally misuse
+the password. However, we should be wary: we used <code>Hash</code> in this example because it's
+provided by <code>std</code> and includes already-implemented hash algorithms, but it's actually
+overly-permissive for this purpose. We could write a custom hasher that would allow us to leak
+information or even completely reveal the value. For a real implementation, we would instead provide
+a more constrained trait that allows you to compute a specific cryptographic hash such as bcrypt or
+scrypt.</p>
+<h1>Some Final Words</h1>
+<p>If you've made it this far, you've seen a bunch of &quot;crazy academic concepts&quot; like parametricity,
+free theorems, and noninterference. You've also seen how traits can be used to relax parametricity
+and give us even more useful free theorems. Hopefully, this endeavor has convinced you of the
+strength of type-based reasoning in Rust. The <a href="https://github.com/aatxe/reasoning-with-types">small examples</a> that you've seen
+throughout the post are really just scratching the surface of this kind of reasoning: we can go
+further by using the added constraints from the ownership system to produce even more interesting
+theorems (such as that a <a href="https://en.wikipedia.org/wiki/Cryptographic_nonce">cryptographic nonce</a> is only used once). The extent of these
+reasoning capabilities is one of my personal favorite features of strong type systems, and
+subsequently one of my favorite things about Rust. Maybe it'll be one of yours now too!</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>Owing to their presentation in the paper <a href="http://ecee.colorado.edu/ecen5533/fall11/reading/free.pdf"><em>Theorems for Free!</em></a>, these properties are
+known in the  academic world as <em>free theorems</em>---though I suspect that some will be unhappy with my
+liberal application of this term to intuited properties. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>And indeed, it was originally presented as the <em>abstraction theorem</em> in John C. Reynolds'
+<a href="https://commie.club/papers/reynolds83:parametricity.pdf"><em>Types, abstraction, and parametric polymorphism</em></a>. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>Strictly speaking, <a href="https://cs.appstate.edu/~johannp/popl04.pdf">Haskell's <code>seq</code> breaks general parametricity</a>, as do Rust's
+various reflection capabilities (including <code>Sized</code>) and the upcoming
+<a href="https://github.com/rust-lang/rfcs/pull/1210">impl specialization</a> feature. Fortunately, like in the Haskell paper, we can always
+refine our notion of parametricity. Though this does have some consequences for precisely what
+properties you can glean from types. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn4" class="footnote-item"><p>Though our argument is somewhat proofy, we would require a formal semantics for Rust. There
+exists one in the form of <a href="http://plv.mpi-sws.org/rustbelt/">RustBelt</a>, and as part of my research, I hope to produce an
+alternative formal backing for these free theorems in Rust, particularly the latter ones related to
+security. <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn5" class="footnote-item"><p>A connection between parametricity and noninterference was commonly held wisdom in the
+programming languages community, but was not proven until Bowman and Ahmed's
+<a href="http://www.ccs.neu.edu/home/amal/papers/nifree.pdf"><em>Noninterference for Free</em></a>. <a href="#fnref5" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn6" class="footnote-item"><p>The consequence of this is that we would need to define methods instead of operators which
+would make secret code look weirder and be less ergonomic, but is not a fundamental limitation to
+this approach. If the trait definitions were made more general, this would be a nonissue, and we
+could use macros instead to offer some improvements. <a href="#fnref6" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn7" class="footnote-item"><p>In <a href="https://hal.archives-ouvertes.fr/hal-01637023/document"><em>Type Abstraction for Relaxed Noninterference</em></a>, we see a related presentation
+of relaxed noninterference as a consequence of object-oriented type abstraction capabilities. Since
+Rust uses parametric polymorphism with traits for type abstraction, we are developing an analogue
+here. <a href="#fnref7" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+  </div>
+  <div class="center">
+    Comments? Questions? <a href="mailto:aweiss@hey.com">Email</a> or
+    <a href="https://twitter.com/aatxe">tweet</a> at me.
+  </div>
+
+  </section>
+
+    </article>
+    <noscript id="deferred-styles">
+      <link href="https://code.cdn.mozilla.net/fonts/fira.css" rel=" stylesheet" />
+      <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet"/>
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                webkitRequestAnimationFrame || msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
+  </body>
+</html>

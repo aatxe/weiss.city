@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aaron Weiss / Monty PL and the Holy Grail</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="./favicon-128x128.png">
+    <link rel="me" href="https://github.com/aatxe">
+    <link rel="me" href="https://twitter.com/aatxe">
+    <link href="/master.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="topbar"></div>
+    <header>
+      <a href="/"><span class="title">&lambda;. Aaron Weiss</span></a>
+    </header>
+    <nav>
+      <div class="navlinks">
+        <a href="/archive/">Blog</a>
+        <a href="/aweiss-resume.pdf">CV</a>
+        <a href="mailto:aweiss@hey.com">Email</a>
+        <a href="https://github.com/aatxe">GitHub</a>
+        <a href="https://twitter.com/aatxe">Twitter</a>
+        <a href="https://keybase.io/awe">Keybase</a>
+      </div>
+    </nav>
+    <article class="content">
+      
+  <section class="copy">
+    
+  <div class="section-head">
+    <div class="post-title">Monty PL and the Holy Grail</div>
+    <div class="post-date">
+      January 26, 2020
+    </div>
+  </div>
+  <div class="section-body">
+    <p>Conventional wisdom among programmers holds that one should choose &quot;the best
+language for the job.&quot; Though exactly which language is &quot;best&quot; is often
+ambiguous, in practice, there has arisen a division between so-called
+<em>&quot;systems programming&quot;</em> languages that enable fine-grained control over
+the usage and layout of memory, and <em>&quot;applications programming&quot;</em>
+languages that provide the programmer with high-level abstractions to make
+correct software more quickly and with less effort. But in the lands of myths
+and legends, brave knights of programming languages research seek out the Holy
+Grail --- a general-purpose programming language that enables programmers to get
+both the high-level abstractions of the latter and the fine-grained control of
+the former.</p>
+<h1>The Quest for the Holy Grail</h1>
+<p>For decades, these Knights of PL have explored idea after idea in search of the
+grail. One of the most promising discoveries on this quest came as Ser Girard's
+Linear Logic whose powers of reasoning about <em>resources</em> spawned a wealth of new
+work on high-level support for resource management in programming. Among these,
+the efforts of Ser Baker on Linear Lisp are most relevant to our tale. On
+their quest, Ser Baker used a notion of <em>linearity</em> to enable efficient
+reuse of objects in memory in a functional programming language <em>without</em>
+garbage collection. Here, linearity prevented aliasing in programs, enabling the
+treatment of names as resources. Further, Ser Baker uncovered a relationship
+between linearity and
+stack machines that allow arbitrary manipulation on the top of the stack,
+capturing a <em>low-level</em> interpretation of linearity in
+programming.</p>
+<p>Then, later quests by Sers Clarke, Potter, and
+Noble and Sers Noble, Vitek, and Potter brought us the discovery of <em>ownership
+types</em>, a programming discipline that empowers the programmer with the
+flexibility to control what kinds of aliasing patterns are allowed in their
+programs. While Ser Baker addressed the question of
+how to design a high-level language without garbage collection, these next
+efforts address the question of how to control aliasing in programs to avoid
+classic systems problems like <em>encapsulation violations</em>,
+<em>use-after-free bugs</em>, and <em>data races</em>. Here, we see an essential
+insight --- rather than choose one for the whole language, one can give the
+programmer a choice locally between uniqueness and mutability <em>or</em>
+sharedness and immutability (sometimes called <em>writing xor sharing</em>).</p>
+<p>Around the same time, Sers Tofte and Talpin
+set out on their own quests to enable more fine-grained
+control of memory management in functional programming languages through the use
+of <em>regions</em>. These regions statically group objects into distinct sections
+of memory which are allocated and deallocated together. In the ensuing years,
+many worked on developing full-scale production languages that leveraged these
+ideas to create a <em>safe systems programming language</em>. Yet, for
+a variety of reasons (not least of which a lack of large-scale engineering
+investment), none of these really caught on. Still, the ideas and techniques
+discovered on these quests moved the Knights of PL forward, helping to bring us
+to today.</p>
+<h1>A New Lead?</h1>
+<p>In recent years, the Rust programming language has taken
+off as the latest language at the intersection of low-level systems programming
+and high-level applications programming --- bringing us the closest we have ever
+gotten to the Holy Grail. Its rapid growth and promising design have caught the
+attention of researchers and practitioners alike. To accomplish this, Rust integrates
+many of these ideas discovered on prior quests --- including automatic memory
+management without garbage collection, flexible
+control over aliasing, and region-based memory
+management --- into a novel framework called <em>borrow checking</em>. But hailing from
+industry knights, Rust and its <em>borrow checker</em> lack the kinds of formal
+specifications that enable many of the
+reasoning techniques favored by the Knights of PL, and thus preventing their
+benefits.</p>
+<p>For those uninitiated by the Knights of PL, I will try to make these benefits
+concrete. Historically, formal reasoning has played an essential role in
+developing new features for programming languages, ensuring the correctness of
+languages and their compilers, and enabling programmers to reason more precisely
+about their programs. For instance, Featherweight
+Java and other similar efforts to formalize
+Java were used to experiment with designs for generics and led to Java's
+generics system being introduced in Java 1.5. As a squire myself, I have set out
+to try to bring this kind of power and interest to Rust by producing a formal
+account of the language, dubbed <em>Oxide</em>, on my journey to knighthood.</p>
+<p>While there are some existing formalizations of Rust, none capture a
+high-level understanding of Rust's essence (namely <em>ownership</em> and
+<em>borrowing</em>). In particular, the first major effort,
+Patina, formalized an early version of Rust which predates
+much of the work to simplify and streamline the language, and was ultimately
+left unfinished. The next effort, known as Rusty
+Types, set out to characterize Rust-like type
+systems, developing a formal calculus, <em>Metal</em>, which relies on an
+algorithmic formulation of borrow checking that is less expressive than both
+Rust and Oxide. RustBelt, the most complete effort to
+date, formalized a <em>low-level</em>, intermediate language in
+continuation-passing style, making it difficult to reason about ownership as a
+<em>source-level</em> concept. Finally, an early version of
+Oxide oversimplified some parts of the language and
+overcomplicated others. We have since revised and simplified Oxide greatly to
+get at its <em>essence</em>.</p>
+<p>In this post, I'll present the key intuitions behind Oxide,
+wade a bit into some of the essential formal elements, and
+finally explore some of the ramifications of this newfound understanding.
+Our draft paper features a larger, and more complete account of Oxide.</p>
+<h1>Understanding the Borrow Checker</h1>
+<p>As alluded to already, the essence of Rust lies in its <em>borrow checker</em>, a
+novel approach to <em>ownership</em>, which accounts for the most interesting
+aspects of the language's type system (or <em>static semantics</em>) and provides
+justification for its claims to <em>memory safety</em> and <em>data race freedom</em>.
+In this section, we work through a number of examples on our quest
+to understand ownership and borrowing, and how they are ultimately captured in
+Oxide.</p>
+<h1>Ownership for Great Good</h1>
+<p>The first element of Rust's <em>borrow checker</em> is a notion of
+<em>ownership</em> that builds on the quests of Ser
+Baker, which developed support for efficient reuse of
+objects in memory using <em>linearity</em>. In fact, there is a strong resemblance
+between this half of Rust's borrow checker and Ser Baker's 'use-once'
+variables. We can view these ideas at work in
+Rust in the following example:</p>
+<pre class="language-rust"><code class="language-rust">  <span class="token keyword">struct</span> <span class="token type-definition class-name">Point</span><span class="token punctuation">(</span><span class="token keyword">u32</span><span class="token punctuation">,</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>  <span class="token keyword">let</span> <span class="token keyword">mut</span> pt <span class="token operator">=</span> <span class="token class-name">Point</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> x <span class="token operator">=</span> pt<span class="token punctuation">;</span><br>  <span class="token keyword">let</span> y <span class="token operator">=</span> pt<span class="token punctuation">;</span> <span class="token comment">// ERROR: pt was already moved</span></code></pre>
+<p>In this example, we declare a type <code>Point</code> consisting of a pair of
+unsigned 32-bit integers (denoted <code>u32</code>). Then, on line 3, we create a new
+<code>Point</code> named <code>pt</code>. We use <code>mut</code> to mark that the binding for
+<code>pt</code> can be reassigned, and we say that this value is <em>owned</em> by its
+identifier <code>pt</code>. Then, on line 4, we transfer ownership to <code>x</code> by
+<em>moving</em> the value from <code>pt</code>. After moving the value out of
+<code>pt</code>, we invalidate the old name, and thus, in the subsequent attempt to
+use it on line 5, we encounter an error as <code>pt</code> was already moved in the
+previous line. With the exception of required type annotations, this program is
+identical in Oxide, and produces the same error.</p>
+<h1>Borrowing for Flexibility</h1>
+<p>The second element of Rust's <em>borrow checker</em> is known as <em>borrowing</em>
+and represents the language's main departure from ideas like 'use-once'
+variables. Rather than say that
+<em>everything</em> must be unique, Rust allows the programmer to locally make a
+decision between using unique references with
+unguarded mutation <em>or</em> using shared references without such
+mutation.<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> This flexibility takes inspiration from the
+quests of Sers Noble, Clarke, Vitek, and Potter toward flexible alias protection
+and ownership types. We can once again see this at work in Rust with an example:</p>
+<pre class="language-rust"><code class="language-rust">  <span class="token keyword">struct</span> <span class="token type-definition class-name">Point</span><span class="token punctuation">(</span><span class="token keyword">u32</span><span class="token punctuation">,</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>  <span class="token keyword">let</span> <span class="token keyword">mut</span> pt <span class="token operator">=</span> <span class="token class-name">Point</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> x <span class="token operator">=</span> <span class="token operator">&amp;</span>pt<span class="token punctuation">;</span><br>  <span class="token keyword">let</span> y <span class="token operator">=</span> <span class="token operator">&amp;</span>pt<span class="token punctuation">;</span> <span class="token comment">// no error, sharing is okay!</span></code></pre>
+<p>In the above example, we replaced the <em>move</em> expressions on lines 4 and 5
+with <em>borrow</em> expressions that create shared references to <code>pt</code>. As
+noted in the comment, this program does not produce an error because the
+references specifically <em>allow</em> this kind of sharing. However, unlike with
+plain variable bindings (as in the last example), we cannot mutate through these
+references, and attempts to do so would result in an error at compile-time.
+However, the behavior changes when we try to mix shared and unique references to
+the same place:</p>
+<pre class="language-rust"><code class="language-rust">  <span class="token keyword">struct</span> <span class="token type-definition class-name">Point</span><span class="token punctuation">(</span><span class="token keyword">u32</span><span class="token punctuation">,</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>  <span class="token keyword">let</span> <span class="token keyword">mut</span> pt<span class="token punctuation">:</span> <span class="token class-name">Point</span> <span class="token operator">=</span> <span class="token class-name">Point</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> x<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'a</span> <span class="token keyword">mut</span> <span class="token class-name">Point</span> <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> pt<span class="token punctuation">;</span><br>  <span class="token keyword">let</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'b</span> <span class="token class-name">Point</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>pt<span class="token punctuation">;</span><br>  <span class="token comment">//                 ^~~</span><br>  <span class="token comment">// ERROR: cannot borrow pt while</span><br>  <span class="token comment">//        a mutable loan to pt is live</span><br>  <span class="token punctuation">...</span> <span class="token comment">// additional code that uses x and y</span></code></pre>
+<p>In this case, we've changed the borrow expression on line 4 to create a unique
+reference, and added explicit type annotations to our bindings on lines 3--5.
+This produces an error because Rust forbids the creation of a shared reference
+while a mutable <em>loan</em> exists. Here, we use the word loan to refer to the
+state introduced in the borrow checker (including the uniqueness of the loan and
+its origin) by the creation of a reference. Regions<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup> in
+Rust (denoted <code>'a</code>, <code>b</code>, etc.) can be understood as collections of
+these loans which together statically approximate which pointers could be used
+dynamically at a particular reference type. This is the sense in which Rust's
+regions are distinct from the existing literature on region-based memory
+management.</p>
+<p>While we were unable to create a second reference to the same place as an
+existing unique reference in our past examples, Rust allows the programmer to
+create two unique references to disjoint paths through the same object, as in
+the following example:</p>
+<pre class="language-rust"><code class="language-rust">  <span class="token keyword">struct</span> <span class="token type-definition class-name">Point</span><span class="token punctuation">(</span><span class="token keyword">u32</span><span class="token punctuation">,</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>  <span class="token keyword">let</span> <span class="token keyword">mut</span> pt<span class="token punctuation">:</span> <span class="token class-name">Point</span> <span class="token operator">=</span> <span class="token class-name">Point</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> x<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'a</span> <span class="token keyword">mut</span> <span class="token keyword">u32</span> <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> pt<span class="token number">.0</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'b</span> <span class="token keyword">mut</span> <span class="token keyword">u32</span> <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> pt<span class="token number">.1</span><span class="token punctuation">;</span><br>  <span class="token comment">// no error, our loans don't overlap!</span></code></pre>
+<p>In this example, we're borrowing from specific paths within <code>pt</code> (namely,
+the first and second projections respectively). Since these paths give a name to
+the places being referenced, we refer to them as <em>places</em>. Rust employs a
+fine-grained notion of ownership allowing unique loans against non-overlapping
+places within aggregate structures (like structs and tuples). Intuitively, this
+is safe because the parts of memory referred to by each place (in this case,
+<code>pt.0</code> and <code>pt.1</code>) do not overlap, and thus they represent portions
+that can each be uniquely owned.</p>
+<h1>Formalizing Rust</h1>
+<p>These programs remain largely the same in Oxide, though I don't have the space
+to reproduce them all here. There are three main differences from Rust. First,
+we explicitly annotate the types of every binding. Second, acknowedgling the two
+distinct roles <code>mut</code> plays in Rust, I draw attention to its use as a
+qualifier for the uniqueness of references (renaming it to <code>uniq</code>). Third, I
+shift the language we use to discuss regions or lifetimes. In particular, since
+regions capture approximations of a reference's origin, I use the more precise
+term <em>approximate provenances</em>, and refer to their variable form
+(<code>'a</code>, <code>'b</code>, etc.) as <em>provenance variables</em>. With these
+differences in mind, let's revisit our last example after translating it into
+Oxide:</p>
+<pre class="language-rust"><code class="language-rust">  <span class="token keyword">struct</span> <span class="token type-definition class-name">Point</span><span class="token punctuation">(</span><span class="token keyword">u32</span><span class="token punctuation">,</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>  <span class="token keyword">let</span> pt<span class="token punctuation">:</span> <span class="token class-name">Point</span> <span class="token operator">=</span> <span class="token class-name">Point</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> x<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'x</span> uniq <span class="token keyword">u32</span> <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'x</span> uniq pt<span class="token number">.0</span><span class="token punctuation">;</span><br>  <span class="token keyword">let</span> y<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'y</span> uniq <span class="token keyword">u32</span> <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'y</span> uniq pt<span class="token number">.1</span><span class="token punctuation">;</span><br>  <span class="token comment">// no error, our loans are disjoint</span></code></pre>
+<p>As already noted, the type annotations on lines 3--5 (i.e. for each let binding)
+are now required, and we replaced <code>mut</code> with the qualifier <code>uniq</code>,
+denoting that the references on lines 4 and 5 are unique. The program is
+otherwise unchanged from the Rust version. Then, as in the original, the Oxide
+version of the program type checks successfully because the origins of the loans
+created on lines 4 and 5 are disjoint. That is, we know that <code>x</code> can
+only have originated from <code>pt.0</code>, <code>y</code> only from <code>pt.1</code>, and
+that <code>pt.0</code> and <code>pt.1</code> refer to disjoint portions of memory.</p>
+<p>How did the type-checker determine this? First, while type-checking the let
+bindings, Oxide computes the concrete values for any provenance variables that
+appear in their types (such as <code>'x</code> and <code>'y</code>). Here, it determines
+that <code>'x</code> will be mapped to <code>{ uniq pt.0 }</code> and <code>'y</code> to <code>{ uniq pt.1 }</code>. These
+mappings tell
+us the potential provenance of each reference, where in this simple case, there
+is exactly one for each. Then, when type-checking the borrow expressions, Oxide
+looks at its place environment Γ to determine that there are no live
+loans to any place that is somehow joint with the place we're borrowing from. In this
+case, on line 5, the type-checker looks at the current environment and finds
+that the only live loan is <code>uniq pt.0</code>, and since <code>pt.0</code> and <code>pt.1</code> are disjoint,
+the second borrow also type checks.</p>
+<p><em>Information Loss</em>. Though the example we just saw has a precise origin
+for each reference, provenances are, in general, approximate because of join
+points in the program. For example, in an if expression, we might create a new
+set of loans in one branch, and a different set of loans in the other branch. To
+keep the type-checker sound, we need to be conservative and act as if
+<em>both</em> sets of loans are live, and so, we combine the return types and
+environments from each branch.</p>
+<h1>Oxide, More Formally</h1>
+<p>We've now seen roughly enough to describe Oxide in more formal detail. First,
+note that loans are created and destroyed over the course of the program. This
+means that our type system has to somehow track the flow of this information as
+it type-checks each expression. As such, we use an environment-passing typing
+judgment where the output of the judgment includes an updated environment that
+may have added or removed some bindings (and thus created or destroyed some
+loans). We write this judgment as $\Sigma; ; \Delta; ; \Gamma \vdash e : \tau \Rightarrow \Gamma^\prime$,
+which can be read as:
+under the global environment $\Sigma$ (containing top-level program
+definitions including both function and type definitions), the type variable
+environment $\Delta$ (tracking in-scope type and provenance variables), and
+the place environment $\Gamma$ (mapping places to their respective types),
+the expression $e$ has type $\tau$ and produces an updated output
+environment $\Gamma^\prime$, which contains all of the remaining places
+<em>after</em> type-checking the expression $e$.</p>
+<p>\begin{figure_[H]
+\begin{mathpar_
+\TMove \and \TBorrow
+\end{mathpar_
+\caption{The essence of Oxide._
+\label{fig:essence_
+\end{figure_</p>
+<p>Above, we see two typing rules that capture the essence of how
+Oxide models the behavior of Rust's borrow checker. Following the traditions of
+the Knights of PL, these rules are written in the style of <em>natural
+deduction</em> where each rule can be read as ``if we have a proof of the
+statements above the horizontal line, then we can combine them to construct a
+proof of the statement below the line.&quot; As such, to understand our two rules,
+it is necessary to understand the meaning of the judgement in their premise
+($\Sigma; ; \Gamma ; \vdash_\omega ; p : \tau \Rightarrow { ; \ell_1 ; \dots ; \ell_n ; }$).</p>
+<p>This judgment, called ownership safety, says &quot;in the place environment
+$\Gamma$, it is safe to use the place $\pi$ (of type $\tau$)
+$\mu$-ly.&quot; That is, if we have a derivation when $\mu$ is unique, we
+know that we can use the place $\pi$ uniquely because we have a proof that
+there are no live loans against the section of memory that $\pi$
+represents. This instance of the judgment appears in the premise of
+$\texttt{T-Move}$ because we know that it is only safe to move a value <em>out</em>
+of the environment when it is the sole name for that value. Further, when we
+have a derivation of this ownership safety judgment where $\mu$ is $\texttt{imm}$,
+we know that we can use the place $\pi$ sharedly because we have a proof
+that there are no live <em>unique</em> loans against the section of memory that
+$\pi$ represents. In the case of borrowing (as in $\texttt{T-Borrow}$), these
+two meanings of ownership safety correspond exactly to the intuition behind when
+a $\mu$-loan is safe to create.</p>
+<p>Since this judgment is the one that captures the essence of Rust's ownership
+semantics, we understand Rust's borrow checking system as ultimately being a
+system for statically building a proof that data in memory is either
+<em>uniquely owned</em> (and thus able to allow unguarded mutation) or
+<em>collectively shared</em>, but not both. To do so, intuitively, the
+ownership safety judgment looks through all of the approximate provenances found
+within types in $\Gamma$, and ensures that none of the loans they contain
+conflict with the place $\pi$ in question. For a $\texttt{uniq}$ loan, a conflict
+occurs if any loan maps to an overlapping place, but for a $\texttt{shrd}$ loan, a
+conflict occurs only when a $\texttt{uniq}$ loan maps to an overlapping place.</p>
+<p>For both more examples and more details about the Oxide formalism, interested
+readers should look at the full article by Weiss, Patterson, Matsakis, and
+Ahmed.</p>
+<h1>Oxide in Context</h1>
+<p>As with prior quests directed at understanding real world languages, Oxide
+provides a formal framework for reasoning about the behavior of programs in one
+such language --- i.e. programs in surface-level Rust. One prominent example is
+Featherweight Java which supported a wealth
+of new research on Java. And as with prior quests such as this, a number of
+promising avenues for future work on Rust open up that leverage our newfound
+reasoning ability with Oxide.</p>
+<h1>Formal Verification</h1>
+<p>One of the unfortunate gaps in Rust programming today is the lack of effective
+tools for proving properties (such as functional correctness) of Rust programs.
+There are some early efforts already to try to improve this
+situation~\cite{ullrich16:electrolysis, toman15:crust, baranowski18:smack,
+astrauskas18:rust-viper_, but without a semantics the possibilities are
+limited. For example, the work by Astrauskas et
+al. builds verification support for Rust into
+Viper, but uses an ad-hoc subset of the language without
+support for shared references. We believe that our work on Oxide can help extend
+such work to support more Rust code, and will enable further verification
+techniques like those seen in $F^\star$ and Liquid
+Haskell.</p>
+<h1>Verified Compilation</h1>
+<p>Given the prevalence of memory safety issues in security vulnerabilities, Rust's
+guarantees of memory safety lend themselves well to building security-critical
+applications. However, many security-critical applications (like cryptography
+code) require that these guarantees still hold after compilation, and further
+require a guarantee that timing of the program is preserved under compilation
+(to avoid the introduction of side-channel attacks). Rust's existing compiler
+toolchain --- which is built using LLVM --- is unable to
+formally prove preservation of these kinds of guarantees, and indeed, for
+timing, optimizations are designed to do almost entirely the opposite. As such,
+another avenue for future work would be to develop a verified compiler for Rust
+that preserves program semantics and timing behavior, perhaps by compilation to
+Vellvm.</p>
+<h1>Language-based Security</h1>
+<p>We also view Oxide as an enabler for future work on extending techniques from
+the literature on language-based security to Rust. In particular, one could
+imagine building support for dynamic or static information-flow control atop
+Oxide as a formalization (for which we can actually prove theorems about these
+extensions) alongside a practical implementation for the official Rust compiler.
+Similarly, Oxide can support building extensions for data-oblivious computing
+(as in work by Zahur and Evans) and relaxed
+noninterference (as in recent work by Cruz et al.).</p>
+<h1>The Quest Marches On…</h1>
+<p>As argued early on, Rust is the closest the Knights of PL have
+gotten to the Holy Grail of Programming --- the language that provides
+programmers all the benefits of high-level abstractions and all the fine-grained
+control of systems programming. With Oxide, we now have the tools to interact
+with and build on Rust more formally. This work too will help bring us closer to
+the Grail. Yet, we also remain so far! Still, I --- forever the fool ---
+continue on my own search.</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>The use of &quot;such&quot; here is intentional as dynamically guarded mutation, e.g. using a <code>Mutex</code>, is still allowed through a shared reference. Indeed, this is precisely what makes such guards <em>useful</em> when programming. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>Previously, Rust used the term <em>lifetime</em>, but recent efforts on a borrow checker rewrite called Polonius have been using the term region. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+
+  </div>
+  <div class="center">
+    Comments? Questions? <a href="mailto:aweiss@hey.com">Email</a> or
+    <a href="https://twitter.com/aatxe">tweet</a> at me.
+  </div>
+
+  </section>
+
+    </article>
+    <noscript id="deferred-styles">
+      <link href="https://code.cdn.mozilla.net/fonts/fira.css" rel=" stylesheet" />
+      <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet"/>
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                webkitRequestAnimationFrame || msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
+  </body>
+</html>

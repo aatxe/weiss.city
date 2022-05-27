@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aaron Weiss / HSCTF Write-Ups</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="./favicon-128x128.png">
+    <link rel="me" href="https://github.com/aatxe">
+    <link rel="me" href="https://twitter.com/aatxe">
+    <link href="/master.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="topbar"></div>
+    <header>
+      <a href="/"><span class="title">&lambda;. Aaron Weiss</span></a>
+    </header>
+    <nav>
+      <div class="navlinks">
+        <a href="/archive/">Blog</a>
+        <a href="/aweiss-resume.pdf">CV</a>
+        <a href="mailto:aweiss@hey.com">Email</a>
+        <a href="https://github.com/aatxe">GitHub</a>
+        <a href="https://twitter.com/aatxe">Twitter</a>
+        <a href="https://keybase.io/awe">Keybase</a>
+      </div>
+    </nav>
+    <article class="content">
+      
+  <section class="copy">
+    
+  <div class="section-head">
+    <div class="post-title">HSCTF Write-Ups</div>
+    <div class="post-date">
+      May 25, 2014
+    </div>
+  </div>
+  <div class="section-body">
+    <p>As an organizer of the recent High School CTF competition, <a href="http://hsctf.com/">HSCTF</a>, I designed a series of problems for competitors to take part in. My primary focus in problem design for the competition was in reverse engineering, but I also created one of the most challenging reconnaissance problem we offered in the competition. Since the competition is now complete, I'll be posting a series of write-ups on the problems I designed. In each write-up, I'll discuss the problem, the ideas that went into the design, the solution, pitfalls that users fell into, and any other interesting information about the problem.</p>
+<p>The competition itself was wildly successful with over 750 teams registered, and over 2,100 participants. We offered 45 problems (and a survey) coming to a total of 14,250 points (50 points for the survey). We had a highly competitive top fifty with many teams able to jump quickly in the ranks by solving one problem. It was a close competition for sure. In fact, Raelly didn't jump into the first position until the closing hour or two of the competition.</p>
+<p>With that, I'd like to congratulate all of our participants in HSCTF. This was a wonderful competition and I'm deeply pleased with how well it went. Hard problems were solved. The competition was fierce. Everyone did a wonderful job. Specifically, I'd like to congratulate The Lumberjacks from Phillips Academy for placing third, 0x90.avi from Thomas Jefferson High School for placing second, and Raelly from Thomas Jefferson High School for Science and Technology for their last-minute steal of first place. This is especially impressive since they joined the competition rather late. Well played, everyone!</p>
+
+  </div>
+  <div class="center">
+    Comments? Questions? <a href="mailto:aweiss@hey.com">Email</a> or
+    <a href="https://twitter.com/aatxe">tweet</a> at me.
+  </div>
+
+  </section>
+
+    </article>
+    <noscript id="deferred-styles">
+      <link href="https://code.cdn.mozilla.net/fonts/fira.css" rel=" stylesheet" />
+      <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet"/>
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                webkitRequestAnimationFrame || msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
+  </body>
+</html>
