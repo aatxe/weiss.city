@@ -3,6 +3,7 @@ const CleanCSS = require("clean-css");
 
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("images");
+  eleventyConfig.addPassthroughCopy("gradapps");
   eleventyConfig.addPassthroughCopy("pubs/*.pdf");
   eleventyConfig.addPassthroughCopy("css/*.css");
   eleventyConfig.addPassthroughCopy("*.pdf");
@@ -13,9 +14,18 @@ module.exports = function(eleventyConfig) {
 
   let markdownIt = require("markdown-it");
   let markdownItFootnote = require("markdown-it-footnote");
+  let markdownItImageFigures = require("markdown-it-image-figures");
   let options = { html: true };
-  let markdownLib = markdownIt(options).use(markdownItFootnote);
-  eleventyConfig.setLibrary("md", markdownLib);
+  let mdLib = markdownIt(options);
+
+  mdLib.use(markdownItFootnote);
+
+  mdLib.use(markdownItImageFigures, {
+    dataType: true,
+    figcaption: true,
+  });
+
+  eleventyConfig.setLibrary("md", mdLib);
 
   eleventyConfig.addFilter("cssmin", function(code) {
     return new CleanCSS({}).minify(code).styles;
@@ -29,6 +39,6 @@ module.exports = function(eleventyConfig) {
   });
 
   eleventyConfig.addCollection("posts", function(collectionApi) {
-    return collectionApi.getFilteredByGlob("_posts/*.md");
+    return collectionApi.getFilteredByGlob("posts/*.md");
   });
 };

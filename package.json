@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "clean-css": "^5.3.0",
-    "markdown-it-footnote": "^3.0.3"
+    "markdown-it-footnote": "^3.0.3",
+    "markdown-it-image-figures": "^2.1.0"
   }
 }

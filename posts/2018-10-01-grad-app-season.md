@@ -28,7 +28,7 @@ undergraduate advisor, Arjun). In this post, I'm including my [statement of purp
 Northeastern, but you should note that they asked for a one-pager which is quite cut-down relative
 to the original generic draft (which seems potentially lost to the annals of time).
 
-[sop]: ../gradapps/Aaron-Weiss-neu-sop.pdf
+[sop]: /gradapps/Aaron-Weiss-neu-sop.pdf
 [koka]: https://www.microsoft.com/en-us/research/project/koka/
 [diet-coke]: https://github.com/aatxe/diet-coke
 
@@ -52,9 +52,9 @@ copypasta from my submissions.
 [pguo]: http://www.pgbovine.net/fellowship-tips.htm
 [ltse]: http://ltse1.bol.ucla.edu/nsf.html
 [mladd]: http://www.malloryladd.com/nsf-grfp-advice.html
-[grfp-ps]: ../gradapps/Aaron-Weiss-grfp-personal-statement.pdf
-[grfp-rp]: ../gradapps/Aaron-Weiss-grfp-research-proposal.pdf
-[grfp-reviews]: ../gradapps/Aaron-Weiss-grfp-reviews.pdf
+[grfp-ps]: /gradapps/Aaron-Weiss-grfp-personal-statement.pdf
+[grfp-rp]: /gradapps/Aaron-Weiss-grfp-research-proposal.pdf
+[grfp-reviews]: /gradapps/Aaron-Weiss-grfp-reviews.pdf
 
 # Miscellany
 
@@ -70,8 +70,8 @@ were asked verbally) including an annotation about one particular question that 
 You can find those questions in [this PDF][questions].
 
 [sk-lor]: http://cs.brown.edu/~sk/Memos/Grad-School-Recos/
-[tr-note]: ../gradapps/Aaron-Weiss-rec-summary.pdf
-[questions]: ../gradapps/Aaron-Weiss-questions-to-amal.pdf
+[tr-note]: /gradapps/Aaron-Weiss-rec-summary.pdf
+[questions]: /gradapps/Aaron-Weiss-questions-to-amal.pdf
 
 # Afterward
 
