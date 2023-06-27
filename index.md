@@ -1,9 +1,9 @@
 ---
-title: Home 
+title: home
 layout: home.njk
 ---
 
-I'm Aaron Weiss, a language designer at [Roblox](https://www.roblox.com) working on
+I'm Aaron, a language designer at [Roblox](https://www.roblox.com) working on
 [Luau](https://luau-lang.org), a gradually-typed scripting language derived from [Lua](https://www.lua.org).
 
 Previously, I was an [NSF Fellow](https://nsfgrfp.org) at
