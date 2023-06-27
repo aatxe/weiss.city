@@ -68,6 +68,11 @@ nav a:hover::before, nav a:hover::after, a.title:hover::before, a.title:hover::a
     opacity: 1;
 }
 
+.archive-rss a::before, .archive-rss a::after {
+    content: "";
+    margin: inherit 0;
+}
+
 .content .about-me {
     text-transform: lowercase;
 }
@@ -82,7 +87,7 @@ section .section-head {
     margin-left: -0.175em;
 }
 
-.pubs {
+.pubs, .posts {
     list-style: none;
     padding: 0;
 }
@@ -104,7 +109,21 @@ section .section-head {
     grid-template: "title date";
 }
 
-.post-title {
+.section-head.archive-head {
+    grid-template: "title rss";
+}
+
+.post {
+    margin: 1.5em 0;
+    display: grid;
+    grid-template: "date" "title";
+}
+
+.post:first-child {
+    margin-top: 0;
+}
+
+.post-title, .archive-title {
     grid-area: title;
     justify-self: left;
     color: #ffc048;
@@ -114,6 +133,25 @@ section .section-head {
     grid-area: date;
     justify-self: right;
     color: #ffc048;
+}
+
+.post-desc {
+    grid-column: span 2;
+    padding: 0.2em 0;
+}
+
+.post-title, .post-date, .post-desc {
+    text-transform: lowercase;
+}
+
+.archive-rss {
+    grid-area: rss;
+    justify-self: right;
+}
+
+.archive-rss img {
+    height: 1em;
+    width: 1em !important;
 }
 
 .content figure, .content .center {
@@ -251,4 +289,11 @@ hr {
 
 .copy .footnote-back {
     padding-left: 0.3em;
+}
+
+@media (min-width: 700px) {
+    .post {
+        grid-template-columns: 1fr 1fr;
+        grid-template: "title date";
+    }
 }
