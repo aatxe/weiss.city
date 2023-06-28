@@ -75,6 +75,7 @@ nav a:hover::before, nav a:hover::after, a.title:hover::before, a.title:hover::a
 
 .content .about-me {
     text-transform: lowercase;
+    line-height: 1.25;
 }
 
 .content > *:not(section:first-child) {
