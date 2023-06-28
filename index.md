@@ -9,7 +9,7 @@ My efforts are primarily focused on the design of and developer experience with 
 
 Outside of work, I'm a [FromSoft](https://www.fromsoftware.jp/ww/) fanatic, chronic Savage raider in the critically-acclaimed
 MMORPG [Final Fantasy XIV](https://www.finalfantasyxiv.com/), and a lover of [Dungeons & Dragons](https://www.dndbeyond.com/)
-& other tabletop roleplaying games. I'm also a hyperpop appreciator, especially [brakence](https://www.brakence.com/) and [underscores](https://underscores.bandcamp.com/).
+& other tabletop roleplaying games. In other media, I'm a hyperpop appreciator, especially [brakence](https://www.brakence.com/) and [underscores](https://underscores.bandcamp.com/), and mecha anime enjoyer, especially [Witch from Mercury](https://myanimelist.net/anime/49828/Kidou_Senshi_Gundam__Suisei_no_Majo) and [Neon Genesis Evangelion](https://myanimelist.net/anime/30/Neon_Genesis_Evangelion).
 
 In my past life, I was an academic. I was a PhD student & [NSF Fellow](https://nsfgrfp.org) at
 [Northeastern](https://www.khoury.northeastern.edu/) working on a formal semantics for [Rust](https://www.rust-lang.org) with
