@@ -34,6 +34,13 @@ module.exports = function(eleventyConfig) {
     return new CleanCSS({}).minify(code).styles;
   });
 
+  eleventyConfig.addCollection("projs", function(collectionApi) {
+    return collectionApi.getAllSorted().filter(function(item) {
+      // Side-step tags and do your own filtering
+      return "lang" in item.data;
+    });
+  });
+
   eleventyConfig.addCollection("pubs", function(collectionApi) {
     return collectionApi.getAllSorted().filter(function(item) {
       // Side-step tags and do your own filtering

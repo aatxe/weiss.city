@@ -4,6 +4,12 @@
   <section class="about-me">
     {{ content | safe }}
   </section>
+  <section class="projects">
+    <div class="section-head"><a href="#projs" id="projs">Projects</a></div>
+    <div class="section-body">
+      {% include 'proj-list.njk' %}
+    </div>
+  </section>
   <section class="publications">
     <div class="section-head"><a href="#pubs" id="pubs">Publications</a></div>
     <div class="section-body">

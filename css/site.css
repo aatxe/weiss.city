@@ -28,7 +28,7 @@ header .title {
     margin-left: -0.175em;
 }
 
-nav .navlinks, .pub-extras p {
+nav .navlinks, .pub-extras p, .proj-header {
     display: flex;
     flex-wrap: wrap;
     column-gap: 1em;
@@ -42,7 +42,7 @@ a, a:link, a.title:hover {
     color: #ffc048;
 }
 
-nav a, nav a:link, nav a:hover, .pub-title a, .pub-title a:link, .pub-title a:hover {
+nav a, nav a:link, nav a:hover, .pub-title a, .pub-title a:link, .pub-title a:hover, .proj-title a, .proj-title a:link, .proj-title a:hover {
     color: #cd84f1;
 }
 
@@ -88,18 +88,37 @@ section .section-head {
     margin-left: -0.175em;
 }
 
-.pubs, .posts {
+.pubs, .posts, .projs {
     list-style: none;
     padding: 0;
 }
 
-.pub {
+.proj-header {
+    column-gap: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.pub, .proj {
     text-align: left;
     word-spacing: .05em;
     margin-bottom: 1.5em;
 }
 
-.pub .pub-extras p {
+.proj {
+    text-transform: lowercase;
+}
+
+.proj-language a::before {
+    content: '[';
+    opacity: 1 !important;
+}
+
+.proj-language a::after {
+    content: ']';
+    opacity: 1 !important;
+}
+
+.pub .pub-extras p, .proj .proj-desc p {
     margin: 0;
 }
 

@@ -1,0 +1,15 @@
+<ul class="projs">
+  {%- for proj in collections.projs | reverse -%}
+    <li class="proj">
+      <div class="proj-header">
+        <div class="proj-title">
+            <a href="{{ proj.data.link }}">{{ proj.data.title }}</a>
+        </div>
+        <div class="proj-language"><a href="{{ proj.data.langlink }}">{{ proj.data.lang }}</a></div>
+      </div>
+      <div class="proj-desc">
+        {{ proj.templateContent | safe }}
+      </div>
+    </li>
+  {%- endfor -%}
+</ul>
