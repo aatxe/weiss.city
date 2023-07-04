@@ -3,8 +3,9 @@ body {
     display: grid;
     grid-template-columns: repeat(12, [col-start] 1fr);
     font-size: 1.3em;
-    width: 80vw;
-    margin: 2em auto;
+    margin: 1.2em auto;
+    width: 90vw;
+    max-width: 900px;
     background-color: #111518;
     color: #f1f5fb;
     font-family: "Fira Sans", "Helvetica Neue", sans-serif;
@@ -312,6 +313,11 @@ hr {
 }
 
 @media (min-width: 700px) {
+    body {
+        margin: 2em auto;
+        width: 80vw;
+    }
+
     .post {
         grid-template-columns: 1fr 1fr;
         grid-template: "title date";

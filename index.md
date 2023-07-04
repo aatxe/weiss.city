@@ -9,7 +9,7 @@ My efforts are primarily focused on the design of and developer experience with 
 
 Outside of work, I'm a [FromSoft](https://www.fromsoftware.jp/ww/) fanatic, chronic Savage raider in the critically-acclaimed
 MMORPG [Final Fantasy XIV](https://www.finalfantasyxiv.com/), and a lover of [Dungeons & Dragons](https://www.dndbeyond.com/)
-& other tabletop roleplaying games. In other media, I'm a hyperpop appreciator, especially [brakence](https://www.brakence.com/) & [underscores](https://underscores.bandcamp.com/), and mecha anime enjoyer, especially [Witch from Mercury](https://myanimelist.net/anime/49828/Kidou_Senshi_Gundam__Suisei_no_Majo) and [Neon Genesis Evangelion](https://myanimelist.net/anime/30/Neon_Genesis_Evangelion).
+& other tabletop roleplaying games. In other media, I'm a hyperpop appreciator, especially [brakence](https://www.brakence.com/) & [underscores](https://underscores.bandcamp.com/), and mecha anime enjoyer, especially [Witch from Mercury](https://myanimelist.net/anime/49828/Kidou_Senshi_Gundam__Suisei_no_Majo) & [Neon Genesis Evangelion](https://myanimelist.net/anime/30/Neon_Genesis_Evangelion).
 
 In my past life, I was an [academic](https://sitn.hms.harvard.edu/flash/2021/the-mental-health-crisis-in-science/). I was
 a [PhD student](https://scholar.google.com/citations?user=AKe9iAQAAAAJ) & [NSF Fellow](https://nsfgrfp.org) at [Northeastern](https://www.khoury.northeastern.edu/) working on a
