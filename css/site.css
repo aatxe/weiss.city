@@ -79,6 +79,17 @@ nav a:hover::before, nav a:hover::after, a.title:hover::before, a.title:hover::a
     line-height: 1.25;
 }
 
+.content .about-me figure {
+    margin: 0;
+}
+
+.content .about-me figure img {
+    width: 100%;
+    max-width: 640px;
+    margin: 1.5em -1em 0.5em -1em;
+    border: solid #f1f5fb 1em;
+}
+
 .content > *:not(section:first-child) {
     margin-top: 2em;
 }
