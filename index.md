@@ -5,7 +5,7 @@ layout: home.njk
 
 [![A photo of Aaron!][aaron-img]][aaron-img-full]
 
-I'm Aaron (they/them), and I'm a Software Engineer & Language Designer at [Roblox](https://www.roblox.com)
+I'm Aaron (she/they), and I'm a Software Engineer & Language Designer at [Roblox](https://www.roblox.com)
 working on [Luau](https://luau-lang.org), a gradually-typed scripting language derived from [Lua](https://www.lua.org).
 My efforts are primarily focused on the design of and developer experience with [Luau](https://luau-lang.org)'s type system.
 
