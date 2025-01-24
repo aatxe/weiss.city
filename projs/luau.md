@@ -1,7 +1,7 @@
 ---
 title: 'Luau'
 date: 2099-10-01
-link: https://github.com/Roblox/Luau
+link: https://github.com/luau-lang/luau
 lang: cpp
 langlink: https://en.cppreference.com/w/
 ---
