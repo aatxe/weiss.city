@@ -5,10 +5,11 @@ layout: home.njk
 
 [![A photo of Ariel!][aaron-img]][aaron-img-full]
 
-Hi, I'm Ariel (she/they) from the [Luau](https://luau-lang.org) team. I work as a Software Engineer
+Hi, I'm Ariel (she/her) from the [Luau](https://luau-lang.org) team. I work as a Software Engineer and Tech Lead
 at [Roblox](https://www.roblox.com) where my efforts are primarily focused on the design of and
-developer experience with [Luau](https://luau-lang.org)'s type system. Its gradual type system is really quite fun,
-featuring powerful features like [semantic subtyping](https://blog.roblox.com/2022/11/semantic-subtyping-luau/),
+developer experience with [Luau](https://luau-lang.org)'s type system & ecosystem. Its gradual
+type system is really quite fun, featuring powerful features like
+[semantic subtyping](https://blog.roblox.com/2022/11/semantic-subtyping-luau/),
 [typestate](https://en.wikipedia.org/wiki/Typestate_analysis), and [partial type operators](https://en.wikipedia.org/wiki/Type_family). 
 
 Outside of work, I'm a [FromSoft](https://www.fromsoftware.jp/ww/) fanatic, chronic Savage raider in the critically-acclaimed
