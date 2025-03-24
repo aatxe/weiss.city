@@ -21,7 +21,7 @@ The code that powers this website (e.g. `css/`, `_includes/`, and `.eleventy.js`
 (via the [CC0][cc0] dedication), but the content (e.g. `posts/`, `pubs/`, and `images/`) remain
 under their respective licenses (defaulting to all rights reserved).
 
-[awe]: https://aaronweiss.us/
+[awe]: https://weiss.city/
 [11ty]: https://www.11ty.dev
 [hakyll]: http://jaspervdj.be/hakyll/
 [gh-pages]: https://pages.github.com/
