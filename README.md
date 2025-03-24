@@ -1,4 +1,4 @@
-# aaronweiss.us
+# weiss.city
 
 This is the latest iteration of my personal website. It's powered proudly by [11ty][11ty], and
 hosted on [GitHub Pages][gh-pages]. You can find the production website [here][awe].
