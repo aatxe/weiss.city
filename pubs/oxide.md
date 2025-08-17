@@ -3,7 +3,7 @@ title: 'Oxide: The Essence of Rust'
 date: 2021-10-19
 pubdate: 'October 2021'
 file: draft21-oxide
-authors: Aaron Weiss, Olek Gierczak,  Daniel Patterson, Amal Ahmed
+authors: Ariel Weiss, Olek Gierczak,  Daniel Patterson, Amal Ahmed
 venue: arXiv
 location: Online
 award: Awarded First Place in POPL '19 SRC
