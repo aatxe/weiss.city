@@ -6,4 +6,4 @@ lang: cpp
 langlink: https://en.cppreference.com/w/
 ---
 
-Lute is a standalone [Luau](https://luau-lang.org) runtime for general-purpose programming, aiming to enable developers to use Luau for writing developer tooling and application code.
+Lute is a standalone [Luau](https://luau.org) runtime for general-purpose programming, aiming to enable developers to use Luau for writing developer tooling and application code.
