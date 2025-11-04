@@ -62,8 +62,13 @@ nav a:hover,
 .pub-title a:hover,
 .proj-title a,
 .proj-title a:link,
-.proj-title a:hover {
+.proj-title a:hover,
+.ariel {
     color: #cd84f1;
+}
+
+em.ariel {
+    font-style: normal;
 }
 
 a::before,
@@ -115,9 +120,10 @@ a.title:hover::after,
 
 .content .about-me figure img {
     width: 100%;
-    max-width: 640px;
+    max-width: 320px;
     margin: 1.5em -1em 0.5em -1em;
-    border: solid #f1f5fb 1em;
+    border: solid #f1f5fb 1.5em;
+    border-bottom: solid #f1f5fb 2.5em;
 }
 
 .content > *:not(section:first-child) {

@@ -3,9 +3,9 @@ title: home
 layout: home.njk
 ---
 
-[![A photo of Ariel!][aaron-img]][aaron-img-full]
+[![A photo of Ariel!][ariel-img]][ariel-img-full]
 
-Hi, I'm Ariel (she/her) from the [Luau](https://luau-lang.org) team. I work as a Software Engineer and Tech Lead
+Hi, I'm <em class="ariel">Ariel</em> (she/her) from the [Luau](https://luau-lang.org) team! I work as a Software Engineer and Tech Lead
 at [Roblox](https://www.roblox.com) where my efforts are primarily focused on the design of and
 developer experience with [Luau](https://luau-lang.org)'s type system & ecosystem. Its gradual
 type system is really quite fun, featuring powerful features like
@@ -22,5 +22,5 @@ formal semantics for [Rust](https://www.rust-lang.org) with [Amal Ahmed](https:/
 undergraduate, I worked with [Arjun Guha](https://ccs.neu.edu/~arjunguha/main/home/) on static verification and
 program repair for [Puppet](https://puppet.com/) manifests.
 
-[aaron-img]: ./images/aaron.jpg
-[aaron-img-full]: ./images/aaron-full.jpg
+[ariel-img]: ./images/ariel.jpg
+[ariel-img-full]: ./images/ariel-full.jpg
