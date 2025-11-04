@@ -379,6 +379,11 @@ hr {
         width: 80vw;
     }
 
+    .content .about-me figure {
+        margin-left: 1.5em;
+        float: right;
+    }
+
     .post {
         grid-template-columns: 1fr 1fr;
         grid-template: "title date";
