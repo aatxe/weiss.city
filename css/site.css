@@ -11,11 +11,14 @@ body {
     font-family: "Fira Sans", "Helvetica Neue", sans-serif;
 }
 
-header, nav {
+header,
+nav {
     text-transform: lowercase;
 }
 
-header, nav, article.content {
+header,
+nav,
+article.content {
     grid-column: span 12;
     padding: 0.1em 1em;
 }
@@ -29,34 +32,55 @@ header .title {
     margin-left: -0.175em;
 }
 
-nav .navlinks, .pub-extras p, .proj-header {
+nav .navlinks,
+.pub-extras p,
+.proj-header {
     display: flex;
     flex-wrap: wrap;
     column-gap: 1em;
 }
 
-a, nav a, nav a:hover, a.title:hover, .section-head a:hover {
+a,
+nav a,
+nav a:hover,
+a.title:hover,
+.section-head a:hover {
     text-decoration: none;
 }
 
-a, a:link, a.title:hover {
+a,
+a:link,
+a.title:hover {
     color: #ffc048;
 }
 
-nav a, nav a:link, nav a:hover, .pub-title a, .pub-title a:link, .pub-title a:hover, .proj-title a, .proj-title a:link, .proj-title a:hover {
+nav a,
+nav a:link,
+nav a:hover,
+.pub-title a,
+.pub-title a:link,
+.pub-title a:hover,
+.proj-title a,
+.proj-title a:link,
+.proj-title a:hover {
     color: #cd84f1;
 }
 
-a::before, a::after {
+a::before,
+a::after {
     opacity: 0;
 }
 
-nav a::before, a.title::before, .section-head a::before {
+nav a::before,
+a.title::before,
+.section-head a::before {
     content: "(";
     margin-left: -0.15em;
 }
 
-nav a::after, a.title::after, .section-head a::after {
+nav a::after,
+a.title::after,
+.section-head a::after {
     content: ")";
     margin-right: -0.15em;
 }
@@ -65,11 +89,17 @@ a:hover {
     text-decoration: underline;
 }
 
-nav a:hover::before, nav a:hover::after, a.title:hover::before, a.title:hover::after, .section-head a:hover::before, .section-head a:hover::after {
+nav a:hover::before,
+nav a:hover::after,
+a.title:hover::before,
+a.title:hover::after,
+.section-head a:hover::before,
+.section-head a:hover::after {
     opacity: 1;
 }
 
-.archive-rss a::before, .archive-rss a::after {
+.archive-rss a::before,
+.archive-rss a::after {
     content: "";
     margin: inherit 0;
 }
@@ -100,7 +130,9 @@ section .section-head {
     margin-left: -0.175em;
 }
 
-.pubs, .posts, .projs {
+.pubs,
+.posts,
+.projs {
     list-style: none;
     padding: 0;
 }
@@ -110,9 +142,10 @@ section .section-head {
     margin-bottom: 0.5em;
 }
 
-.pub, .proj {
+.pub,
+.proj {
     text-align: left;
-    word-spacing: .05em;
+    word-spacing: 0.05em;
     margin-bottom: 1.5em;
 }
 
@@ -121,16 +154,17 @@ section .section-head {
 }
 
 .proj-language a::before {
-    content: '[';
+    content: "[";
     opacity: 1 !important;
 }
 
 .proj-language a::after {
-    content: ']';
+    content: "]";
     opacity: 1 !important;
 }
 
-.pub .pub-extras p, .proj .proj-desc p {
+.pub .pub-extras p,
+.proj .proj-desc p {
     margin: 0;
 }
 
@@ -155,7 +189,8 @@ section .section-head {
     margin-top: 0;
 }
 
-.post-title, .archive-title {
+.post-title,
+.archive-title {
     grid-area: title;
     justify-self: left;
     color: #ffc048;
@@ -172,7 +207,9 @@ section .section-head {
     padding: 0.2em 0;
 }
 
-.post-title, .post-date, .post-desc {
+.post-title,
+.post-date,
+.post-desc {
     text-transform: lowercase;
 }
 
@@ -186,15 +223,18 @@ section .section-head {
     width: 1em !important;
 }
 
-.content figure, .content .center {
+.content figure,
+.content .center {
     text-align: center;
 }
 
-.content pre, .content code {
+.content pre,
+.content code {
     font-family: "Fira Code", "Fira Mono", monospace;
 }
 
-.content pre, .content div.sourceCode {
+.content pre,
+.content div.sourceCode {
     font-size: 0.9em;
     text-align: left;
 }
@@ -211,7 +251,8 @@ section .section-head {
     overflow-y: hidden;
 }
 
-.content .sourceCode a.sourceLine, .content .sourceCode a:visited.sourceLine {
+.content .sourceCode a.sourceLine,
+.content .sourceCode a:visited.sourceLine {
     color: #1e272e;
 }
 
@@ -235,7 +276,8 @@ code {
     border-radius: 4px;
 }
 
-pre code, code.sourceCode {
+pre code,
+code.sourceCode {
     color: #1e272e;
     background-color: #d2dae2;
 }
@@ -269,7 +311,8 @@ hr {
     text-align: justify;
 }
 
-.content .copy .blurb, .copy figcaption {
+.content .copy .blurb,
+.copy figcaption {
     font-size: 0.9em;
 }
 
@@ -281,7 +324,7 @@ hr {
 }
 
 .copy blockquote cite::before {
-    content: '\2014 ';
+    content: "\2014 ";
 }
 
 .copy blockquote cite {
@@ -298,7 +341,7 @@ hr {
 
 .copy ul li::before {
     font-family: Helvetica !important;
-    content: '\2605';
+    content: "\2605";
     color: #ffc048;
     margin-left: -1.5em;
     margin-right: 0.5em;
@@ -315,7 +358,8 @@ hr {
     content: unset;
 }
 
-.copy blockquote ol:not(:first-child), .copy blockquote ul:not(:first-child) {
+.copy blockquote ol:not(:first-child),
+.copy blockquote ul:not(:first-child) {
     margin-top: -0.5em;
 }
 
