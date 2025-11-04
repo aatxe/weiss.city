@@ -380,12 +380,18 @@ hr {
     }
 
     .content .about-me figure {
-        margin-left: 1.5em;
+        margin-left: 1.7em;
         float: right;
     }
 
     .post {
         grid-template-columns: 1fr 1fr;
         grid-template: "title date";
+    }
+}
+
+@media (min-width: 1080px) {
+    .content .about-me figure {
+        margin-left: 2em;
     }
 }
