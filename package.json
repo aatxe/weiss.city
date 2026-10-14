@@ -1,18 +1,18 @@
 {
-  "name": "aaronweiss.us",
+  "name": "weiss.city",
   "version": "2.0.0",
-  "description": "the personal website of aaron weiss.",
+  "description": "the personal website of ariel weiss.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@commie.club:awe/aaronweiss.us.git"
+    "url": "git@github.com:aatxe/weiss.city.git"
   },
-  "author": "Aaron Weiss <aweiss@hey.com> (https://aaronweiss.us/)",
+  "author": "Ariel Weiss <aweiss@hey.com> (https://weiss.city/)",
   "devDependencies": {
-    "@11ty/eleventy": "^2.0.1",
+    "@11ty/eleventy": "^3.1.6",
     "@11ty/eleventy-plugin-rss": "^1.1.2",
     "@11ty/eleventy-plugin-syntaxhighlight": "^4.0.0"
   },
