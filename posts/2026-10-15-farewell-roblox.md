@@ -9,8 +9,8 @@ joined Roblox, the company was in an explosive period of growth and change. Luau
 prior, and a new director with significant programming languages expertise had been brought on to lead the project. The
 Luau team had acquired a tremendous talent in the late [Alan Jeffrey](https://www.asaj.org/), whose presence was
 actually what brought me to Roblox as a fellow ex-academic and programming languages creative. I was hired to bring more
-type system design (and crucially) implementation expertise to the team. Four and a half years later, the New Type
-Solver[^1] has been out a year, and, while the launch was rocky, it is by most accounts a pretty good product now.[^2]
+type system design and implementation expertise to the team. Four and a half years later, the New Type Solver[^1] has
+been out a year, and, while the launch was rocky, it is by most accounts a pretty good product now.[^2]
 
 In that time, I have grown a lot as a person, an engineer, and a leader, and I'm very appreciative of the opportunities
 working on Luau has afforded me. I've learned a great deal about working on and managing larger open source projects,
@@ -39,8 +39,8 @@ the community — sometimes to a detriment even. While I think that investment i
 very hard for me to experience the leadership instabilities, the shifting priorities of a fairly indecisive company, and
 the sustained awareness of all the things still wrong in Luau. Some of this would get better in time, but leaving feels
 like the only option really in my control today. It's hard to let go since I've truly loved working on Luau and truly
-loved working with the open source community around Roblox, even through many of the difficulties of doing so, but I'm
-very much in need of a reset for my overall well-being.
+loved working with the open source community around Roblox, but I'm very much in need of a reset for my overall
+well-being.
 
 To everyone who has worked with me on this journey to make Luau the best language it can be, whether that be folks here
 at Roblox or the many, many passionate folks in open source: thank you for your contributions and for your passions! It
