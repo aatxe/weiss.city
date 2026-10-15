@@ -313,10 +313,6 @@ hr {
     line-height: 1.45;
 }
 
-.content .copy p {
-    text-align: justify;
-}
-
 .content .copy .blurb,
 .copy figcaption {
     font-size: 0.9em;
@@ -387,6 +383,10 @@ hr {
     .post {
         grid-template-columns: 1fr 1fr;
         grid-template: "title date";
+    }
+
+    .content .copy p {
+        text-align: justify;
     }
 }
 
