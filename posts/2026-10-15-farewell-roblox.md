@@ -35,7 +35,7 @@ that in mind, and combined with the overarching narrative of our field today, I 
 change.
 
 Anyone who knows me probably can tell that I'm a very emotional person, and that I've invested a lot into my work and
-the community (sometimes to a detriment even). While I think that investment is broadly a strength, it's also made it
+the community — sometimes to a detriment even. While I think that investment is broadly a strength, it's also made it
 very hard for me to experience the leadership instabilities, the shifting priorities of a fairly indecisive company, and
 the sustained awareness of all the things still wrong in Luau. Some of this would get better in time, but leaving feels
 like the only option really in my control today. It's hard to let go since I've truly loved working on Luau and truly
