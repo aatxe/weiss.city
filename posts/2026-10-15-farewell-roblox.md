@@ -48,9 +48,9 @@ has meant so, so much to me to do this work over the past five years. I'm sorry 
 of it, but I believe I'm leaving the project better than I found it, and the future for Luau seems very bright! I will
 be rooting for all of you!
 
-\[^1\]: I consider this to be something of a brand name for our type inference engine, and that's why it is written as a
+[^1]: I consider this to be something of a brand name for our type inference engine, and that's why it is written as a
 proper noun. I've never heard anyone else refer to a type inference algorithm as a type solver, so I generally
-characterize the term as an [Andy](https://andyfriesen.com/)-ism-turned-brand-name. \[^2\]: I think personally I'm still
-unsure of how to be proud of my own work, and so it's hard for me to look at all the problems I know are still
-outstanding and say that, but I have to believe the many people who are kind enough to share with me the positive
-experiences they've had using it.
+characterize the term as an [Andy](https://andyfriesen.com/)-ism-turned-brand-name.
+[^2]: I think personally I'm still unsure of how to be proud of my own work, and so it's hard for me to look at all the
+problems I know are still outstanding and say that, but I have to believe the many people who are kind enough to share
+with me the positive experiences they've had using it.
