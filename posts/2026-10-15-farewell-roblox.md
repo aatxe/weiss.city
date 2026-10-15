@@ -10,7 +10,7 @@ prior, and a new director with significant programming languages expertise had b
 Luau team had acquired a tremendous talent in the late [Alan Jeffrey](https://www.asaj.org/), whose presence was
 actually what brought me to Roblox as a fellow ex-academic and programming languages creative. I was hired to bring more
 type system design and implementation expertise to the team. Four and a half years later, the New Type Solver[^1] has
-been out a year, and, while the launch was rocky, it is by most accounts a pretty good product now.[^2]
+been out for a year, and, while the launch was rocky, it is by most accounts a pretty good product now.[^2]
 
 In that time, I have grown a lot as a person, an engineer, and a leader, and I'm very appreciative of the opportunities
 working on Luau has afforded me. I've learned a great deal about working on and managing larger open source projects,
