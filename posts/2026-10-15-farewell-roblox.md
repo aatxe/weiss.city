@@ -23,10 +23,10 @@ of big, long-term projects, I pushed very hard for us to work on smaller, better
 [Lute](https://github.com/luau-lang/lute), [Mandolin](https://github.com/luau-lang/mandolin), [the website overhaul](https://github.com/luau-lang/site), and other developer tooling arose from.
 There have been both great successes in that process, as well as plenty of failures. With that in mind, and combined with the overarching narrative of our field today, I am frankly burnt out and in need of change.
 
-I'd imagine anyone that has had the pleasure (or perhaps displeasure?) of interacting with me would see that I am a very emotional person, and, while I'd hope that I generally leverage my 
-emotional attachment as a strength, it's also a source of tremendous difficulty when faced with the mix of instability, corporate constraints, and just... time spent deep in the weeds of one big project.
-Since the only thing that can really change those things is time, I'm left with leaving as the only option really within my control. It's hard to let go since I've truly loved working on Luau and truly loved
-working with the open source community around Roblox, even through many of the difficulties of doing so, but I'm very much in need of some distance now for the sake of my well-being.
+Anyone who knows me probably can tell that I'm a very emotional person, and that I've invested a lot into my work and the community (sometimes to a detriment even). While I think that investment
+is broadly a strength, it's also made it very hard for me to experience the leadership instabilities, the shifting priorities of a fairly indecisive company, and the sustained awareness of all the
+things still wrong in Luau. Some of this would get better in time, but leaving feels like the only option really in my control today. It's hard to let go since I've truly loved working on Luau and truly loved
+working with the open source community around Roblox, even through many of the difficulties of doing so, but I'm very much in need of a reset for my overall well-being.
 
 To everyone who has worked with me on this journey to make Luau the best language it can be, whether that be folks here at Roblox or the many, many passionate folks in open source: thank you for your contributions
 and for your passions! It has meant so, so much to me to do this work over the past five years. I'm sorry that I am unable to stay on for the rest of it, but I believe I'm leaving the project better than I found it,
