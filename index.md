@@ -5,12 +5,7 @@ layout: home.njk
 
 [![A photo of Ariel!][ariel-img]][ariel-img-full]
 
-Hi, I'm <em class="ariel">Ariel</em> (she/her) from the [Luau](https://luau.org) team! I work as a Software Engineer and Tech Lead
-at [Roblox](https://www.roblox.com) where my efforts are primarily focused on the design of and
-developer experience with [Luau](https://luau.org)'s type system & ecosystem. Its gradual
-type system is really quite fun, featuring powerful features like
-[semantic subtyping](https://blog.roblox.com/2022/11/semantic-subtyping-luau/),
-[typestate](https://en.wikipedia.org/wiki/Typestate_analysis), and [partial type operators](https://en.wikipedia.org/wiki/Type_family).
+Hi, I'm <em class="ariel">Ariel</em> (she/her), a newly-minted member of the [Swift](https://swift.org) team at [Apple](https://apple.com)! Previously,  I helped lead the [Luau](https://luau.org) team at [Roblox](https://www.roblox.com) where  my efforts primarily focused on the design and implementation of [Luau](https://luau.org)'s type system. I also led the creation of [Lute](https://lute.luau.org) to support using Luau both to build developer tooling, and as a general-purpose programming language.
 
 Outside of work, I'm a [FromSoft](https://www.fromsoftware.jp/ww/) fanatic, a frequent [Magic the Gathering](https://moxfield.com/users/thewitchdog) player, a chronic Savage raider in the critically-acclaimed
 MMORPG [Final Fantasy XIV](https://www.finalfantasyxiv.com/), and a lover of [Dungeons & Dragons](https://www.dndbeyond.com/),
