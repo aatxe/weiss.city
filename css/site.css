@@ -117,7 +117,7 @@ a.title:hover::after,
 .content .about-me figure {
     width: 320px;
     max-width: 100%;
-    margin: 0;
+    margin: 0 auto;
     container-type: inline-size;
 }
 
