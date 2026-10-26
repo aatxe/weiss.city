@@ -115,16 +115,18 @@ a.title:hover::after,
 }
 
 .content .about-me figure {
+    width: 320px;
+    max-width: 100%;
     margin: 0;
+    container-type: inline-size;
 }
 
 .content .about-me figure img {
     width: 100%;
-    max-width: 320px;
     margin: 1.5em -1em 0.5em -1em;
-    border: solid #f1f5fb calc(320px * 0.076);
-    border-top: solid #f1f5fb calc(320px * 0.063);
-    border-bottom: solid #f1f5fb calc(320px * 0.309);
+    border: solid #f1f5fb 7.6cqi;
+    border-top: solid #f1f5fb 6.3cqi;
+    border-bottom: solid #f1f5fb 30.9cqi;
 }
 
 .content > *:not(section:first-child) {
