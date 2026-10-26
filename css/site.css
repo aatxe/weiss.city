@@ -122,8 +122,9 @@ a.title:hover::after,
     width: 100%;
     max-width: 320px;
     margin: 1.5em -1em 0.5em -1em;
-    border: solid #f1f5fb 1.5em;
-    border-bottom: solid #f1f5fb 2.5em;
+    border: solid #f1f5fb calc(320px * 0.076);
+    border-top: solid #f1f5fb calc(320px * 0.063);
+    border-bottom: solid #f1f5fb calc(320px * 0.309);
 }
 
 .content > *:not(section:first-child) {
